@@ -8,14 +8,16 @@ class LoginRepoImp implements LoginRepo {
   final LoginRemoteDataSource loginRemoteDataSource;
   LoginRepoImp(this.loginRemoteDataSource);
   @override
-  Future<Either<ApiErrorModel, UserLoginEntity>> login({
+  Future<Either<ApiErrorModel, Unit>> login({
     required UserLoginEntity userLoginEntity,
   }) async {
     try {
-      final result = await loginRemoteDataSource.login(userLoginEntity: userLoginEntity);
-      return Right(result);
+      await loginRemoteDataSource.login(userLoginEntity: userLoginEntity);
+      return Right(unit);
     } catch (error) {
-      return Left(ApiErrorModel(errorMessage: ErrorData(message: error.toString())));
+      return Left(
+        ApiErrorModel(errorMessage: ErrorData(message: error.toString())),
+      );
     }
   }
 }

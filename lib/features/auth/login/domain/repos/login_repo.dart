@@ -4,5 +4,5 @@ import 'package:united_formation_app/features/auth/login/domain/entities/user_lo
 import '../../../../../core/core.dart';
 
 abstract class LoginRepo {
-  Future<Either<ApiErrorModel, UserLoginEntity>> login({required UserLoginEntity userLoginEntity});
+  Future<Either<ApiErrorModel, Unit>> login({required UserLoginEntity userLoginEntity});
 }

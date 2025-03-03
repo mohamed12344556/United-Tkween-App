@@ -5,13 +5,13 @@ import 'package:united_formation_app/features/auth/login/domain/repos/login_repo
 import '../entities/user_login_entity.dart';
 
 class LoginUseCase
-    implements UseCase<ApiErrorModel, UserLoginEntity, UserLoginEntity> {
+    implements UseCase<ApiErrorModel, Unit, UserLoginEntity> {
   final LoginRepo loginRepo;
 
   LoginUseCase({required this.loginRepo});
 
   @override
-  Future<Either<ApiErrorModel, UserLoginEntity>> call(UserLoginEntity params) async {
+  Future<Either<ApiErrorModel, Unit>> call(UserLoginEntity params) async {
     try {
       return await loginRepo.login(userLoginEntity: params);
     } on Exception catch (e) {
