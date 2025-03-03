@@ -4,7 +4,7 @@ class AppColors {
   //Private constructor to prevent instantiation
   AppColors._();
   // Light Mood
-  static const Color primary = Color(0xFF2F98D7);
+  static const Color primary = Color(0xFFddf32b);
   static const Color secondary = Color(0xFFF0F3FF);
   static const Color background = Color(0xFFFFFFFF);
   static const Color text = Color(0xFF505050);

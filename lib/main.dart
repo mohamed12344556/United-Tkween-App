@@ -25,9 +25,9 @@ Future<void> main() async {
             ? HydratedStorageDirectory.web
             : HydratedStorageDirectory((await getTemporaryDirectory()).path),
   );
-  await AppState.initialize();
-  final bool hasValidSession = await TokenManager.hasValidTokens();
-  log('Main - AppState.isLoggedIn: ${AppState.isLoggedIn}');
+  // await AppState.initialize();
+  // final bool hasValidSession = await TokenManager.hasValidTokens();
+  // log('Main - AppState.isLoggedIn: ${AppState.isLoggedIn}');
   await ScreenUtil.ensureScreenSize();
   runApp(
     EasyLocalization(
@@ -36,7 +36,7 @@ Future<void> main() async {
       assetLoader: CodegenLoader(),
       child: UnitedFormationApp(
         appRouter: AppRouter(),
-        hasValidSession: hasValidSession,
+        // hasValidSession: hasValidSession,
       ),
     ),
   );

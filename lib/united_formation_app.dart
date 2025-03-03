@@ -11,11 +11,11 @@ import 'core/themes/cubit/theme_cubit.dart';
 
 class UnitedFormationApp extends StatelessWidget {
   final AppRouter appRouter;
-  final bool hasValidSession;
+  // final bool hasValidSession;
   const UnitedFormationApp({
     super.key,
     required this.appRouter,
-    required this.hasValidSession,
+    // required this.hasValidSession,
   });
 
   @override
@@ -40,8 +40,8 @@ class UnitedFormationApp extends StatelessWidget {
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
               locale: context.locale,
-              initialRoute:
-                  hasValidSession ? Routes.homeView : Routes.onboardingView,
+              initialRoute: Routes.loginView,
+              // hasValidSession ? Routes.homeView : Routes.onboardingView,
               onGenerateRoute: appRouter.generateRoute,
             ),
           );

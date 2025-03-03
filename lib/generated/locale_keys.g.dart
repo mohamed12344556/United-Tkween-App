@@ -5,5 +5,6 @@
 abstract class  LocaleKeys {
   static const hello = 'hello';
   static const welcome = 'welcome';
+  static const or = 'or';
 
 }
