@@ -1,6 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:united_formation_app/features/auth/login/ui/logic/cubit/login_cubit.dart';
 
 import '../../../../../core/core.dart';
+import '../../../../../generated/locale_keys.g.dart';
+import '../widgets/auth_header.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -10,220 +15,144 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    // Get screen dimensions for responsive design
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
     // Calculate responsive values
-    final horizontalPadding = screenWidth * 0.06; // 6% of screen width
-    final verticalSpacing = screenHeight * 0.02; // 2% of screen height
+    final horizontalPadding = context.screenWidth * 0.06;
+    final verticalSpacing = context.screenHeight * 0.02;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight:
-                  screenHeight -
-                  MediaQuery.of(context).padding.top -
-                  MediaQuery.of(context).padding.bottom,
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: horizontalPadding,
-                vertical: verticalSpacing * 2,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Logo or icon at the top
-                  Container(
-                    width: screenWidth * 0.13, // Responsive width
-                    height: screenWidth * 0.13, // Keep it square
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.auto_awesome,
-                      color: Colors.black,
-                      size: screenWidth * 0.07, // Responsive icon size
-                    ),
+    final cubit = context.watch<LoginCubit>();
+
+    return BlocConsumer<LoginCubit, LoginState>(
+      listener: (context, state) {
+        if (state is LoginSuccess) {
+          // Show success message and navigate to home
+          context.showSuccessSnackBar(LocaleKeys.login_successful.tr());
+          context.pushNamedAndRemoveUntil(
+            Routes.homeView,
+            predicate: (route) => false,
+          );
+        } else if (state is LoginError) {
+          // Show error message
+          context.showErrorSnackBar(state.errorMessage);
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight:
+                      context.screenHeight -
+                      context.paddingTop -
+                      context.paddingBottom,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                    vertical: verticalSpacing * 2,
                   ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header (logo, title, subtitle)
+                      AuthHeader(
+                        title: LocaleKeys.welcome_back.tr(),
+                        subtitle:
+                            LocaleKeys
+                                .we_happy_to_see_you_here_again_enter_your_email_address_and_password
+                                .tr(),
+                      ),
 
-                  SizedBox(height: verticalSpacing * 1.5),
+                      // Email field
+                      AppTextField(
+                        controller: cubit.emailController,
+                        hintText: LocaleKeys.email.tr(),
+                        keyboardType: TextInputType.emailAddress,
+                      ),
 
-                  // Title
-                  Text(
-                    'Welcome back,',
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.06, // Responsive font size
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
+                      SizedBox(height: verticalSpacing),
 
-                  SizedBox(height: verticalSpacing * 0.5),
+                      // Password field
+                      AppTextField(
+                        controller: cubit.passwordController,
+                        hintText: LocaleKeys.password.tr(),
+                        isPassword: true,
+                        passwordVisible: cubit.isPasswordVisible,
+                        onTogglePasswordVisibility: () {
+                          setState(() {
+                            cubit.isPasswordVisible = !cubit.isPasswordVisible;
+                          });
+                        },
+                      ),
 
-                  // Subtitle
-                  Text(
-                    'We happy to see you here again. Enter your email address and password',
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.035, // Responsive font size
-                      color: Colors.black54,
-                    ),
-                  ),
+                      SizedBox(height: verticalSpacing * 2),
 
-                  SizedBox(height: verticalSpacing * 2),
+                      // Login button
+                      AppButton(
+                        text: LocaleKeys.log_in.tr(),
+                        backgroundColor: AppColors.primary,
+                        textColor: Colors.black,
+                        isLoading: state is LoginLoading,
+                        onPressed: () {
+                          // Call login method from cubit
+                          context.read<LoginCubit>().login(
+                            email: cubit.emailController.text.trim(),
+                            password: cubit.passwordController.text,
+                          );
+                        },
+                      ),
 
-                  // Email field
-                  _buildTextField(
-                    controller: _emailController,
-                    hintText: 'Email',
-                    keyboardType: TextInputType.emailAddress,
-                    context: context,
-                  ),
-
-                  SizedBox(height: verticalSpacing),
-
-                  // Password field
-                  _buildTextField(
-                    controller: _passwordController,
-                    hintText: 'Password',
-                    isPassword: true,
-                    context: context,
-                  ),
-
-                  SizedBox(height: verticalSpacing * 2),
-
-                  // Login button
-                  CustomButton(
-                    text: 'Log In',
-                    backgroundColor: AppColors.primary,
-                    textColor: Colors.black,
-                    onPressed: () {
-                      Navigator.pushNamed(context, Routes.homeView);
-                    },
-                    height: screenHeight * 0.065, // Responsive height
-                    borderRadius: 12,
-                  ),
-
-                  // Forgot password
-                  Center(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, Routes.forgetPasswordView);
-                      },
-                      child: Text(
-                        'Forgot password?',
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: screenWidth * 0.035,
+                      // Forgot password
+                      Center(
+                        child: TextButton(
+                          onPressed: () {
+                            context.pushNamed(Routes.forgetPasswordView);
+                          },
+                          child: Text(
+                            LocaleKeys.forgot_password.tr(),
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.grey[300]
+                                      : Colors.black54,
+                              fontSize: context.screenWidth * 0.035,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+
+                      SizedBox(height: verticalSpacing * 0.5),
+
+                      // Divider with OR
+                      CustomDivider(text: LocaleKeys.or.tr()),
+
+                      SizedBox(height: verticalSpacing),
+
+                      // Register button
+                      AppButton(
+                        text: LocaleKeys.create_account.tr(),
+                        backgroundColor:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.darkSecondary
+                                : Colors.black,
+                        textColor: Colors.white,
+                        onPressed: () {
+                          context.pushNamed(Routes.registerView);
+                        },
+                      ),
+                    ],
                   ),
-
-                  SizedBox(height: verticalSpacing * 0.5),
-
-                  // Divider with OR
-                  const CustomDivider(),
-
-                  SizedBox(height: verticalSpacing),
-
-                  // Register button
-                  CustomButton(
-                    text: 'Create an Account',
-                    backgroundColor: Colors.black,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      Navigator.pushNamed(context, Routes.registerView);
-                    },
-                    height: screenHeight * 0.065,
-                    borderRadius: 12,
-                  ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    required BuildContext context,
-    TextInputType? keyboardType,
-    bool isPassword = false,
-  }) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.lightSecondary),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        obscureText: isPassword && !_isPasswordVisible,
-        style: TextStyle(fontSize: screenWidth * 0.04, color: AppColors.text),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(
-            color: Colors.grey[400],
-            fontSize: screenWidth * 0.04,
-          ),
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.05,
-            vertical: screenHeight * 0.02,
-          ),
-          suffixIcon:
-              isPassword
-                  ? IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                      color: AppColors.text.withValues(alpha: 0.7),
-                      size: screenWidth * 0.055,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  )
-                  : null,
-        ),
-      ),
+        );
+      },
     );
   }
 }

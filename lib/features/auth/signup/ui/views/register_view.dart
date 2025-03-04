@@ -1,240 +1,169 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:united_formation_app/features/auth/login/ui/widgets/auth_header.dart';
+import 'package:united_formation_app/features/auth/signup/ui/logic/register_cubit.dart';
+import 'package:united_formation_app/features/auth/signup/ui/widgets/social_button.dart';
+import 'package:united_formation_app/generated/locale_keys.g.dart';
 import '../../../../../core/core.dart';
-import '../../../../../core/widgets/custom_divider.dart';
-import '../widgets/social_button.dart';
 
-class RegisterView extends StatefulWidget {
+class RegisterView extends StatelessWidget {
   const RegisterView({super.key});
 
   @override
-  State<RegisterView> createState() => _RegisterViewState();
+  Widget build(BuildContext context) {
+    return const RegisterViewContent();
+  }
 }
 
-class _RegisterViewState extends State<RegisterView> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
+class RegisterViewContent extends StatelessWidget {
+  const RegisterViewContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Logo or icon at the top
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.auto_awesome,
-                    color: Colors.black,
-                    size: 28,
-                  ),
+    final horizontalPadding = context.screenWidth * 0.06;
+    final verticalSpacing = context.screenHeight * 0.02;
+    final isDark = context.isDarkMode;
+    final cubit = context.watch<RegisterCubit>();
+
+    return BlocConsumer<RegisterCubit, RegisterState>(
+      listener: (context, state) {
+        if (state is RegisterSuccess) {
+          context.showSuccessSnackBar(LocaleKeys.account_created_successfully.tr());
+          context.pushNamedAndRemoveUntil(
+            Routes.homeView,
+            predicate: (route) => false,
+          );
+        } else if (state is RegisterError) {
+          context.showErrorSnackBar(state.errorMessage);
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding,
+                  vertical: verticalSpacing * 2,
                 ),
-
-                const SizedBox(height: 30),
-
-                // Title
-                const Text(
-                  'Create an account',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-
-                const SizedBox(height: 14),
-
-                // Subtitle
-                const Text(
-                  'Create your account; it takes less than a minute. Enter your email and password',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: Colors.black54),
-                ),
-
-                const SizedBox(height: 40),
-
-                // Email field
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: TextField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      hintText: 'Email',
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 16,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Password field
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: TextField(
-                    controller: _passwordController,
-                    obscureText: !_isPasswordVisible,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 16,
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: Colors.grey,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 40),
-
-                // Register button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: Implement registration logic
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Create an Account',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Divider with OR
-                const CustomDivider(),
-
-                const SizedBox(height: 20),
-
-                // Google sign in
-                SocialButton(
-                  onPressed: () {
-                    // TODO: Implement Google login
-                  },
-                  icon: Assets.google,
-                  text: 'Continue with Google',
-                ),
-
-                const SizedBox(height: 16),
-
-                // Facebook sign in
-                SocialButton(
-                  onPressed: () {
-                    // TODO: Implement Facebook login
-                  },
-                  icon: Assets.facebook,
-                  text: 'Continue with Facebook',
-                ),
-
-                const SizedBox(height: 16),
-
-                // Apple sign in
-                SocialButton(
-                  onPressed: () {
-                    // TODO: Implement Apple login
-                  },
-                  icon: Assets.apple,
-                  text: 'Continue with Apple',
-                ),
-
-                const SizedBox(height: 30),
-
-                // Login option
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Already have an account?',
-                      style: TextStyle(color: Colors.black54, fontSize: 14),
+                    // Header (logo, title, subtitle)
+                    AuthHeader(
+                      title: LocaleKeys.create_account.tr(),
+                      subtitle: LocaleKeys.create_your_account_it_takes_less_than_a_minute_enter_your_email_and_password.tr(),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, Routes.loginView);
+
+                    // Email field
+                    AppTextField(
+                      controller: cubit.emailController,
+                      hintText: LocaleKeys.email.tr(),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+
+                    SizedBox(height: verticalSpacing),
+
+                    // Password field
+                    AppTextField(
+                      controller: cubit.passwordController,
+                      hintText: LocaleKeys.password.tr(),
+                      isPassword: true,
+                      passwordVisible: cubit.isPasswordVisible,
+                      onTogglePasswordVisibility: () {
+                        cubit.togglePasswordVisibility();
                       },
-                      child: const Text(
-                        'Log In',
-                        style: TextStyle(
-                          color: Colors.amber,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                    ),
+
+                    SizedBox(height: verticalSpacing * 2),
+
+                    // Register button
+                    AppButton(
+                      text: LocaleKeys.create_an_account.tr(),
+                      backgroundColor: AppColors.primary,
+                      textColor: Colors.black,
+                      isLoading: state is RegisterLoading,
+                      onPressed: () {
+                        cubit.registerWithEmailAndPassword();
+                      },
+                    ),
+
+                    SizedBox(height: verticalSpacing),
+
+                    // Divider with OR
+                    CustomDivider(text: LocaleKeys.or.tr()),
+
+                    SizedBox(height: verticalSpacing),
+
+                    // Google sign in
+                    SocialButton(
+                      onPressed: () {
+                        cubit.registerWithSocialMedia('google');
+                      },
+                      icon: Assets.google,
+                      text: LocaleKeys.continue_with_google.tr(),
+                    ),
+
+                    SizedBox(height: verticalSpacing * 0.8),
+
+                    // Facebook sign in
+                    SocialButton(
+                      onPressed: () {
+                        cubit.registerWithSocialMedia('facebook');
+                      },
+                      icon: Assets.facebook,
+                      text: LocaleKeys.continue_with_facebook.tr(),
+                    ),
+
+                    SizedBox(height: verticalSpacing * 0.8),
+
+                    // Apple sign in
+                    SocialButton(
+                      onPressed: () {
+                        cubit.registerWithSocialMedia('apple');
+                      },
+                      icon: Assets.apple,
+                      text: LocaleKeys.continue_with_apple.tr(),
+                    ),
+
+                    SizedBox(height: verticalSpacing * 1.5),
+
+                    // Login option
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          LocaleKeys.already_have_an_account.tr(),
+                          style: TextStyle(
+                            color: isDark ? Colors.grey[300] : Colors.black54,
+                            fontSize: context.screenWidth * 0.035,
+                          ),
                         ),
-                      ),
+                        TextButton(
+                          onPressed: () {
+                            context.pushNamed(Routes.loginView);
+                          },
+                          child: Text(
+                            LocaleKeys.log_in.tr(),
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: context.screenWidth * 0.035,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-
-                // Bottom indicator
-                Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  width: 40,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
-

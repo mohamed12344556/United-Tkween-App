@@ -1,7 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:united_formation_app/features/auth/signup/ui/logic/learning_options_cubit.dart';
+import 'package:united_formation_app/generated/locale_keys.g.dart';
 import '../../../../../core/core.dart';
-
+import '../widgets/selection_option_chip.dart';
 
 class LearningOptionsView extends StatefulWidget {
   const LearningOptionsView({super.key});
@@ -11,179 +14,156 @@ class LearningOptionsView extends StatefulWidget {
 }
 
 class _LearningOptionsViewState extends State<LearningOptionsView> {
-  final List<String> options = [
-    'Illustration',
-    'Animation',
-    'Fine Art',
-    'Graphic Design',
-    'Lifestyle',
-    'Photography',
-    'Film & Video',
-    'Marketing',
-    'Web Development',
-    'Music',
-    'UI Design',
-    'UX Design',
-    'Business & Management',
-    'Productivity',
-  ];
+  // Helper method to get localized option text
+  String getLocalizedOption(String option) {
+    final Map<String, String> optionsMap = {
+      'Illustration': LocaleKeys.illustration.tr(),
+      'Animation': LocaleKeys.animation.tr(),
+      'Fine Art': LocaleKeys.fine_art.tr(),
+      'Graphic Design': LocaleKeys.graphic_design.tr(),
+      'Lifestyle': LocaleKeys.lifestyle.tr(),
+      'Photography': LocaleKeys.photography.tr(),
+      'Film & Video': LocaleKeys.film_and_video.tr(),
+      'Marketing': LocaleKeys.marketing.tr(),
+      'Web Development': LocaleKeys.web_development.tr(),
+      'Music': LocaleKeys.music.tr(),
+      'UI Design': LocaleKeys.ui_design.tr(),
+      'UX Design': LocaleKeys.ux_design.tr(),
+      'Business & Management': LocaleKeys.business_and_management.tr(),
+      'Productivity': LocaleKeys.productivity.tr(),
+    };
 
-  final List<String> selectedOptions = [];
+    return optionsMap[option] ?? option;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Back button
-              IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
-                padding: EdgeInsets.zero,
-                alignment: Alignment.centerLeft,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              
-              const SizedBox(height: 20),
-              
-              // Heading
-              const Text(
-                'What do you want\nto learn?',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              
-              const SizedBox(height: 10),
-              
-              // Subtitle
-              const Text(
-                'Select your areas of courses you would like to learn',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black54,
-                ),
-              ),
-              
-              const SizedBox(height: 24),
-              
-              // Options Grid
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 3.5,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
+    return BlocConsumer<LearningOptionsCubit, LearningOptionsState>(
+      listener: (context, state) {
+        if (state is LearningOptionsError) {
+          context.showErrorSnackBar(state.errorMessage);
+        } else if (state is LearningOptionsSuccess) {
+          // Navigate to register page after successful options selection
+          context.pushNamed(Routes.registerView);
+        }
+      },
+      builder: (context, state) {
+        final cubit = context.read<LearningOptionsCubit>();
+        final isDark = context.isDarkMode;
+        final horizontalPadding = context.screenWidth * 0.06;
+        final verticalSpacing = context.screenHeight * 0.02;
+
+        return Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(horizontalPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Back button
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: isDark ? Colors.white : Colors.black,
+                      size: context.screenWidth * 0.06,
+                    ),
+                    padding: EdgeInsets.zero,
+                    alignment: Alignment.centerLeft,
+                    onPressed: () {
+                      context.pop();
+                    },
                   ),
-                  itemCount: options.length,
-                  itemBuilder: (context, index) {
-                    final option = options[index];
-                    final isSelected = selectedOptions.contains(option);
-                    
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (isSelected) {
-                            selectedOptions.remove(option);
-                          } else {
-                            selectedOptions.add(option);
-                          }
-                        });
+
+                  SizedBox(height: verticalSpacing),
+
+                  // Heading
+                  Text(
+                    LocaleKeys.what_do_you_want_to_learn.tr(),
+                    style: TextStyle(
+                      fontSize: context.screenWidth * 0.07,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+
+                  SizedBox(height: verticalSpacing * 0.5),
+
+                  // Subtitle
+                  Text(
+                    LocaleKeys
+                        .select_your_areas_of_courses_you_would_like_to_learn
+                        .tr(),
+                    style: TextStyle(
+                      fontSize: context.screenWidth * 0.035,
+                      color: isDark ? Colors.grey[300] : Colors.black54,
+                    ),
+                  ),
+
+                  SizedBox(height: verticalSpacing),
+
+                  // Options Grid
+                  Expanded(
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 3.5,
+                        crossAxisSpacing: context.screenWidth * 0.03,
+                        mainAxisSpacing: context.screenHeight * 0.015,
+                      ),
+                      itemCount: cubit.options.length,
+                      itemBuilder: (context, index) {
+                        final option = cubit.options[index];
+                        final isSelected = cubit.selectedOptions.contains(
+                          option,
+                        );
+
+                        return SelectionOptionChip(
+                          label: getLocalizedOption(option),
+                          isSelected: isSelected,
+                          onTap: () {
+                            cubit.toggleOption(option);
+                          },
+                        );
                       },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: isSelected ? AppColors.primary : Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1,
+                    ),
+                  ),
+
+                  // Continue Button
+                  AppButton(
+                    text: LocaleKeys.continue1.tr(),
+                    backgroundColor: isDark ? AppColors.primary : Colors.black,
+                    textColor: isDark ? Colors.black : Colors.white,
+                    isLoading: state is LearningOptionsLoading,
+                    onPressed: () {
+                      cubit.saveOptions();
+                    },
+                    borderRadius: context.screenWidth * 0.08,
+                    height: context.screenHeight * 0.065,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          LocaleKeys.continue1.tr(),
+                          style: TextStyle(
+                            fontSize: context.screenWidth * 0.04,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (isSelected)
-                              const Icon(
-                                Icons.check_circle,
-                                color: Colors.black,
-                                size: 20,
-                              ),
-                            if (isSelected) const SizedBox(width: 8),
-                            Text(
-                              option,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                              ),
-                            ),
-                          ],
+                        SizedBox(width: context.screenWidth * 0.02),
+                        Icon(
+                          Icons.arrow_forward,
+                          size: context.screenWidth * 0.05,
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              
-              // Continue Button
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(top: 20),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.registerView);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      ],
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Continue',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.arrow_forward, size: 20),
-                    ],
-                  ),
-                ),
+                ],
               ),
-              
-              // Bottom indicator
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                alignment: Alignment.center,
-                child: Container(
-                  width: 40,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

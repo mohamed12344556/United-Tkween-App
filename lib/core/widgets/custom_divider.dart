@@ -1,50 +1,52 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
-import '../../generated/locale_keys.g.dart';
-import '../core.dart';
+import 'package:united_formation_app/core/core.dart';
 
 class CustomDivider extends StatelessWidget {
-  final String? text;
-  final Color? dividerColor;
-  final double? dividerThickness;
-  final TextStyle? textStyle;
-
+  final String text;
+  final double? thickness;
+  
   const CustomDivider({
     super.key,
-    this.text,
-    this.dividerColor,
-    this.dividerThickness,
-    this.textStyle,
+    this.text = 'or',
+    this.thickness,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    final dividerColor = isDark 
+        ? Colors.grey[700] 
+        : Colors.grey[400];
+    
+    final textColor = isDark 
+        ? Colors.grey[300] 
+        : Colors.grey[600];
+    
+    final responsiveThickness = thickness ?? context.screenHeight * 0.001;
+    
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
           child: Divider(
-            color: dividerColor ?? Colors.grey,
-            thickness: dividerThickness ?? 0.5,
+            color: dividerColor,
+            thickness: responsiveThickness,
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.paddingMedium,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.04),
           child: Text(
-            text ?? LocaleKeys.or.tr(),
-            style:
-                textStyle ??
-                TextStyle(color: Colors.grey.shade600, fontSize: 14),
+            text,
+            style: TextStyle(
+              color: textColor,
+              fontSize: context.screenWidth * 0.035,
+            ),
           ),
         ),
         Expanded(
           child: Divider(
-            color: dividerColor ?? Colors.grey,
-            thickness: dividerThickness ?? 0.5,
+            color: dividerColor,
+            thickness: responsiveThickness,
           ),
         ),
       ],

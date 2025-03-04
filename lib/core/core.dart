@@ -40,8 +40,8 @@ export './utilities/methods_utils.dart';
 export './utilities/storage_keys.dart';
 export './utilities/validators_utils.dart';
 // widgets
-export './widgets/custom_button.dart';
-export './widgets/custom_text_form_field.dart';
+export 'widgets/app_button.dart';
+export './widgets/app_text_field.dart';
 export './widgets/custom_divider.dart';
 
 // routs
