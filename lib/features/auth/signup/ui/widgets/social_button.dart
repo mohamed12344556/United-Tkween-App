@@ -54,15 +54,18 @@ class SocialButton extends StatelessWidget {
               icon,
               width: context.screenWidth * 0.05,
               height: context.screenWidth * 0.05,
-              color: iconColor,
+              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
             ),
             SizedBox(width: context.screenWidth * 0.03),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: context.screenWidth * 0.04,
-                fontWeight: FontWeight.w500,
-                color: defaultTextColor,
+            SizedBox(
+              width: context.screenWidth * 0.4,
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: context.screenWidth * 0.04,
+                  fontWeight: FontWeight.w500,
+                  color: defaultTextColor,
+                ),
               ),
             ),
           ],

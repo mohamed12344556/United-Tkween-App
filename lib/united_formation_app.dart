@@ -39,10 +39,7 @@ class UnitedFormationApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
-              locale:
-                  context.locale.languageCode == 'ar'
-                      ? Locale('ar')
-                      : Locale('en'),
+              locale: context.locale,
               initialRoute: Routes.loginView,
               // hasValidSession ? Routes.homeView : Routes.onboardingView,
               onGenerateRoute: appRouter.generateRoute,
