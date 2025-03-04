@@ -29,9 +29,11 @@ class RegisterViewContent extends StatelessWidget {
     return BlocConsumer<RegisterCubit, RegisterState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
-          context.showSuccessSnackBar(LocaleKeys.account_created_successfully.tr());
+          context.showSuccessSnackBar(
+            LocaleKeys.account_created_successfully.tr(),
+          );
           context.pushNamedAndRemoveUntil(
-            Routes.homeView,
+            Routes.learningOptionsView,
             predicate: (route) => false,
           );
         } else if (state is RegisterError) {
@@ -55,7 +57,10 @@ class RegisterViewContent extends StatelessWidget {
                     // Header (logo, title, subtitle)
                     AuthHeader(
                       title: LocaleKeys.create_account.tr(),
-                      subtitle: LocaleKeys.create_your_account_it_takes_less_than_a_minute_enter_your_email_and_password.tr(),
+                      subtitle:
+                          LocaleKeys
+                              .create_your_account_it_takes_less_than_a_minute_enter_your_email_and_password
+                              .tr(),
                     ),
 
                     // Email field
