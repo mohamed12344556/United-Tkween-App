@@ -17,7 +17,7 @@ class RegisterSuccess extends RegisterState {
   final String userID;
   final String userEmail;
   final String? socialProvider; // Optional for social logins
-  
+
   RegisterSuccess({
     required this.userID,
     required this.userEmail,
@@ -25,11 +25,15 @@ class RegisterSuccess extends RegisterState {
   });
 }
 
+class RegisterOtpSent extends RegisterState {
+  final String email;
+
+  RegisterOtpSent({required this.email});
+}
+
 // Error state
 class RegisterError extends RegisterState {
   final String errorMessage;
-  
-  RegisterError({
-    required this.errorMessage,
-  });
+
+  RegisterError({required this.errorMessage});
 }

@@ -20,7 +20,11 @@ class OtpTimerUpdated extends OtpState {
 class OtpResent extends OtpState {}
 
 // OTP verified successfully
-class OtpVerified extends OtpState {}
+class OtpVerified extends OtpState {
+  final OtpPurpose? purpose;
+  
+  OtpVerified({this.purpose});
+}
 
 // Error state
 class OtpError extends OtpState {

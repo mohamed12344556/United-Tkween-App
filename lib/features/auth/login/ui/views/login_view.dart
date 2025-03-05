@@ -85,7 +85,8 @@ class _LoginViewState extends State<LoginView> {
                         onTogglePasswordVisibility: () {
                           if (mounted) {
                             setState(() {
-                              cubit.isPasswordVisible = !cubit.isPasswordVisible;
+                              cubit.isPasswordVisible =
+                                  !cubit.isPasswordVisible;
                             });
                           }
                         },
@@ -108,11 +109,11 @@ class _LoginViewState extends State<LoginView> {
                         },
                       ),
 
-                      // Forgot password
+                      // Forgot password - تم تعديله للانتقال إلى الشاشة الجديدة
                       Center(
                         child: TextButton(
                           onPressed: () {
-                            context.pushNamed(Routes.forgetPasswordView);
+                            context.pushNamed(Routes.requestOtpView);
                           },
                           child: Text(
                             LocaleKeys.forgot_password.tr(),
@@ -143,6 +144,7 @@ class _LoginViewState extends State<LoginView> {
                                 ? AppColors.darkSecondary
                                 : Colors.black,
                         textColor: Colors.white,
+
                         onPressed: () {
                           context.pushNamed(Routes.registerView);
                         },

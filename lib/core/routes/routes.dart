@@ -9,4 +9,6 @@ class Routes {
   static const String otpAuthenticateView = "/otp-authenticate";
   static const String forgetPasswordView = "/forget-password";
   static const String resetPasswordView = "/reset-password";
+  static const String requestOtpView = "/request-otp";
+  static const String verifyOtpView = "/verify-otp";
 }

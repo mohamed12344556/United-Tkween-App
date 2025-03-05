@@ -21,7 +21,7 @@ final ThemeData darkTheme = ThemeData(
   ),
   // Text Style:
   textTheme: ThemeData.dark().textTheme.apply(
-        bodyColor: AppColors.darkSecondary,
+        bodyColor: Colors.white,
         displayColor: Colors.white,
         fontFamily: AppFonts.textFont,
       ),
@@ -33,14 +33,23 @@ final ThemeData darkTheme = ThemeData(
       disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
       disabledForegroundColor: Colors.black.withOpacity(0.5),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(50), // زيادة الاستدارة
       ),
       textStyle: AppTextStyling.font10W400TextColor.copyWith(
         fontWeight: FontWeight.w600,
         fontSize: 16,
       ),
-      elevation: 3,
-      shadowColor: AppColors.primary.withOpacity(0.3),
+      elevation: 0, // إزالة الظل
+      padding: const EdgeInsets.symmetric(vertical: 15), // زيادة الارتفاع
+    ),
+  ),
+  // Text Button Style:
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: AppColors.primary,
+      textStyle: const TextStyle(
+        fontWeight: FontWeight.w500,
+      ),
     ),
   ),
   // Text Field Style:
@@ -75,6 +84,24 @@ final ThemeData darkTheme = ThemeData(
     prefixIconColor: Colors.grey[400],
     suffixIconColor: Colors.grey[400],
   ),
+  // Chip Theme:
+  chipTheme: ChipThemeData(
+    backgroundColor: AppColors.darkSecondary,
+    selectedColor: AppColors.primary,
+    labelStyle: const TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w500,
+    ),
+    secondaryLabelStyle: const TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w500,
+    ),
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    side: const BorderSide(color: AppColors.darkSecondary),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50),
+    ),
+  ),
   // Divider style:
   dividerTheme: const DividerThemeData(
     color: Color(0xFF2C2C2C),
@@ -85,7 +112,7 @@ final ThemeData darkTheme = ThemeData(
   // Card Theme:
   cardTheme: CardTheme(
     color: AppColors.darkSurface,
-    elevation: 2,
+    elevation: 0, // إزالة الظل
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12),
     ),
@@ -109,7 +136,7 @@ final ThemeData darkTheme = ThemeData(
     selectedItemColor: AppColors.primary,
     unselectedItemColor: Colors.grey,
     type: BottomNavigationBarType.fixed,
-    elevation: 8,
+    elevation: 0, // إزالة الظل
   ),
   // Switch Theme:
   switchTheme: SwitchThemeData(
@@ -139,6 +166,7 @@ final ThemeData darkTheme = ThemeData(
   // Dialog Theme:
   dialogTheme: DialogTheme(
     backgroundColor: AppColors.darkSurface,
+    elevation: 0, // إزالة الظل
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(16),
     ),

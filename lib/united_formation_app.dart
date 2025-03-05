@@ -40,9 +40,9 @@ class UnitedFormationApp extends StatelessWidget {
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
               locale: context.locale,
-              initialRoute: Routes.learningOptionsView,
-              // hasValidSession ? Routes.homeView : Routes.onboardingView,
+              initialRoute: Routes.loginView,
               onGenerateRoute: appRouter.generateRoute,
+              // hasValidSession ? Routes.homeView : Routes.onboardingView,
             ),
           );
         },

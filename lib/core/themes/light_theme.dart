@@ -31,15 +31,24 @@ final ThemeData lightTheme = ThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: AppColors.primary,
       foregroundColor: Colors.black,
-      disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
-      disabledForegroundColor: Colors.black.withValues(alpha: 0.5),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
+      disabledForegroundColor: Colors.black.withOpacity(0.5),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)), // زيادة التقويس ليكون أكثر استدارة
       textStyle: AppTextStyling.font10W400TextColor.copyWith(
         fontWeight: FontWeight.w600,
         fontSize: 16,
       ),
-      elevation: 2,
-      shadowColor: AppColors.primary.withValues(alpha: 0.3),
+      elevation: 0, // إزالة الظل
+      padding: const EdgeInsets.symmetric(vertical: 15), // زيادة الارتفاع
+    ),
+  ),
+  // Text Button Style:
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: AppColors.primary,
+      textStyle: const TextStyle(
+        fontWeight: FontWeight.w500,
+      ),
     ),
   ),
   // Text Field Style:
@@ -71,21 +80,39 @@ final ThemeData lightTheme = ThemeData(
     prefixIconColor: Colors.grey[600],
     suffixIconColor: Colors.grey[600],
   ),
+  // Chip Theme:
+  chipTheme: ChipThemeData(
+    backgroundColor: AppColors.unselectedChip,
+    selectedColor: AppColors.selectedChip,
+    labelStyle: const TextStyle(
+      color: AppColors.text,
+      fontWeight: FontWeight.w500,
+    ),
+    secondaryLabelStyle: const TextStyle(
+      color: AppColors.text,
+      fontWeight: FontWeight.w500,
+    ),
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    side: BorderSide(color: Colors.grey[300]!),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(50),
+    ),
+  ),
   // Switch Theme:
   switchTheme: SwitchThemeData(
-    thumbColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.selected)) {
+    thumbColor: MaterialStateProperty.resolveWith((states) {
+      if (states.contains(MaterialState.selected)) {
         return Colors.black;
       }
       return Colors.white;
     }),
-    trackColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.selected)) {
+    trackColor: MaterialStateProperty.resolveWith((states) {
+      if (states.contains(MaterialState.selected)) {
         return AppColors.primary;
       }
       return Colors.grey[300];
     }),
-    trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+    trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
   ),
   // Bottom App Bar:
   bottomAppBarTheme: const BottomAppBarTheme(
@@ -114,8 +141,7 @@ final ThemeData lightTheme = ThemeData(
   // Card Theme:
   cardTheme: CardTheme(
     color: Colors.white,
-    elevation: 2,
-    shadowColor: Colors.black.withValues(alpha: 0.1),
+    elevation: 0, // إزالة الظل
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   ),
   // App Bar Theme:
@@ -150,7 +176,7 @@ final ThemeData lightTheme = ThemeData(
   // Dialog Theme:
   dialogTheme: DialogTheme(
     backgroundColor: Colors.white,
-    elevation: 8,
+    elevation: 0, // إزالة الظل
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
   ),
 );
