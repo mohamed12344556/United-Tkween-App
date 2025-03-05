@@ -170,3 +170,14 @@ extension StringExtension on String? {
 extension ListExtension<T> on List<T>? {
   bool isNullOrEmpty() => this == null || this!.isEmpty;
 }
+
+extension ColorExtension on Color {
+  Color withValues({int? red, int? green, int? blue, double? alpha}) {
+    return Color.fromRGBO(
+      red ?? this.red,
+      green ?? this.green,
+      blue ?? this.blue,
+      alpha ?? this.opacity,
+    );
+  }
+}

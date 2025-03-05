@@ -74,5 +74,23 @@
   "light_mode": "Light Mode",
   "language": "Language",
   "notifications": "Notifications",
-  "about": "About"
+  "about": "About",
+
+  "verify_your_email": "Verify Your Email",
+  "please_enter_the_4_digit_code_sent_to_your_email_address": "Please enter the 4-digit code sent to your email address",
+  "didnt_receive_code": "Didn't receive code?",
+  "resend": "Resend",
+  "verify": "Verify",
+  "otp_verified_successfully": "OTP verified successfully!",
+  "otp_resent_successfully": "OTP resent successfully!",
+  "otp_sent_successfully": "OTP sent successfully!",
+  "password_reset_successful": "Password reset successful!",
+  "enter_your_email_address_to_reset_your_password": "Enter your email address to reset your password",
+  "get_verification_code": "Get Verification Code",
+  "create_a_new_password_for_your_account": "Create a new password for your account",
+  "new_password": "New Password",
+  "confirm_new_password": "Confirm New Password",
+  "please_enter_valid_otp": "Please enter valid OTP",
+  "confirm_password_is_required": "Confirm password is required",
+  "passwords_do_not_match": "Passwords do not match"
 }

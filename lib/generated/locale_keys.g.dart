@@ -71,5 +71,22 @@ abstract class  LocaleKeys {
   static const language = 'language';
   static const notifications = 'notifications';
   static const about = 'about';
+  static const verify_your_email = 'verify_your_email';
+  static const please_enter_the_4_digit_code_sent_to_your_email_address = 'please_enter_the_4_digit_code_sent_to_your_email_address';
+  static const didnt_receive_code = 'didnt_receive_code';
+  static const resend = 'resend';
+  static const verify = 'verify';
+  static const otp_verified_successfully = 'otp_verified_successfully';
+  static const otp_resent_successfully = 'otp_resent_successfully';
+  static const otp_sent_successfully = 'otp_sent_successfully';
+  static const password_reset_successful = 'password_reset_successful';
+  static const enter_your_email_address_to_reset_your_password = 'enter_your_email_address_to_reset_your_password';
+  static const get_verification_code = 'get_verification_code';
+  static const create_a_new_password_for_your_account = 'create_a_new_password_for_your_account';
+  static const new_password = 'new_password';
+  static const confirm_new_password = 'confirm_new_password';
+  static const please_enter_valid_otp = 'please_enter_valid_otp';
+  static const confirm_password_is_required = 'confirm_password_is_required';
+  static const passwords_do_not_match = 'passwords_do_not_match';
 
 }

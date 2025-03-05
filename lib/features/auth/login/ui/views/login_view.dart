@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/features/auth/login/ui/logic/cubit/login_cubit.dart';
+import 'package:united_formation_app/features/auth/login/ui/logic/login_cubit/login_cubit.dart';
 
 import '../../../../../core/core.dart';
 import '../../../../../generated/locale_keys.g.dart';
@@ -83,9 +83,11 @@ class _LoginViewState extends State<LoginView> {
                         isPassword: true,
                         passwordVisible: cubit.isPasswordVisible,
                         onTogglePasswordVisibility: () {
-                          setState(() {
-                            cubit.isPasswordVisible = !cubit.isPasswordVisible;
-                          });
+                          if (mounted) {
+                            setState(() {
+                              cubit.isPasswordVisible = !cubit.isPasswordVisible;
+                            });
+                          }
                         },
                       ),
 

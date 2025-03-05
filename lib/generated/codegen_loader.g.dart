@@ -82,7 +82,24 @@ class CodegenLoader extends AssetLoader{
   "light_mode": "الوضع الفاتح",
   "language": "اللغة",
   "notifications": "الإشعارات",
-  "about": "حول التطبيق"
+  "about": "حول التطبيق",
+  "verify_your_email": "تحقق من بريدك الإلكتروني",
+  "please_enter_the_4_digit_code_sent_to_your_email_address": "يرجى إدخال الرمز المكون من 4 أرقام المرسل إلى بريدك الإلكتروني",
+  "didnt_receive_code": "لم تستلم الرمز؟",
+  "resend": "إعادة إرسال",
+  "verify": "تحقق",
+  "otp_verified_successfully": "تم التحقق من الرمز بنجاح!",
+  "otp_resent_successfully": "تمت إعادة إرسال الرمز بنجاح!",
+  "otp_sent_successfully": "تم إرسال الرمز بنجاح!",
+  "password_reset_successful": "تم إعادة تعيين كلمة المرور بنجاح!",
+  "enter_your_email_address_to_reset_your_password": "أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور",
+  "get_verification_code": "الحصول على رمز التحقق",
+  "create_a_new_password_for_your_account": "إنشاء كلمة مرور جديدة لحسابك",
+  "new_password": "كلمة المرور الجديدة",
+  "confirm_new_password": "تأكيد كلمة المرور الجديدة",
+  "please_enter_valid_otp": "الرجاء إدخال رمز صالح",
+  "confirm_password_is_required": "تأكيد كلمة المرور مطلوب",
+  "passwords_do_not_match": "كلمات المرور غير متطابقة"
 };
 static const Map<String,dynamic> _en = {
   "hello": "Hello",
@@ -152,7 +169,24 @@ static const Map<String,dynamic> _en = {
   "light_mode": "Light Mode",
   "language": "Language",
   "notifications": "Notifications",
-  "about": "About"
+  "about": "About",
+  "verify_your_email": "Verify Your Email",
+  "please_enter_the_4_digit_code_sent_to_your_email_address": "Please enter the 4-digit code sent to your email address",
+  "didnt_receive_code": "Didn't receive code?",
+  "resend": "Resend",
+  "verify": "Verify",
+  "otp_verified_successfully": "OTP verified successfully!",
+  "otp_resent_successfully": "OTP resent successfully!",
+  "otp_sent_successfully": "OTP sent successfully!",
+  "password_reset_successful": "Password reset successful!",
+  "enter_your_email_address_to_reset_your_password": "Enter your email address to reset your password",
+  "get_verification_code": "Get Verification Code",
+  "create_a_new_password_for_your_account": "Create a new password for your account",
+  "new_password": "New Password",
+  "confirm_new_password": "Confirm New Password",
+  "please_enter_valid_otp": "Please enter valid OTP",
+  "confirm_password_is_required": "Confirm password is required",
+  "passwords_do_not_match": "Passwords do not match"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar": _ar, "en": _en};
 }

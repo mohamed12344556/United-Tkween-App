@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:united_formation_app/core/core.dart';
 
 class SelectionOptionChip extends StatelessWidget {
@@ -19,7 +20,10 @@ class SelectionOptionChip extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
         decoration: BoxDecoration(
           color:
               isSelected
@@ -47,24 +51,35 @@ class SelectionOptionChip extends StatelessWidget {
                   : null,
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (isSelected)
-              Icon(
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 250),
+              opacity: isSelected ? 1.0 : 0.0,
+              child: Icon(
                 Icons.check_circle,
                 color: isDark ? Colors.black87 : Colors.black,
                 size: context.screenWidth * 0.05,
               ),
-            if (isSelected) SizedBox(width: context.screenWidth * 0.02),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: context.screenWidth * 0.035,
-                color:
-                    isDark
-                        ? (isSelected ? Colors.black87 : Colors.white)
-                        : Colors.black,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            ),
+            // if (isSelected) SizedBox(width: context.screenWidth * 0.02),
+            Flexible(
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
+                style: TextStyle(
+                  fontSize: 14.5.sp,
+                  color:
+                      isDark
+                          ? (isSelected ? Colors.black87 : Colors.white)
+                          : Colors.black,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(label),
+                ),
               ),
             ),
           ],

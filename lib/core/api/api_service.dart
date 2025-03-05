@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:united_formation_app/features/auth/login/data/models/login_model.dart';
+import 'package:united_formation_app/features/auth/login/data/models/otp_verification_model.dart';
+import 'package:united_formation_app/features/auth/login/data/models/reset_password_model.dart';
+import 'package:united_formation_app/features/auth/login/data/models/send_otp_model.dart';
 
 import '../core.dart';
 
@@ -13,6 +16,14 @@ abstract class ApiService {
   @POST(ApiConstants.signup)
   Future<LoginModel> signup(@Body() LoginModel request);
 
+  @POST(ApiConstants.resetPassword)
+  Future<ResetPasswordModel> resetPassword(@Body() ResetPasswordModel request);
+
+  @POST(ApiConstants.forgotPassword)
+  Future<SendOtpModel> sendOtp(@Body() SendOtpModel request);
+
+  @POST(ApiConstants.verifyResetPasswordOTP)
+  Future<OtpVerificationModel> verifyOtp(@Body() OtpVerificationModel request);
 }
 
 //! command to run the service file generator

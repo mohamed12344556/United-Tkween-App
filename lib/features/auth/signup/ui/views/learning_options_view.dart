@@ -43,8 +43,10 @@ class _LearningOptionsViewState extends State<LearningOptionsView> {
         if (state is LearningOptionsError) {
           context.showErrorSnackBar(state.errorMessage);
         } else if (state is LearningOptionsSuccess) {
-          // Navigate to register page after successful options selection
-          context.pushNamed(Routes.registerView);
+          // Navigate to home page after successful options selection
+          Navigator.of(
+            context,
+          ).pushNamedAndRemoveUntil(Routes.homeView, (route) => false);
         }
       },
       builder: (context, state) {
@@ -61,22 +63,6 @@ class _LearningOptionsViewState extends State<LearningOptionsView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Back button
-                  IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: isDark ? Colors.white : Colors.black,
-                      size: context.screenWidth * 0.06,
-                    ),
-                    padding: EdgeInsets.zero,
-                    alignment: Alignment.centerLeft,
-                    onPressed: () {
-                      context.pop();
-                    },
-                  ),
-
-                  SizedBox(height: verticalSpacing),
-
                   // Heading
                   Text(
                     LocaleKeys.what_do_you_want_to_learn.tr(),

@@ -61,7 +61,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       // For example:
       // final result = await authRepository.register(email, password);
       
-      // Emit success state
+      // Emit success state with email for OTP verification
       emit(RegisterSuccess(userID: 'user_123', userEmail: email));
     } catch (e) {
       // Handle registration errors
@@ -80,9 +80,13 @@ class RegisterCubit extends Cubit<RegisterState> {
       // TODO: Implement actual social login
       // final result = await authRepository.loginWithSocial(provider);
       
+      // For social logins, we might still need email verification or directly proceed
+      // Here we're assuming we got the email from social provider
+      final socialEmail = 'social@example.com';
+      
       emit(RegisterSuccess(
         userID: 'social_user_123',
-        userEmail: 'social@example.com',
+        userEmail: socialEmail,
         socialProvider: provider,
       ));
     } catch (e) {

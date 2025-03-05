@@ -32,9 +32,12 @@ class RegisterViewContent extends StatelessWidget {
           context.showSuccessSnackBar(
             LocaleKeys.account_created_successfully.tr(),
           );
-          context.pushNamedAndRemoveUntil(
-            Routes.learningOptionsView,
-            predicate: (route) => false,
+          
+          // Navigate to OTP verification with email
+          Navigator.pushNamed(
+            context, 
+            Routes.otpAuthenticateView,
+            arguments: state.userEmail,
           );
         } else if (state is RegisterError) {
           context.showErrorSnackBar(state.errorMessage);
