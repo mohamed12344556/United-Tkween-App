@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:united_formation_app/core/utilities/safe_controller.dart';
 import 'package:united_formation_app/features/auth/domain/entities/user_login_entity.dart';
 import 'package:united_formation_app/features/auth/domain/usecases/auth_usecases.dart';
 
@@ -13,8 +14,8 @@ class LoginCubit extends Cubit<LoginState> {
 
   bool _isDisposed = false;
 
-  late final TextEditingController emailController;
-  late final TextEditingController passwordController;
+  late final SafeTextEditingController emailController;
+  late final SafeTextEditingController passwordController;
 
   bool _isPasswordVisible = false;
 
@@ -29,8 +30,8 @@ class LoginCubit extends Cubit<LoginState> {
   bool get isActive => !_isDisposed;
 
   LoginCubit({this.loginUseCase}) : super(LoginInitial()) {
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
+    emailController = SafeTextEditingController();
+    passwordController = SafeTextEditingController();
   }
 
   Future<void> login({required String email, required String password}) async {
@@ -112,14 +113,28 @@ class LoginCubit extends Cubit<LoginState> {
 
   void resetState() {
     if (!isActive) return;
+    
+    // آمن للاستخدام مع SafeTextEditingController
+    emailController.clear();
+    passwordController.clear();
+    
+    _isPasswordVisible = false;
     emit(LoginInitial());
   }
 
   @override
   Future<void> close() {
     _isDisposed = true;
-    emailController.dispose();
-    passwordController.dispose();
+    
+    // استخدام فحص isDisposed
+    if (!emailController.isDisposed) {
+      emailController.dispose();
+    }
+    
+    if (!passwordController.isDisposed) {
+      passwordController.dispose();
+    }
+    
     return super.close();
   }
 }

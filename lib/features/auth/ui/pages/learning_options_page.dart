@@ -61,93 +61,96 @@ class _LearningOptionsPageState extends State<LearningOptionsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Heading
-                  Text(
-                    LocaleKeys.what_do_you_want_to_learn.tr(),
-                    style: TextStyle(
-                      fontSize: context.screenWidth * 0.07,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black,
-                    ),
-                  ),
-
+                  _buildHeading(context, isDark),
                   SizedBox(height: verticalSpacing * 0.5),
-
-                  // Subtitle
-                  Text(
-                    LocaleKeys
-                        .select_your_areas_of_courses_you_would_like_to_learn
-                        .tr(),
-                    style: TextStyle(
-                      fontSize: context.screenWidth * 0.035,
-                      color: isDark ? Colors.grey[300] : Colors.black54,
-                    ),
-                  ),
-
+                  _buildSubtitle(context, isDark),
                   SizedBox(height: verticalSpacing),
-
-                  // Options Grid
-                  Expanded(
-                    child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 3.5,
-                        crossAxisSpacing: context.screenWidth * 0.03,
-                        mainAxisSpacing: context.screenHeight * 0.015,
-                      ),
-                      itemCount: cubit.options.length,
-                      itemBuilder: (context, index) {
-                        final option = cubit.options[index];
-                        final isSelected = cubit.selectedOptions.contains(
-                          option,
-                        );
-
-                        return SelectionOptionChip(
-                          label: getLocalizedOption(option),
-                          isSelected: isSelected,
-                          onTap: () {
-                            cubit.toggleOption(option);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-
-                  // Continue Button
-                  AppButton(
-                    text: LocaleKeys.continue1.tr(),
-                    backgroundColor: isDark ? AppColors.primary : Colors.black,
-                    textColor: isDark ? Colors.black : Colors.white,
-                    isLoading: state is LearningOptionsLoading,
-                    onPressed: () {
-                      cubit.saveOptions();
-                    },
-                    borderRadius: context.screenWidth * 0.08,
-                    height: context.screenHeight * 0.065,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          LocaleKeys.continue1.tr(),
-                          style: TextStyle(
-                            fontSize: context.screenWidth * 0.04,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(width: context.screenWidth * 0.02),
-                        Icon(
-                          Icons.arrow_forward,
-                          size: context.screenWidth * 0.05,
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildOptionsGrid(context, cubit),
+                  _buildContinueButton(context, cubit, state, isDark),
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildHeading(BuildContext context, bool isDark) {
+    return Text(
+      LocaleKeys.what_do_you_want_to_learn.tr(),
+      style: TextStyle(
+        fontSize: context.screenWidth * 0.07,
+        fontWeight: FontWeight.bold,
+        color: isDark ? Colors.white : AppColors.text,
+      ),
+    );
+  }
+
+  Widget _buildSubtitle(BuildContext context, bool isDark) {
+    return Text(
+      LocaleKeys.select_your_areas_of_courses_you_would_like_to_learn.tr(),
+      style: TextStyle(
+        fontSize: context.screenWidth * 0.035,
+        color: isDark ? Colors.grey[300] : AppColors.textSecondary,
+      ),
+    );
+  }
+
+  Widget _buildOptionsGrid(BuildContext context, LearningOptionsCubit cubit) {
+    return Expanded(
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 3.5,
+          crossAxisSpacing: context.screenWidth * 0.03,
+          mainAxisSpacing: context.screenHeight * 0.015,
+        ),
+        itemCount: cubit.options.length,
+        itemBuilder: (context, index) {
+          final option = cubit.options[index];
+          final isSelected = cubit.selectedOptions.contains(option);
+
+          return SelectionOptionChip(
+            label: getLocalizedOption(option),
+            isSelected: isSelected,
+            onTap: () {
+              cubit.toggleOption(option);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildContinueButton(BuildContext context, LearningOptionsCubit cubit, LearningOptionsState state, bool isDark) {
+    return AppButton(
+      text: LocaleKeys.continue1.tr(),
+      backgroundColor: isDark ? AppColors.primary : AppColors.secondary,
+      textColor: isDark ? AppColors.secondary : AppColors.background,
+      isLoading: state is LearningOptionsLoading,
+      onPressed: () {
+        cubit.saveOptions();
+      },
+      borderRadius: context.screenWidth * 0.08,
+      height: context.screenHeight * 0.065,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            LocaleKeys.continue1.tr(),
+            style: TextStyle(
+              fontSize: context.screenWidth * 0.04,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(width: context.screenWidth * 0.02),
+          Icon(
+            Icons.arrow_forward,
+            size: context.screenWidth * 0.05,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -29,6 +29,7 @@ Future<void> main() async {
       supportedLocales: Languages.all,
       path: 'assets/translations',
       assetLoader: CodegenLoader(),
+      
       child: UnitedFormationApp(
         appRouter: AppRouter(),
         // hasValidSession: hasValidSession,

@@ -33,15 +33,13 @@ class RegisterViewContent extends StatelessWidget {
             LocaleKeys.account_created_successfully.tr(),
           );
 
-          Navigator.of(context).pushNamed(
-            Routes.verifyOtpView, 
-            arguments: state.userEmail
-          );
+          Navigator.of(
+            context,
+          ).pushNamed(Routes.verifyOtpView, arguments: state.userEmail);
         } else if (state is RegisterOtpSent) {
-          Navigator.of(context).pushNamed(
-            Routes.verifyOtpView,
-            arguments: state.email
-          );
+          Navigator.of(
+            context,
+          ).pushNamed(Routes.verifyOtpView, arguments: state.email);
         } else if (state is RegisterError) {
           context.showErrorSnackBar(state.errorMessage);
         }
@@ -94,7 +92,7 @@ class RegisterViewContent extends StatelessWidget {
                     AppButton(
                       text: LocaleKeys.create_an_account.tr(),
                       backgroundColor: AppColors.primary,
-                      textColor: Colors.black,
+                      textColor: AppColors.text,
                       isLoading: state is RegisterLoading,
                       onPressed: () {
                         cubit.registerWithEmailAndPassword();
@@ -148,7 +146,7 @@ class RegisterViewContent extends StatelessWidget {
                         Text(
                           LocaleKeys.already_have_an_account.tr(),
                           style: TextStyle(
-                            color: isDark ? Colors.grey[300] : Colors.black54,
+                            color: isDark ? AppColors.textHint : AppColors.text,
                             fontSize: context.screenWidth * 0.035,
                           ),
                         ),

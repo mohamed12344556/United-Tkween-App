@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:united_formation_app/core/utilities/safe_controller.dart';
 import 'package:united_formation_app/features/auth/domain/entities/user_reset_password_entity.dart';
 import 'package:united_formation_app/features/auth/domain/usecases/auth_usecases.dart';
 import 'package:united_formation_app/generated/locale_keys.g.dart';
@@ -17,9 +18,9 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
   final ResetPasswordUseCase? resetPasswordUseCase;
 
   // Controllers
-  late final TextEditingController emailController;
-  late final TextEditingController passwordController;
-  late final TextEditingController confirmPasswordController;
+  late final SafeTextEditingController emailController;
+  late final SafeTextEditingController passwordController;
+  late final SafeTextEditingController confirmPasswordController;
 
   // Current email being processed
   String? currentEmail;
@@ -42,10 +43,10 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
     this.verifyOtpUseCase,
     this.resetPasswordUseCase,
   }) : super(PasswordResetInitial()) {
-    // إنشاء وحدات التحكم في البناء
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-    confirmPasswordController = TextEditingController();
+    // إنشاء وحدات التحكم الآمنة في البناء
+    emailController = SafeTextEditingController();
+    passwordController = SafeTextEditingController();
+    confirmPasswordController = SafeTextEditingController();
   }
 
   // التحقق من أن وحدات التحكم ما زالت نشطة
@@ -54,7 +55,9 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
   // دوال إضافية للتعامل مع التنقل بين الشاشات
   void setEmail(String email) {
     currentEmail = email;
-    emailController.text = email;
+    if (!emailController.isDisposed) {
+      emailController.text = email;
+    }
   }
 
   void setVerifiedOtp(String otp) {
@@ -269,6 +272,12 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
   // إعادة ضبط الحالة إلى الحالة الأولية
   void resetState() {
     if (!isActive) return;
+    
+    // حذف المحتوى الآمن باستخدام SafeTextEditingController
+    if (!emailController.isDisposed) emailController.clear();
+    if (!passwordController.isDisposed) passwordController.clear();
+    if (!confirmPasswordController.isDisposed) confirmPasswordController.clear();
+    
     emit(PasswordResetInitial());
   }
 
@@ -342,10 +351,22 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
     // تعيين علامة التخلص قبل التخلص من وحدات التحكم
     _isDisposed = true;
 
-    // التخلص من وحدات التحكم
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
+    // التخلص من وحدات التحكم بشكل آمن
+    try {
+      if (!emailController.isDisposed) {
+        emailController.dispose();
+      }
+      
+      if (!passwordController.isDisposed) {
+        passwordController.dispose();
+      }
+      
+      if (!confirmPasswordController.isDisposed) {
+        confirmPasswordController.dispose();
+      }
+    } catch (e) {
+      print('Error disposing controllers: $e');
+    }
 
     return super.close();
   }

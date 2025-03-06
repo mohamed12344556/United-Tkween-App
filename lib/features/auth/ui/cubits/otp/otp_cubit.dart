@@ -176,6 +176,7 @@ class OtpCubit extends Cubit<OtpState> {
     }
   }
 
+  // إضافة طريقة صريحة لإلغاء المؤقت
   void cancelTimer() {
     _otpTimer?.cancel();
     _otpTimer = null;

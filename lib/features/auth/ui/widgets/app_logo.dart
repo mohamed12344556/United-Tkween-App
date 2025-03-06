@@ -25,26 +25,25 @@ class AppLogo extends StatelessWidget {
         color: AppColors.primary,
         shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
         borderRadius: isCircle ? null : BorderRadius.all(Radius.circular(15)),
-        boxShadow:
-            isDark
-                ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  ),
-                ]
-                : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
+        boxShadow: isDark
+            ? [
+                BoxShadow(
+                  color: AppColors.black38,
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ]
+            : [
+                BoxShadow(
+                  color: AppColors.black12,
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
       ),
       child: Icon(
         icon,
-        color: isDark ? Colors.black87 : Colors.black,
+        color: isDark ? AppColors.text : AppColors.textSecondary,
         size: iconSize,
       ),
     );

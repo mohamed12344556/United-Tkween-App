@@ -27,43 +27,54 @@ class AppRouter {
 
     switch (settings.name) {
       case Routes.loginView:
+        // تأكد من أن Cubit جديد يتم إنشاؤه في كل مرة
         return MaterialPageRoute(
           settings: settings,
-          builder:
-              (_) => BlocProvider(
-                create: (context) => sl<LoginCubit>(),
-                child: const LoginPage(),
-              ),
+          builder: (_) => BlocProvider(
+            create: (context) {
+              // استخدم sl<LoginCubit>() لإنشاء مثيل جديد في كل مرة
+              final cubit = sl<LoginCubit>();
+              
+              // إذا كانت هناك وسيطات تشير إلى بدء جديد
+              if (arguments is Map && arguments.containsKey('fresh_start')) {
+                cubit.resetState();
+              }
+              
+              return cubit;
+            },
+            child: const LoginPage(),
+          ),
         );
 
       case Routes.registerView:
         return MaterialPageRoute(
           settings: settings,
-          builder:
-              (_) => BlocProvider(
-                create: (context) => sl<RegisterCubit>(),
-                child: const RegisterPage(),
-              ),
+          builder: (_) => BlocProvider(
+            create: (context) => sl<RegisterCubit>(),
+            child: const RegisterPage(),
+          ),
         );
 
       case Routes.learningOptionsView:
         return MaterialPageRoute(
           settings: settings,
-          builder:
-              (_) => BlocProvider(
-                create: (context) => sl<LearningOptionsCubit>(),
-                child: const LearningOptionsPage(),
-              ),
+          builder: (_) => BlocProvider(
+            create: (context) => sl<LearningOptionsCubit>(),
+            child: const LearningOptionsPage(),
+          ),
         );
 
       case Routes.requestOtpView:
         return MaterialPageRoute(
           settings: settings,
-          builder:
-              (_) => BlocProvider(
-                create: (context) => sl<PasswordResetCubit>(),
-                child: const RequestOtpPage(),
-              ),
+          builder: (_) => BlocProvider(
+            create: (context) {
+              // التأكد من تنظيف أي مؤقتات أو موارد قبل إنشاء جديد
+              final cubit = sl<PasswordResetCubit>();
+              return cubit;
+            },
+            child: const RequestOtpPage(),
+          ),
         );
 
       case Routes.verifyOtpView:
@@ -92,17 +103,15 @@ class AppRouter {
           // If coming from registration, use OtpCubit
           return MaterialPageRoute(
             settings: settings,
-            builder:
-                (_) => BlocProvider(
-                  create:
-                      (context) => OtpCubit(
-                        email: email,
-                        verifyOtpUseCase: sl(),
-                        sendOtpUseCase: sl(),
-                        purpose: OtpPurpose.accountVerification,
-                      ),
-                  child: OtpVerificationPage(email: email),
-                ),
+            builder: (_) => BlocProvider(
+              create: (context) => OtpCubit(
+                email: email,
+                verifyOtpUseCase: sl(),
+                sendOtpUseCase: sl(),
+                purpose: OtpPurpose.accountVerification,
+              ),
+              child: OtpVerificationPage(email: email),
+            ),
           );
         } else {
           // If coming from password reset, use PasswordResetCubit
@@ -111,15 +120,18 @@ class AppRouter {
           );
           return MaterialPageRoute(
             settings: settings,
-            builder:
-                (_) => BlocProvider(
-                  create: (context) {
-                    final cubit = sl<PasswordResetCubit>();
-                    cubit.setEmail(email);
-                    return cubit;
-                  },
-                  child: OtpVerificationPage(email: email),
-                ),
+            builder: (_) => BlocProvider(
+              create: (context) {
+                // إنشاء مثيل جديد تمامًا من PasswordResetCubit
+                final cubit = sl<PasswordResetCubit>();
+                
+                // تعيين البريد الإلكتروني بشكل آمن
+                cubit.setEmail(email);
+                
+                return cubit;
+              },
+              child: OtpVerificationPage(email: email),
+            ),
           );
         }
 
@@ -145,16 +157,19 @@ class AppRouter {
 
         return MaterialPageRoute(
           settings: settings,
-          builder:
-              (_) => BlocProvider(
-                create: (context) {
-                  final cubit = sl<PasswordResetCubit>();
-                  cubit.setEmail(email);
-                  cubit.setVerifiedOtp(otp);
-                  return cubit;
-                },
-                child: ResetPasswordPage(email: email, otp: otp),
-              ),
+          builder: (_) => BlocProvider(
+            create: (context) {
+              // إنشاء مثيل جديد كل مرة لتجنب استخدام cubit متخلص منه
+              final cubit = sl<PasswordResetCubit>();
+              
+              // تعيين البيانات بشكل آمن
+              cubit.setEmail(email);
+              cubit.setVerifiedOtp(otp);
+              
+              return cubit;
+            },
+            child: ResetPasswordPage(email: email, otp: otp),
+          ),
         );
 
       case Routes.homeView:
@@ -166,12 +181,11 @@ class AppRouter {
       default:
         return MaterialPageRoute(
           settings: settings,
-          builder:
-              (_) => Scaffold(
-                body: Center(
-                  child: Text('No route defined for ${settings.name}'),
-                ),
-              ),
+          builder: (_) => Scaffold(
+            body: Center(
+              child: Text('No route defined for ${settings.name}'),
+            ),
+          ),
         );
     }
   }

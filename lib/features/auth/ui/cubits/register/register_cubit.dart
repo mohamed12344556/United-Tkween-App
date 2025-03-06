@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:united_formation_app/features/auth/domain/entities/user_login_entity.dart';
 import 'package:united_formation_app/features/auth/domain/usecases/auth_usecases.dart';
+import 'package:united_formation_app/core/utilities/safe_controller.dart';
 import 'package:united_formation_app/generated/locale_keys.g.dart';
 
 import '../../../../../core/core.dart';
@@ -16,8 +17,8 @@ class RegisterCubit extends Cubit<RegisterState> {
   bool _isDisposed = false;
 
   // Controllers for form fields
-  late final TextEditingController emailController;
-  late final TextEditingController passwordController;
+  late final SafeTextEditingController emailController;
+  late final SafeTextEditingController passwordController;
 
   // Password visibility flag
   bool _isPasswordVisible = false;
@@ -28,8 +29,8 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   RegisterCubit({this.registerUseCase, this.sendOtpUseCase})
     : super(RegisterInitial()) {
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
+    emailController = SafeTextEditingController();
+    passwordController = SafeTextEditingController();
   }
 
   // Toggle password visibility
@@ -204,8 +205,10 @@ class RegisterCubit extends Cubit<RegisterState> {
   void resetForm() {
     if (!isActive) return;
 
-    emailController.clear();
-    passwordController.clear();
+    // استخدام isDisposed مع SafeTextEditingController
+    if (!emailController.isDisposed) emailController.clear();
+    if (!passwordController.isDisposed) passwordController.clear();
+    
     _isPasswordVisible = false;
     emit(RegisterInitial());
   }
@@ -214,9 +217,18 @@ class RegisterCubit extends Cubit<RegisterState> {
   Future<void> close() {
     _isDisposed = true;
 
-    // Clean up controllers
-    emailController.dispose();
-    passwordController.dispose();
+    // التخلص الآمن من وحدات التحكم
+    try {
+      if (!emailController.isDisposed) {
+        emailController.dispose();
+      }
+      if (!passwordController.isDisposed) {
+        passwordController.dispose();
+      }
+    } catch (e) {
+      print('Error disposing controllers: $e');
+    }
+    
     return super.close();
   }
 }

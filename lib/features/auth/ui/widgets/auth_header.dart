@@ -33,7 +33,7 @@ class AuthHeader extends StatelessWidget {
           style: TextStyle(
             fontSize: context.screenWidth * 0.06,
             fontWeight: FontWeight.bold,
-            color: isDark ? AppColors.background : Colors.black,
+            color: isDark ? AppColors.textHint : AppColors.text,
           ),
         ),
 
@@ -44,10 +44,7 @@ class AuthHeader extends StatelessWidget {
           subtitle,
           style: TextStyle(
             fontSize: context.screenWidth * 0.035,
-            color:
-                isDark
-                    ? AppColors.background.withValues(alpha: 0.7)
-                    : Colors.black54,
+            color: isDark ? AppColors.textHint : AppColors.textSecondary,
           ),
         ),
 

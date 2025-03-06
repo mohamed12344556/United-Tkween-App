@@ -26,13 +26,12 @@ class SocialButton extends StatelessWidget {
     final defaultBackgroundColor =
         isDark
             ? backgroundColor ?? AppColors.darkSecondary
-            : backgroundColor ?? Colors.black;
+            : backgroundColor ?? AppColors.secondary;
 
     final defaultTextColor =
-        isDark ? textColor ?? Colors.white : textColor ?? Colors.white;
+        isDark ? textColor ?? AppColors.textHint : textColor ?? AppColors.text;
 
-    final iconColor =
-        isDark ? Colors.white.withValues(alpha: 0.9) : Colors.white;
+    final iconColor = isDark ? AppColors.textHint : AppColors.white70;
 
     return SizedBox(
       width: double.infinity,
@@ -46,7 +45,7 @@ class SocialButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(context.screenWidth * 0.03),
           ),
-          elevation: isDark ? 4 : 1,
+          elevation: 1,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

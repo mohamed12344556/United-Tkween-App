@@ -20,6 +20,9 @@ class OtpInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // التحقق من أن السياق متصل
+    if (!context.mounted) return const SizedBox();
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.06),
       child: PinCodeTextField(
@@ -58,8 +61,18 @@ class OtpInputField extends StatelessWidget {
           fontWeight: FontWeight.bold,
           color: isDark ? Colors.white : Colors.black,
         ),
-        onCompleted: onCompleted,
-        onChanged: onChanged,
+        onCompleted: (value) {
+          // التحقق من أن السياق متصل قبل إجراء أي عملية إكمال
+          if (context.mounted) {
+            onCompleted(value);
+          }
+        },
+        onChanged: (value) {
+          // التحقق من أن السياق متصل قبل إجراء أي تغيير
+          if (context.mounted) {
+            onChanged(value);
+          }
+        },
         beforeTextPaste: (text) =>
             text != null &&
             text.length == 4 &&

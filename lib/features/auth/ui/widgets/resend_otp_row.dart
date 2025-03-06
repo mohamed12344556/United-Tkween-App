@@ -24,7 +24,7 @@ class ResendOtpRow extends StatelessWidget {
           LocaleKeys.didnt_receive_code.tr(),
           style: TextStyle(
             fontSize: context.screenWidth * 0.035,
-            color: isDark ? Colors.grey[300] : Colors.black54,
+            color: isDark ? AppColors.textHint : AppColors.textSecondary,
           ),
         ),
         if (timeRemaining > 0)
