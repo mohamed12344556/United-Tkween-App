@@ -35,7 +35,6 @@ class ResetPasswordView extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
             elevation: 0,
             backgroundColor: Colors.transparent,

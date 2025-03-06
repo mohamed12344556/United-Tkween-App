@@ -33,18 +33,16 @@ class RegisterViewContent extends StatelessWidget {
             LocaleKeys.account_created_successfully.tr(),
           );
 
-          // تغيير هنا: بدلاً من الانتقال مباشرة إلى صفحة اختيار المجالات،
-          // ننتقل إلى صفحة التحقق من OTP
-          Navigator.of(
-            context,
-          ).pushNamed(Routes.verifyOtpView, arguments: state.userEmail);
+          Navigator.of(context).pushNamed(
+            Routes.verifyOtpView, 
+            arguments: state.userEmail
+          );
         } else if (state is RegisterError) {
           context.showErrorSnackBar(state.errorMessage);
         }
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: SafeArea(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),

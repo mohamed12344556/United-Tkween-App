@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'otp_cubit.dart';
 
 @immutable
@@ -12,7 +13,7 @@ class OtpLoading extends OtpState {}
 // Timer update state
 class OtpTimerUpdated extends OtpState {
   final int timeRemaining;
-  
+
   OtpTimerUpdated({required this.timeRemaining});
 }
 
@@ -22,13 +23,13 @@ class OtpResent extends OtpState {}
 // OTP verified successfully
 class OtpVerified extends OtpState {
   final OtpPurpose? purpose;
-  
-  OtpVerified({this.purpose});
+
+  OtpVerified({required this.purpose});
 }
 
 // Error state
 class OtpError extends OtpState {
   final String message;
-  
+
   OtpError({required this.message});
 }

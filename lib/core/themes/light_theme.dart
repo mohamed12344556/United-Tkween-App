@@ -31,24 +31,22 @@ final ThemeData lightTheme = ThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: AppColors.primary,
       foregroundColor: Colors.black,
-      disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
-      disabledForegroundColor: Colors.black.withOpacity(0.5),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)), // زيادة التقويس ليكون أكثر استدارة
+      disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
+      disabledForegroundColor: Colors.black.withValues(alpha: 0.5),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
       textStyle: AppTextStyling.font10W400TextColor.copyWith(
         fontWeight: FontWeight.w600,
         fontSize: 16,
       ),
-      elevation: 0, // إزالة الظل
-      padding: const EdgeInsets.symmetric(vertical: 15), // زيادة الارتفاع
+      elevation: 0,
+      padding: const EdgeInsets.symmetric(vertical: 15),
     ),
   ),
   // Text Button Style:
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
       foregroundColor: AppColors.primary,
-      textStyle: const TextStyle(
-        fontWeight: FontWeight.w500,
-      ),
+      textStyle: const TextStyle(fontWeight: FontWeight.w500),
     ),
   ),
   // Text Field Style:
@@ -94,25 +92,23 @@ final ThemeData lightTheme = ThemeData(
     ),
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     side: BorderSide(color: Colors.grey[300]!),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50),
-    ),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
   ),
   // Switch Theme:
   switchTheme: SwitchThemeData(
-    thumbColor: MaterialStateProperty.resolveWith((states) {
-      if (states.contains(MaterialState.selected)) {
+    thumbColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.selected)) {
         return Colors.black;
       }
       return Colors.white;
     }),
-    trackColor: MaterialStateProperty.resolveWith((states) {
-      if (states.contains(MaterialState.selected)) {
+    trackColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.selected)) {
         return AppColors.primary;
       }
       return Colors.grey[300];
     }),
-    trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
+    trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
   ),
   // Bottom App Bar:
   bottomAppBarTheme: const BottomAppBarTheme(
@@ -141,7 +137,7 @@ final ThemeData lightTheme = ThemeData(
   // Card Theme:
   cardTheme: CardTheme(
     color: Colors.white,
-    elevation: 0, // إزالة الظل
+    elevation: 0,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   ),
   // App Bar Theme:
@@ -176,7 +172,7 @@ final ThemeData lightTheme = ThemeData(
   // Dialog Theme:
   dialogTheme: DialogTheme(
     backgroundColor: Colors.white,
-    elevation: 0, // إزالة الظل
+    elevation: 0,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
   ),
 );

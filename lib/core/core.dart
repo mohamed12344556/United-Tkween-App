@@ -50,3 +50,4 @@ export './routes/routes.dart';
 // utilities
 export './utilities/enums/auth_type.dart';
 export './utilities/enums/validation_type.dart';
+export './utilities/enums/otp_purpose.dart';

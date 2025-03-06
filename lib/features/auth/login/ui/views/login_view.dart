@@ -17,12 +17,9 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
-    // Calculate responsive values
     final horizontalPadding = context.screenWidth * 0.06;
     final verticalSpacing = context.screenHeight * 0.02;
-
     final cubit = context.watch<LoginCubit>();
-
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
@@ -39,7 +36,6 @@ class _LoginViewState extends State<LoginView> {
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: SafeArea(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -66,16 +62,13 @@ class _LoginViewState extends State<LoginView> {
                                 .we_happy_to_see_you_here_again_enter_your_email_address_and_password
                                 .tr(),
                       ),
-
                       // Email field
                       AppTextField(
                         controller: cubit.emailController,
                         hintText: LocaleKeys.email.tr(),
                         keyboardType: TextInputType.emailAddress,
                       ),
-
                       SizedBox(height: verticalSpacing),
-
                       // Password field
                       AppTextField(
                         controller: cubit.passwordController,
@@ -91,9 +84,7 @@ class _LoginViewState extends State<LoginView> {
                           }
                         },
                       ),
-
                       SizedBox(height: verticalSpacing * 2),
-
                       // Login button
                       AppButton(
                         text: LocaleKeys.log_in.tr(),
@@ -101,15 +92,13 @@ class _LoginViewState extends State<LoginView> {
                         textColor: Colors.black,
                         isLoading: state is LoginLoading,
                         onPressed: () {
-                          // Call login method from cubit
                           context.read<LoginCubit>().login(
                             email: cubit.emailController.text.trim(),
                             password: cubit.passwordController.text,
                           );
                         },
                       ),
-
-                      // Forgot password - تم تعديله للانتقال إلى الشاشة الجديدة
+                      // Forgot password
                       Center(
                         child: TextButton(
                           onPressed: () {
@@ -128,14 +117,10 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         ),
                       ),
-
                       SizedBox(height: verticalSpacing * 0.5),
-
                       // Divider with OR
                       CustomDivider(text: LocaleKeys.or.tr()),
-
                       SizedBox(height: verticalSpacing),
-
                       // Register button
                       AppButton(
                         text: LocaleKeys.create_account.tr(),
@@ -144,7 +129,6 @@ class _LoginViewState extends State<LoginView> {
                                 ? AppColors.darkSecondary
                                 : Colors.black,
                         textColor: Colors.white,
-
                         onPressed: () {
                           context.pushNamed(Routes.registerView);
                         },

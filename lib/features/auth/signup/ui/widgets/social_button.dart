@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:united_formation_app/core/core.dart';
 
@@ -56,9 +57,9 @@ class SocialButton extends StatelessWidget {
               height: context.screenWidth * 0.05,
               colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
             ),
-            SizedBox(width: context.screenWidth * 0.03),
+            SizedBox(width: 10.w),
             SizedBox(
-              width: context.screenWidth * 0.4,
+              width: 190.w,
               child: Text(
                 text,
                 style: TextStyle(

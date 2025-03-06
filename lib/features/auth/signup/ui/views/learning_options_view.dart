@@ -43,7 +43,6 @@ class _LearningOptionsViewState extends State<LearningOptionsView> {
         if (state is LearningOptionsError) {
           context.showErrorSnackBar(state.errorMessage);
         } else if (state is LearningOptionsSuccess) {
-          // Navigate to home page after successful options selection
           Navigator.of(
             context,
           ).pushNamedAndRemoveUntil(Routes.homeView, (route) => false);
@@ -56,7 +55,6 @@ class _LearningOptionsViewState extends State<LearningOptionsView> {
         final verticalSpacing = context.screenHeight * 0.02;
 
         return Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: SafeArea(
             child: Padding(
               padding: EdgeInsets.all(horizontalPadding),

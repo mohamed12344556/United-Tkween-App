@@ -85,7 +85,7 @@ class AppRouter {
       case Routes.verifyOtpView:
         print("verifyOtpView Arguments Type: ${arguments.runtimeType}");
         String email;
-        bool isFromRegister = true;
+        bool isFromRegister = false;
         
         if (arguments is String) {
           // من التسجيل

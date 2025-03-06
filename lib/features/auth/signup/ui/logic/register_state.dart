@@ -25,9 +25,10 @@ class RegisterSuccess extends RegisterState {
   });
 }
 
+// حالة إرسال OTP
 class RegisterOtpSent extends RegisterState {
   final String email;
-
+  
   RegisterOtpSent({required this.email});
 }
 

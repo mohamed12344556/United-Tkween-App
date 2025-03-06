@@ -25,11 +25,9 @@ class RequestOtpView extends StatelessWidget {
         } else if (state is ForgetPasswordOtpSent) {
           context.showSuccessSnackBar(LocaleKeys.otp_sent_successfully.tr());
           
-          // انتقل إلى صفحة التحقق من OTP مع تمرير البريد الإلكتروني بالشكل الصحيح
           final email = state.email;
           print("Navigating to VerifyOtpView with email: $email");
           
-          // استخدام Map بدلاً من String للتمييز بين التسجيل واستعادة كلمة المرور
           context.pushNamed(
             Routes.verifyOtpView,
             arguments: {'email': email},
@@ -38,7 +36,6 @@ class RequestOtpView extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
             elevation: 0,
             backgroundColor: Colors.transparent,
