@@ -9,6 +9,7 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor({this.shouldRefresh = true});
 
   @override
+
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     final tokens = await TokenManager.getTokens();

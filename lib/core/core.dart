@@ -45,7 +45,7 @@ export './widgets/app_text_field.dart';
 export './widgets/custom_divider.dart';
 
 // routs
-export './routes/app_router.dart';
+export './routes/app_router.dart' hide sl;
 export './routes/routes.dart';
 // utilities
 export './utilities/enums/auth_type.dart';
