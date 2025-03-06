@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
               if (mounted) {
                 Navigator.of(
                   context,
-                ).pushNamedAndRemoveUntil(Routes.homeView, (route) => false);
+                ).pushNamedAndRemoveUntil(Routes.profileView, (route) => false);
               }
             });
           }

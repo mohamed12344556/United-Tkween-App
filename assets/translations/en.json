@@ -64,6 +64,7 @@
   "explore_courses": "Explore Courses",
   
   "profile": "Profile",
+  "profile_title": "Profile",
   "edit_profile": "Edit Profile",
   "change_password": "Change Password",
   "logout": "Logout",
@@ -92,5 +93,49 @@
   "confirm_new_password": "Confirm New Password",
   "please_enter_valid_otp": "Please enter valid OTP",
   "confirm_password_is_required": "Confirm password is required",
-  "passwords_do_not_match": "Passwords do not match"
+  "passwords_do_not_match": "Passwords do not match",
+  
+  "my_orders": "My Orders",
+  "my_library": "My Library",
+  "store_support": "Store Support",
+  "main_store": "Main Store",
+  
+  "full_name": "Full Name",
+  "phone_number_1": "Phone Number 1",
+  "phone_number_2": "Phone Number 2 (Optional)",
+  "address": "Address",
+  
+  "order_date": "Order Date",
+  "price": "Price",
+  "status": "Status",
+  "processing": "Processing",
+  "shipped": "Shipped",
+  "delivered": "Delivered",
+  "cancelled": "Cancelled",
+  "in_progress": "In Progress",
+  
+  "file_type": "File Type",
+  "download": "Download",
+  "pdf": "PDF",
+  "paper": "Paper",
+  "video": "Video",
+  "audio": "Audio",
+  "image": "Image",
+  
+  "how_can_we_help_you": "How Can We Help You?",
+  "write_your_message_here": "Write your message here...",
+  "send": "Send",
+  "message_sent_successfully": "Your message has been sent successfully",
+  
+  "error_loading_profile": "Error loading profile",
+  "error_updating_profile": "Error updating profile",
+  "error_loading_orders": "Error loading orders",
+  "error_loading_library": "Error loading library",
+  "error_sending_message": "Error sending message",
+  "no_orders": "No orders found",
+  "no_library_items": "No library items found",
+  
+  "are_you_sure_you_want_to_logout": "Are you sure you want to logout?",
+  "yes": "Yes",
+  "no": "No"
 }

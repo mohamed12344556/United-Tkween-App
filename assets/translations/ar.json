@@ -64,6 +64,7 @@
   "explore_courses": "استكشاف الدورات",
   
   "profile": "الملف الشخصي",
+  "profile_title": "الملف الشخصي",
   "edit_profile": "تعديل الملف الشخصي",
   "change_password": "تغيير كلمة المرور",
   "logout": "تسجيل الخروج",
@@ -92,5 +93,49 @@
   "confirm_new_password": "تأكيد كلمة المرور الجديدة",
   "please_enter_valid_otp": "الرجاء إدخال رمز صالح",
   "confirm_password_is_required": "تأكيد كلمة المرور مطلوب",
-  "passwords_do_not_match": "كلمات المرور غير متطابقة"
+  "passwords_do_not_match": "كلمات المرور غير متطابقة",
+  
+  "my_orders": "مشترياتي",
+  "my_library": "مكتبتي",
+  "store_support": "دعم المتجر",
+  "main_store": "المتجر الرئيسي",
+  
+  "full_name": "الاسم الكامل",
+  "phone_number_1": "رقم الهاتف 1",
+  "phone_number_2": "رقم الهاتف 2 (اختياري)",
+  "address": "العنوان",
+  
+  "order_date": "تاريخ الطلب",
+  "price": "السعر",
+  "status": "الحالة",
+  "processing": "قيد المعالجة",
+  "shipped": "تم الشحن",
+  "delivered": "تم التوصيل",
+  "cancelled": "ملغي",
+  "in_progress": "في الطريق",
+  
+  "file_type": "نوع الملف",
+  "download": "تحميل",
+  "pdf": "PDF",
+  "paper": "ورقي",
+  "video": "فيديو",
+  "audio": "صوتي",
+  "image": "صورة",
+  
+  "how_can_we_help_you": "كيف يمكننا مساعدتك؟",
+  "write_your_message_here": "اكتب رسالتك هنا...",
+  "send": "إرسال",
+  "message_sent_successfully": "تم إرسال رسالتك بنجاح",
+  
+  "error_loading_profile": "خطأ في تحميل الملف الشخصي",
+  "error_updating_profile": "خطأ في تحديث الملف الشخصي",
+  "error_loading_orders": "خطأ في تحميل المشتريات",
+  "error_loading_library": "خطأ في تحميل المكتبة",
+  "error_sending_message": "خطأ في إرسال الرسالة",
+  "no_orders": "لا توجد مشتريات",
+  "no_library_items": "لا توجد عناصر في المكتبة",
+  
+  "are_you_sure_you_want_to_logout": "هل أنت متأكد من رغبتك في تسجيل الخروج؟",
+  "yes": "نعم",
+  "no": "لا"
 }
