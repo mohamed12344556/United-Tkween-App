@@ -123,7 +123,12 @@ class _LearningOptionsPageState extends State<LearningOptionsPage> {
     );
   }
 
-  Widget _buildContinueButton(BuildContext context, LearningOptionsCubit cubit, LearningOptionsState state, bool isDark) {
+  Widget _buildContinueButton(
+    BuildContext context,
+    LearningOptionsCubit cubit,
+    LearningOptionsState state,
+    bool isDark,
+  ) {
     return AppButton(
       text: LocaleKeys.continue1.tr(),
       backgroundColor: isDark ? AppColors.primary : AppColors.secondary,
@@ -144,9 +149,10 @@ class _LearningOptionsPageState extends State<LearningOptionsPage> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(width: context.screenWidth * 0.02),
+          SizedBox(width: context.screenWidth * 0.06),
           Icon(
             Icons.arrow_forward,
+            color: isDark ? AppColors.secondary : AppColors.focused,
             size: context.screenWidth * 0.05,
           ),
         ],
