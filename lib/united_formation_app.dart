@@ -1,13 +1,10 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'core/api/auth_interceptor.dart';
-import 'core/routes/app_router.dart';
-import 'core/routes/routes.dart';
-import 'core/themes/app_theme.dart';
-import 'core/themes/cubit/theme_cubit.dart';
+import 'package:united_formation_app/core/core.dart';
+import 'package:united_formation_app/core/themes/cubit/theme_cubit.dart';
+import 'package:united_formation_app/generated/l10n.dart';
 
 class UnitedFormationApp extends StatelessWidget {
   final AppRouter appRouter;
@@ -37,10 +34,15 @@ class UnitedFormationApp extends StatelessWidget {
               theme: AppTheme.light,
               darkTheme: AppTheme.dark,
               debugShowCheckedModeBanner: false,
-              localizationsDelegates: context.localizationDelegates,
-              supportedLocales: context.supportedLocales,
-              locale: context.locale,
-              initialRoute: Routes.profileView,
+              localizationsDelegates: const [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+              title: 'Flutter Demo',
+              initialRoute: Routes.loginView,
               onGenerateRoute: appRouter.generateRoute,
               // hasValidSession ? Routes.homeView : Routes.onboardingView,
             ),

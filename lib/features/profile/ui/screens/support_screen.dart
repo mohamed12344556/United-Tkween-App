@@ -1,5 +1,8 @@
+// file: lib/features/profile/ui/screens/support_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:united_formation_app/features/profile/ui/widgets/content_container.dart';
+import 'package:united_formation_app/features/profile/ui/widgets/support_message_input.dart';
 import '../../../../core/core.dart';
 import '../cubits/support/support_cubit.dart';
 import '../cubits/support/support_state.dart';
@@ -47,157 +50,105 @@ class _SupportScreenState extends State<SupportScreen> {
         elevation: 0,
       ),
       body: BlocConsumer<SupportCubit, SupportState>(
-        listener: (context, state) {
-          if (state.isSuccess && state.messageSent) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تم إرسال رسالتك بنجاح'),
-                backgroundColor: AppColors.success,
-              ),
-            );
-            _messageController.clear();
-          }
-
-          if (state.isError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ?? 'خطأ في إرسال الرسالة'),
-                backgroundColor: AppColors.error,
-              ),
-            );
-          }
-        },
+        listener: _supportStateListener,
         builder: (context, state) {
-          return Container(
-            color: AppColors.primary,
+          return ContentContainer(
+            padding: const EdgeInsets.all(16),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Support form in white container
+                // أيقونة الدعم والعنوان
+                _buildSupportHeader(),
+
+                const SizedBox(height: 24),
+
+                // نموذج الدعم
                 Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(0),
-                        topRight: Radius.circular(0),
-                      ),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Support icon and title
-                        const Center(
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.headset_mic,
-                                size: 80,
-                                color: AppColors.secondary,
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                'كيف يمكننا مساعدتك؟',
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.text,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'يمكنك ارسال استفسارك وسنرد عليك في أقرب وقت',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.textSecondary,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 32),
-                            ],
-                          ),
-                        ),
-
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.grey[300]!),
-                            ),
-                            padding: const EdgeInsets.all(16),
-                            child: TextField(
-                              controller: _messageController,
-                              focusNode: _messageFocusNode,
-                              maxLines: 10,
-                              textDirection: TextDirection.rtl,
-                              textAlign: TextAlign.right,
-                              decoration: const InputDecoration.collapsed(
-                                hintText: 'اكتب رسالتك هنا...',
-                                hintTextDirection: TextDirection.rtl,
-                              ),
-                              onChanged: (value) {
-                                context.read<SupportCubit>().updateMessage(
-                                  value,
-                                );
-                              },
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: AppColors.text,
-                                height: 1.5,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // Send button
-                        ElevatedButton(
-                          onPressed:
-                              state.isLoading
-                                  ? null
-                                  : () {
-                                    // Hide keyboard
-                                    FocusScope.of(context).unfocus();
-                                    // Send message
-                                    context.read<SupportCubit>().sendMessage();
-                                  },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.secondary,
-                            foregroundColor: AppColors.primary,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 0,
-                          ),
-                          child:
-                              state.isLoading
-                                  ? const SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      color: AppColors.primary,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                  : const Text(
-                                    'إرسال',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                        ),
-                      ],
-                    ),
+                  child: SupportMessageInput(
+                    controller: _messageController,
+                    focusNode: _messageFocusNode,
+                    onChanged: (value) {
+                      context.read<SupportCubit>().updateMessage(value);
+                    },
+                    isLoading: state.isLoading,
+                    onSend: () {
+                      // إخفاء لوحة المفاتيح
+                      FocusScope.of(context).unfocus();
+                      // إرسال الرسالة
+                      context.read<SupportCubit>().sendMessage();
+                    },
                   ),
                 ),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  void _supportStateListener(BuildContext context, SupportState state) {
+    if (state.isSuccess && state.messageSent) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('تم إرسال رسالتك بنجاح'),
+          backgroundColor: AppColors.success,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+        ),
+      );
+      _messageController.clear();
+    }
+
+    if (state.isError) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(state.errorMessage ?? 'خطأ في إرسال الرسالة'),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _buildSupportHeader() {
+    return Center(
+      child: Column(
+        children: [
+          const Hero(
+            tag: 'support_icon',
+            child: Icon(
+              Icons.headset_mic,
+              size: 80,
+              color: AppColors.secondary,
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'كيف يمكننا مساعدتك؟',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: AppColors.text,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'يمكنك ارسال استفسارك وسنرد عليك في أقرب وقت',
+            style: TextStyle(
+              fontSize: 16,
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

@@ -1,11 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/core/utilities/navigation_manager.dart';
 import 'package:united_formation_app/features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/auth_header.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
 
 class RequestOtpPage extends StatelessWidget {
   const RequestOtpPage({super.key});
@@ -25,13 +23,13 @@ class RequestOtpPage extends StatelessWidget {
           }
         } else if (state is PasswordResetOtpSent) {
           if (context.mounted) {
-            context.showSuccessSnackBar(LocaleKeys.otp_sent_successfully.tr());
-            
+            context.showSuccessSnackBar(context.localeS.otp_sent_successfully);
+
             Future.microtask(() {
               if (context.mounted) {
                 NavigationManager.navigateToOtpVerification(
-                  state.email, 
-                  isPasswordReset: true
+                  state.email,
+                  isPasswordReset: true,
                 );
               }
             });
@@ -63,22 +61,28 @@ class RequestOtpPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AuthHeader(
-                      title: LocaleKeys.forgot_password.tr(),
-                      subtitle: LocaleKeys.enter_your_email_address_to_reset_your_password.tr(),
+                      title: context.localeS.forgot_password,
+                      subtitle:
+                          context
+                              .localeS
+                              .enter_your_email_address_to_reset_your_password,
                     ),
                     AppTextField(
                       controller: cubit.emailController,
-                      hintText: LocaleKeys.email.tr(),
+                      hintText: context.localeS.email,
                       keyboardType: TextInputType.emailAddress,
                     ),
                     SizedBox(height: verticalSpacing * 2),
                     AppButton(
-                      text: LocaleKeys.get_verification_code.tr(),
+                      text: context.localeS.get_verification_code,
                       backgroundColor: AppColors.primary,
                       textColor: AppColors.text,
                       isLoading: state is PasswordResetLoading,
                       onPressed: () {
-                        cubit.requestOtp(email: cubit.emailController.text.trim());
+                        cubit.requestOtp(
+                          email: cubit.emailController.text.trim(),
+                          context: context,
+                        );
                       },
                     ),
                   ],

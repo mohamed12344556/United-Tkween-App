@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:united_formation_app/features/profile/ui/widgets/profile_menu_item.dart';
+import 'package:united_formation_app/features/profile/ui/widgets/profile_social_icon.dart';
 import '../../../../core/core.dart';
 import '../cubits/profile/profile_cubit.dart';
 import '../cubits/profile/profile_state.dart';
@@ -20,9 +22,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final profileCubit = context.watch<ProfileCubit>();
-    final state = profileCubit.state;
-
     return Scaffold(
       backgroundColor:
           context.isDarkMode ? AppColors.darkBackground : Colors.white,
@@ -47,103 +46,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
 
             if (state.isError && state.profile == null) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      state.errorMessage ?? 'خطأ في تحميل الملف الشخصي',
-                      style: TextStyle(
-                        color:
-                            context.isDarkMode ? Colors.white : AppColors.text,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => profileCubit.loadProfile(),
-                      child: const Text('إعادة المحاولة'),
-                    ),
-                  ],
-                ),
-              );
+              return _buildErrorWidget(context, state);
             }
+            
             return Container(
               color: AppColors.primary,
-              child: Column(
-                spacing: 10,
-                children: [
-                  // Profile Menu Items
-                  _buildMenuItem(
-                    icon: Icons.person,
-                    title: 'الملف الشخصي',
-                    onTap: () {
-                      context.navigateToNamed(Routes.editProfileView);
-                    },
-                  ),
-
-                  _buildMenuItem(
-                    icon: Icons.shopping_cart,
-                    title: 'مشترياتي',
-                    count: 3,
-                    onTap: () {
-                      context.navigateToNamed(Routes.ordersView);
-                    },
-                  ),
-
-                  _buildMenuItem(
-                    icon: Icons.book,
-                    title: 'مكتبتي',
-                    onTap: () {
-                      context.navigateToNamed(Routes.libraryView);
-                    },
-                  ),
-
-                  _buildMenuItem(
-                    icon: Icons.headset_mic,
-                    title: 'دعم المتجر',
-                    onTap: () {
-                      context.navigateToNamed(Routes.supportView);
-                    },
-                  ),
-
-                  _buildMenuItem(
-                    icon: Icons.store,
-                    title: 'المتجر الرئيسي',
-                    onTap: () {
-                      // التنقل إلى المتجر الرئيسي
-                    },
-                  ),
-
-                  // Logout Button
-                  _buildMenuItem(
-                    icon: Icons.logout,
-                    title: 'تسجيل الخروج',
-                    onTap: () {
-                      _showLogoutConfirmation(context);
-                    },
-                    backgroundColor: AppColors.primary.withValues(alpha: 0.5),
-                    highlightColor: AppColors.error,
-                  ),
-                  const Spacer(),
-
-                  // Social Media Icons
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildSocialIcon(
-                          Icons.whatshot_outlined,
-                          onTap: () {},
-                        ), //todo: add social media icons
-                        _buildSocialIcon(Icons.facebook, onTap: () {}),
-                        _buildSocialIcon(Icons.photo_camera, onTap: () {}),
-                        _buildSocialIcon(Icons.chat_bubble, onTap: () {}),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              child: _buildMenuItems(context),
             );
           },
         ),
@@ -151,92 +59,162 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-    int? count,
-    bool isHighlighted = false,
-    Color backgroundColor = Colors.transparent,
-    Color highlightColor = AppColors.primary,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        color:
-            isHighlighted
-                ? AppColors.secondary.withValues(alpha: 0.2)
-                : backgroundColor,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: isHighlighted ? AppColors.secondary : Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    icon,
-                    color:
-                        isHighlighted ? AppColors.primary : AppColors.secondary,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.secondary,
-                    ),
-                  ),
-                ),
-                if (count != null)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.secondary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      count.toString(),
-                      style: TextStyle(
-                        color: AppColors.primary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-              ],
+  Widget _buildErrorWidget(BuildContext context, ProfileState state) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            state.errorMessage ?? 'خطأ في تحميل الملف الشخصي',
+            style: TextStyle(
+              color: context.isDarkMode ? Colors.white : AppColors.text,
             ),
           ),
-        ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () => context.read<ProfileCubit>().loadProfile(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.secondary,
+              foregroundColor: AppColors.primary,
+            ),
+            child: const Text('إعادة المحاولة'),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildSocialIcon(IconData icon, {required VoidCallback onTap}) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Icon(icon, color: AppColors.secondary, size: 24),
+  Widget _buildMenuItems(BuildContext context) {
+    return Column(
+      children: [
+        // Menu items with improved animations
+        Expanded(
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            children: [
+              // Profile Menu Items
+              _buildAnimatedMenuItem(
+                index: 0,
+                child: ProfileMenuItem(
+                  title: 'الملف الشخصي',
+                  icon: Icons.person,
+                  onTap: () {
+                    context.navigateToNamed(Routes.editProfileView);
+                  },
+                ),
+              ),
+              
+              _buildAnimatedMenuItem(
+                index: 1,
+                child: ProfileMenuItem(
+                  title: 'مشترياتي',
+                  icon: Icons.shopping_cart,
+                  onTap: () {
+                    context.navigateToNamed(Routes.ordersView);
+                  },
+                ),
+              ),
+              
+              _buildAnimatedMenuItem(
+                index: 2,
+                child: ProfileMenuItem(
+                  title: 'مكتبتي',
+                  icon: Icons.book,
+                  onTap: () {
+                    context.navigateToNamed(Routes.libraryView);
+                  },
+                ),
+              ),
+              
+              _buildAnimatedMenuItem(
+                index: 3,
+                child: ProfileMenuItem(
+                  title: 'دعم المتجر',
+                  icon: Icons.headset_mic,
+                  onTap: () {
+                    context.navigateToNamed(Routes.supportView);
+                  },
+                ),
+              ),
+              
+              _buildAnimatedMenuItem(
+                index: 4,
+                child: ProfileMenuItem(
+                  title: 'المتجر الرئيسي',
+                  icon: Icons.store,
+                  onTap: () {
+                    // التنقل إلى المتجر الرئيسي
+                  },
+                ),
+              ),
+              
+              // Logout Button
+              _buildAnimatedMenuItem(
+                index: 5,
+                child: ProfileMenuItem(
+                  title: 'تسجيل الخروج',
+                  icon: Icons.logout,
+                  onTap: () {
+                    _showLogoutConfirmation(context);
+                  },
+                  backgroundColor: AppColors.primary.withOpacity(0.5),
+                  highlightColor: AppColors.error,
+                  isHighlighted: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Social Media Icons
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ProfileSocialIcon(
+                icon: Icons.whatshot_outlined,
+                onTap: () {
+                  // TODO: تنفيذ الإجراء الخاص بمنصة التواصل الاجتماعي
+                },
+              ),
+              ProfileSocialIcon(
+                icon: Icons.facebook,
+                onTap: () {
+                  // TODO: تنفيذ الإجراء الخاص بفيسبوك
+                },
+              ),
+              ProfileSocialIcon(
+                icon: Icons.photo_camera,
+                onTap: () {
+                  // TODO: تنفيذ الإجراء الخاص بإنستجرام
+                },
+              ),
+              ProfileSocialIcon(
+                icon: Icons.chat_bubble,
+                onTap: () {
+                  // TODO: تنفيذ الإجراء الخاص بتويتر
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAnimatedMenuItem({required int index, required Widget child}) {
+    // إضافة تأخير لتحميل كل عنصر بتسلسل للحصول على تأثير مرئي أفضل
+    return AnimatedOpacity(
+      opacity: 1.0,
+      duration: Duration(milliseconds: 300 + (index * 100)),
+      curve: Curves.easeInOut,
+      child: AnimatedPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        duration: Duration(milliseconds: 300 + (index * 100)),
+        curve: Curves.easeInOut,
+        child: child,
       ),
     );
   }
@@ -247,22 +225,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('تسجيل الخروج'),
-          content: const Text('هل أنت متأكد من تسجيل الخروج؟'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('إلغاء'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            'تسجيل الخروج',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
             ),
-            TextButton(
-              child: const Text('تسجيل الخروج'),
-              onPressed: () {
-                // Implement logout functionality
-                Navigator.of(context).pop();
-                // Add logout logic here
-              },
+          ),
+          content: const Text(
+            'هل أنت متأكد من تسجيل الخروج؟',
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.text,
+                    ),
+                    child: const Text('إلغاء'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.error,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('تسجيل الخروج'),
+                    onPressed: () {
+                      // Implement logout functionality
+                      Navigator.of(context).pop();
+                      // TODO: تنفيذ منطق تسجيل الخروج
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         );

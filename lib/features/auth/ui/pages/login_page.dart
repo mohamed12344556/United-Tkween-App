@@ -1,11 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/features/auth/ui/cubits/login/login_cubit.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/auth_header.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -39,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       listener: (context, state) {
         if (state is LoginSuccess) {
           if (mounted) {
-            context.showSuccessSnackBar(LocaleKeys.login_successful.tr());
+            context.showSuccessSnackBar(context.localeS.login_successful);
             Future.microtask(() {
               if (mounted) {
                 Navigator.of(
@@ -73,21 +71,21 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AuthHeader(
-                        title: LocaleKeys.welcome_back.tr(),
+                        title: context.localeS.welcome_back,
                         subtitle:
-                            LocaleKeys
-                                .we_happy_to_see_you_here_again_enter_your_email_address_and_password
-                                .tr(),
+                            context
+                                .localeS
+                                .we_happy_to_see_you_here_again_enter_your_email_address_and_password,
                       ),
                       AppTextField(
                         controller: cubit.emailController,
-                        hintText: LocaleKeys.email.tr(),
+                        hintText: context.localeS.email,
                         keyboardType: TextInputType.emailAddress,
                       ),
                       SizedBox(height: verticalSpacing),
                       AppTextField(
                         controller: cubit.passwordController,
-                        hintText: LocaleKeys.password.tr(),
+                        hintText: context.localeS.password,
                         isPassword: true,
                         passwordVisible: cubit.isPasswordVisible,
                         onTogglePasswordVisibility:
@@ -95,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: verticalSpacing * 2),
                       AppButton(
-                        text: LocaleKeys.log_in.tr(),
+                        text: context.localeS.log_in,
                         backgroundColor: AppColors.primary,
                         textColor: Colors.black,
                         isLoading: state is LoginLoading,
@@ -104,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                             cubit.login(
                               email: cubit.emailController.text.trim(),
                               password: cubit.passwordController.text,
+                              context: context,
                             );
                           }
                         },
@@ -118,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                             }
                           },
                           child: Text(
-                            LocaleKeys.forgot_password.tr(),
+                            context.localeS.forgot_password,
                             style: TextStyle(
                               color:
                                   Theme.of(context).brightness ==
@@ -131,10 +130,10 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(height: verticalSpacing * 0.5),
-                      CustomDivider(text: LocaleKeys.or.tr()),
+                      CustomDivider(text: context.localeS.or),
                       SizedBox(height: verticalSpacing),
                       AppButton(
-                        text: LocaleKeys.create_account.tr(),
+                        text: context.localeS.create_account,
                         backgroundColor:
                             isDark ? AppColors.darkSecondary : Colors.black,
                         textColor: Colors.white,

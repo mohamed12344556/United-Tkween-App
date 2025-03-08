@@ -1,7 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
 
 class ResendOtpRow extends StatelessWidget {
   final int timeRemaining;
@@ -21,7 +19,7 @@ class ResendOtpRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          LocaleKeys.didnt_receive_code.tr(),
+          context.localeS.didnt_receive_code,
           style: TextStyle(
             fontSize: context.screenWidth * 0.035,
             color: isDark ? AppColors.textHint : AppColors.textSecondary,
@@ -40,7 +38,7 @@ class ResendOtpRow extends StatelessWidget {
           TextButton(
             onPressed: onResendOtp,
             child: Text(
-              LocaleKeys.resend.tr(),
+              context.localeS.resend,
               style: TextStyle(
                 fontSize: context.screenWidth * 0.035,
                 fontWeight: FontWeight.bold,

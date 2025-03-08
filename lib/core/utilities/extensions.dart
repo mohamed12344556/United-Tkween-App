@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:united_formation_app/generated/l10n.dart';
 
 extension BuildContextExtensions on BuildContext {
   //! Get screen dimensions
@@ -15,6 +16,9 @@ extension BuildContextExtensions on BuildContext {
 
   //! get theme system
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
+
+  //! Localization
+  S get localeS => S.of(this);
 
   //! Navigation
   void navigateTo(String routeName) =>
@@ -46,6 +50,7 @@ extension BuildContextExtensions on BuildContext {
 
   void pop() => Navigator.of(this).pop();
 
+  //! Show SnackBar
   Future<T?> showSnackBarAsDialog<T>({
     required String message,
     required bool isError,
@@ -171,13 +176,3 @@ extension ListExtension<T> on List<T>? {
   bool isNullOrEmpty() => this == null || this!.isEmpty;
 }
 
-extension ColorExtension on Color {
-  Color withValues({int? red, int? green, int? blue, double? alpha}) {
-    return Color.fromRGBO(
-      red ?? this.red,
-      green ?? this.green,
-      blue ?? this.blue,
-      alpha ?? this.opacity,
-    );
-  }
-}

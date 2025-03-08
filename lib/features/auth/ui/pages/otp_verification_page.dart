@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +8,6 @@ import 'package:united_formation_app/features/auth/ui/cubits/password_reset/pass
 import 'package:united_formation_app/features/auth/ui/widgets/auth_header.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/otp_input_field.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/resend_otp_row.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
 
 class OtpVerificationPage extends StatefulWidget {
   final String email;
@@ -36,7 +34,10 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     if (mounted) {
       try {
         if (context.read<PasswordResetCubit?>() != null) {
-          context.read<PasswordResetCubit>().requestOtp(email: widget.email);
+          context.read<PasswordResetCubit>().requestOtp(
+            email: widget.email,
+            context: context,
+          );
         } else if (context.read<OtpCubit?>() != null) {
           final otpCubit = context.read<OtpCubit>();
           if (otpCubit.otpTimeRemaining <= 0) otpCubit.resendOtp();
@@ -93,16 +94,16 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
     return isAccountVerification
         ? _buildWithOtpCubit(
-            verticalSpacing: verticalSpacing,
-            horizontalPadding: horizontalPadding,
-            isDark: isDark,
-          )
+          verticalSpacing: verticalSpacing,
+          horizontalPadding: horizontalPadding,
+          isDark: isDark,
+        )
         : _buildWithPasswordResetCubit(
-            verticalSpacing: verticalSpacing,
-            horizontalPadding: horizontalPadding,
-            isDark: isDark,
-            email: widget.email,
-          );
+          verticalSpacing: verticalSpacing,
+          horizontalPadding: horizontalPadding,
+          isDark: isDark,
+          email: widget.email,
+        );
   }
 
   Widget _buildWithOtpCubit({
@@ -119,7 +120,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         } else if (state is OtpVerified) {
           if (mounted) {
             context.showSuccessSnackBar(
-              LocaleKeys.otp_verified_successfully.tr(),
+              context.localeS.otp_verified_successfully,
             );
 
             Future.microtask(() {
@@ -134,7 +135,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         } else if (state is OtpResent) {
           if (mounted) {
             context.showSuccessSnackBar(
-              LocaleKeys.otp_resent_successfully.tr(),
+              context.localeS.otp_resent_successfully,
             );
             _otpController.clear();
             _updateOtpValue('');
@@ -144,13 +145,15 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       builder: (context, state) {
         final cubit = context.read<OtpCubit>();
         final timeRemaining =
-            state is OtpTimerUpdated ? state.timeRemaining : cubit.otpTimeRemaining;
+            state is OtpTimerUpdated
+                ? state.timeRemaining
+                : cubit.otpTimeRemaining;
 
         return _buildScaffold(
           timeRemaining: timeRemaining,
           isLoading: state is OtpLoading,
           onResendOtp: () => cubit.resendOtp(),
-          onVerifyOtp: () => cubit.verifyOtp(otp: _otpValue),
+          onVerifyOtp: () => cubit.verifyOtp(otp: _otpValue, context: context),
           verticalSpacing: verticalSpacing,
           horizontalPadding: horizontalPadding,
           isDark: isDark,
@@ -181,7 +184,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
             Future.microtask(() {
               if (mounted) {
                 context.showSuccessSnackBar(
-                  LocaleKeys.otp_verified_successfully.tr(),
+                  context.localeS.otp_verified_successfully,
                 );
 
                 Navigator.of(context).pushReplacementNamed(
@@ -194,7 +197,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         } else if (state is PasswordResetOtpResent) {
           if (mounted) {
             context.showSuccessSnackBar(
-              LocaleKeys.otp_resent_successfully.tr(),
+              context.localeS.otp_resent_successfully,
             );
             _otpController.clear();
             _updateOtpValue('');
@@ -204,13 +207,20 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       builder: (context, state) {
         final cubit = context.read<PasswordResetCubit>();
         final timeRemaining =
-            state is PasswordResetOtpTimerUpdated ? state.timeRemaining : cubit.otpTimeRemaining;
+            state is PasswordResetOtpTimerUpdated
+                ? state.timeRemaining
+                : cubit.otpTimeRemaining;
 
         return _buildScaffold(
           timeRemaining: timeRemaining,
           isLoading: state is PasswordResetLoading,
-          onResendOtp: () => cubit.resendOtp(),
-          onVerifyOtp: () => cubit.verifyOtp(otp: _otpValue, email: email),
+          onResendOtp: () => cubit.resendOtp(context),
+          onVerifyOtp:
+              () => cubit.verifyOtp(
+                otp: _otpValue,
+                email: email,
+                context: context,
+              ),
           verticalSpacing: verticalSpacing,
           horizontalPadding: horizontalPadding,
           isDark: isDark,
@@ -253,8 +263,11 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AuthHeader(
-                  title: LocaleKeys.verify_your_email.tr(),
-                  subtitle: LocaleKeys.please_enter_the_4_digit_code_sent_to_your_email_address.tr(),
+                  title: context.localeS.verify_your_email,
+                  subtitle:
+                      context
+                          .localeS
+                          .please_enter_the_4_digit_code_sent_to_your_email_address,
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: verticalSpacing),
@@ -287,7 +300,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                 ),
                 SizedBox(height: verticalSpacing * 2),
                 AppButton(
-                  text: LocaleKeys.verify.tr(),
+                  text: context.localeS.verify,
                   backgroundColor: AppColors.primary,
                   textColor: Colors.black,
                   isLoading: isLoading,

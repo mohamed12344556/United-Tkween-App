@@ -28,10 +28,9 @@ class SocialButton extends StatelessWidget {
             ? backgroundColor ?? AppColors.darkSecondary
             : backgroundColor ?? AppColors.secondary;
 
-    final defaultTextColor =
-        isDark ? textColor ?? AppColors.textHint : textColor ?? AppColors.text;
+    final defaultTextColor = textColor ?? AppColors.textHint;
 
-    final iconColor = isDark ? AppColors.textHint : AppColors.white70;
+    final iconColor = AppColors.textHint;
 
     return SizedBox(
       width: double.infinity,

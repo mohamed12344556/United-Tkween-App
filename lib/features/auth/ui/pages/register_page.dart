@@ -1,11 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/features/auth/ui/cubits/register/register_cubit.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/auth_header.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/social_button.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -30,7 +28,7 @@ class RegisterViewContent extends StatelessWidget {
       listener: (context, state) {
         if (state is RegisterSuccess) {
           context.showSuccessSnackBar(
-            LocaleKeys.account_created_successfully.tr(),
+            context.localeS.account_created_successfully,
           );
 
           Navigator.of(
@@ -59,17 +57,17 @@ class RegisterViewContent extends StatelessWidget {
                   children: [
                     // Header (logo, title, subtitle)
                     AuthHeader(
-                      title: LocaleKeys.create_account.tr(),
+                      title: context.localeS.create_account,
                       subtitle:
-                          LocaleKeys
+                          context.localeS
                               .create_your_account_it_takes_less_than_a_minute_enter_your_email_and_password
-                              .tr(),
+                              ,
                     ),
 
                     // Email field
                     AppTextField(
                       controller: cubit.emailController,
-                      hintText: LocaleKeys.email.tr(),
+                      hintText: context.localeS.email,
                       keyboardType: TextInputType.emailAddress,
                     ),
 
@@ -78,7 +76,7 @@ class RegisterViewContent extends StatelessWidget {
                     // Password field
                     AppTextField(
                       controller: cubit.passwordController,
-                      hintText: LocaleKeys.password.tr(),
+                      hintText: context.localeS.password,
                       isPassword: true,
                       passwordVisible: cubit.isPasswordVisible,
                       onTogglePasswordVisibility: () {
@@ -90,29 +88,29 @@ class RegisterViewContent extends StatelessWidget {
 
                     // Register button
                     AppButton(
-                      text: LocaleKeys.create_an_account.tr(),
+                      text: context.localeS.create_an_account,
                       backgroundColor: AppColors.primary,
                       textColor: AppColors.text,
                       isLoading: state is RegisterLoading,
                       onPressed: () {
-                        cubit.registerWithEmailAndPassword();
+                        cubit.registerWithEmailAndPassword(context);
                       },
                     ),
 
                     SizedBox(height: verticalSpacing),
 
                     // Divider with OR
-                    CustomDivider(text: LocaleKeys.or.tr()),
+                    CustomDivider(text: context.localeS.or),
 
                     SizedBox(height: verticalSpacing),
 
                     // Google sign in
                     SocialButton(
                       onPressed: () {
-                        cubit.registerWithSocialMedia('google');
+                        cubit.registerWithSocialMedia('google',context);
                       },
                       icon: Assets.google,
-                      text: LocaleKeys.continue_with_google.tr(),
+                      text: context.localeS.continue_with_google,
                     ),
 
                     SizedBox(height: verticalSpacing * 0.8),
@@ -120,10 +118,10 @@ class RegisterViewContent extends StatelessWidget {
                     // Facebook sign in
                     SocialButton(
                       onPressed: () {
-                        cubit.registerWithSocialMedia('facebook');
+                        cubit.registerWithSocialMedia('facebook',context);
                       },
                       icon: Assets.facebook,
-                      text: LocaleKeys.continue_with_facebook.tr(),
+                      text: context.localeS.continue_with_facebook,
                     ),
 
                     SizedBox(height: verticalSpacing * 0.8),
@@ -131,10 +129,10 @@ class RegisterViewContent extends StatelessWidget {
                     // Apple sign in
                     SocialButton(
                       onPressed: () {
-                        cubit.registerWithSocialMedia('apple');
+                        cubit.registerWithSocialMedia('apple',context);
                       },
                       icon: Assets.apple,
-                      text: LocaleKeys.continue_with_apple.tr(),
+                      text: context.localeS.continue_with_apple,
                     ),
 
                     SizedBox(height: verticalSpacing * 1.5),
@@ -144,7 +142,7 @@ class RegisterViewContent extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          LocaleKeys.already_have_an_account.tr(),
+                          context.localeS.already_have_an_account,
                           style: TextStyle(
                             color: isDark ? AppColors.textHint : AppColors.text,
                             fontSize: context.screenWidth * 0.035,
@@ -155,7 +153,7 @@ class RegisterViewContent extends StatelessWidget {
                             context.pushNamed(Routes.loginView);
                           },
                           child: Text(
-                            LocaleKeys.log_in.tr(),
+                            context.localeS.log_in,
                             style: TextStyle(
                               color: AppColors.primary,
                               fontWeight: FontWeight.bold,
