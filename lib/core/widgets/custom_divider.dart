@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:united_formation_app/core/core.dart';
+import '../core.dart';
 
 class CustomDivider extends StatelessWidget {
   final String text;

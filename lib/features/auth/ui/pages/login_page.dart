@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/login/login_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/auth_header.dart';
+import '../../../../core/core.dart';
+import '../cubits/login/login_cubit.dart';
+import '../widgets/auth_header.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -40,9 +40,10 @@ class _LoginPageState extends State<LoginPage> {
             context.showSuccessSnackBar(context.localeS.login_successful);
             Future.microtask(() {
               if (mounted) {
-                Navigator.of(
-                  context,
-                ).pushNamedAndRemoveUntil(Routes.profileView, (route) => false);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.settingsView,
+                  (route) => false,
+                );
               }
             });
           }

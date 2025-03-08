@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:united_formation_app/core/core.dart';
+
+import '../../../../core/core.dart';
 
 class SelectionOptionChip extends StatelessWidget {
   final String label;

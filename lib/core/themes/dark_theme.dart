@@ -30,17 +30,17 @@ final ThemeData darkTheme = ThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: AppColors.primary,
       foregroundColor: Colors.black,
-      disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
-      disabledForegroundColor: Colors.black.withOpacity(0.5),
+      disabledBackgroundColor: AppColors.primary.withValues(alpha:  0.5),
+      disabledForegroundColor: Colors.black.withValues(alpha: 0.5),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50), // زيادة الاستدارة
+        borderRadius: BorderRadius.circular(50),
       ),
       textStyle: AppTextStyling.font10W400TextColor.copyWith(
         fontWeight: FontWeight.w600,
         fontSize: 16,
       ),
-      elevation: 0, // إزالة الظل
-      padding: const EdgeInsets.symmetric(vertical: 15), // زيادة الارتفاع
+      elevation: 0,
+      padding: const EdgeInsets.symmetric(vertical: 15),
     ),
   ),
   // Text Button Style:
@@ -112,7 +112,7 @@ final ThemeData darkTheme = ThemeData(
   // Card Theme:
   cardTheme: CardTheme(
     color: AppColors.darkSurface,
-    elevation: 0, // إزالة الظل
+    elevation: 0, 
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12),
     ),
@@ -136,18 +136,18 @@ final ThemeData darkTheme = ThemeData(
     selectedItemColor: AppColors.primary,
     unselectedItemColor: Colors.grey,
     type: BottomNavigationBarType.fixed,
-    elevation: 0, // إزالة الظل
+    elevation: 0, 
   ),
   // Switch Theme:
   switchTheme: SwitchThemeData(
-    thumbColor: MaterialStateProperty.resolveWith((states) {
-      if (states.contains(MaterialState.selected)) {
+    thumbColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.selected)) {
         return Colors.black;
       }
       return Colors.white;
     }),
-    trackColor: MaterialStateProperty.resolveWith((states) {
-      if (states.contains(MaterialState.selected)) {
+    trackColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.selected)) {
         return AppColors.primary;
       }
       return Colors.grey;
@@ -166,7 +166,7 @@ final ThemeData darkTheme = ThemeData(
   // Dialog Theme:
   dialogTheme: DialogTheme(
     backgroundColor: AppColors.darkSurface,
-    elevation: 0, // إزالة الظل
+    elevation: 0, 
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(16),
     ),

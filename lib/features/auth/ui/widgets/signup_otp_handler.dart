@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/otp/otp_cubit.dart';
+import '../../../../core/core.dart';
+import '../cubits/otp/otp_cubit.dart';
 
 class SignupOtpHandler {
   static void handleOtpVerified(BuildContext context) {

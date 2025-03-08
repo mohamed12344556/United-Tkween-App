@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/core/utilities/safe_controller.dart';
-import 'package:united_formation_app/features/auth/domain/entities/user_reset_password_entity.dart';
-import 'package:united_formation_app/features/auth/domain/usecases/auth_usecases.dart';
+import '../../../../../core/utilities/safe_controller.dart';
+import '../../../domain/entities/user_reset_password_entity.dart';
+import '../../../domain/usecases/auth_usecases.dart';
 
 import '../../../../../core/core.dart';
 

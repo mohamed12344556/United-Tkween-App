@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:united_formation_app/core/api/token_manager.dart';
+import '../../../../core/api/token_manager.dart';
 
 
 

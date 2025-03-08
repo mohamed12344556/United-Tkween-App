@@ -1,0 +1,83 @@
+import 'package:flutter/material.dart';
+import 'package:united_formation_app/core/widgets/app_card.dart';
+import '../../../../core/core.dart';
+import 'info_item_widget.dart';
+
+class ContactInfoCardWidget extends StatelessWidget {
+  final String email;
+  final String? phoneNumber1;
+  final String? phoneNumber2;
+
+  const ContactInfoCardWidget({
+    Key? key,
+    required this.email,
+    required this.phoneNumber1,
+    this.phoneNumber2,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: AppColors.darkSurface,
+      elevation: 0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // عنوان البطاقة
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 51),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.contact_mail,
+                    color: AppColors.primary,
+                    size: 18,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Text(
+                  'معلومات الاتصال',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          InfoItemWidget(
+            icon: Icons.email,
+            title: 'البريد الإلكتروني',
+            value: email,
+          ),
+
+          Divider(color: Colors.grey[800], height: 24),
+
+          InfoItemWidget(
+            icon: Icons.phone,
+            title: 'رقم الهاتف الأساسي',
+            value: phoneNumber1 ?? 'غير محدد',
+          ),
+
+          if (phoneNumber2 != null && phoneNumber2!.isNotEmpty) ...[
+            Divider(color: Colors.grey[800], height: 24),
+            InfoItemWidget(
+              icon: Icons.phone_android,
+              title: 'رقم الهاتف الإضافي',
+              value: phoneNumber2!,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}

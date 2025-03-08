@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
+
+import '../../../../core/core.dart';
+import '../cubits/password_reset/password_reset_cubit.dart';
 
 class PasswordResetHandler {
   static void handleOtpVerified(

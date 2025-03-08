@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/selection_option_chip.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
-import 'package:united_formation_app/generated/l10n.dart';
+import '../../../../core/core.dart';
+import '../widgets/selection_option_chip.dart';
+import '../cubits/learning_options/learning_options_cubit.dart';
+import '../../../../generated/l10n.dart';
 
 class LearningOptionsPage extends StatefulWidget {
   const LearningOptionsPage({super.key});

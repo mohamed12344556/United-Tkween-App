@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:united_formation_app/core/utilities/extensions.dart';
-import 'package:united_formation_app/generated/l10n.dart';
+import '../../../../../core/utilities/extensions.dart';
+import '../../../../../generated/l10n.dart';
 
 part 'learning_options_state.dart';
 

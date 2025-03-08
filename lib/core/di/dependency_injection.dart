@@ -1,29 +1,32 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:united_formation_app/features/auth/data/datasources/auth_local_datasource.dart';
-import 'package:united_formation_app/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:united_formation_app/features/auth/data/repos/auth_repository_impl.dart';
-import 'package:united_formation_app/features/auth/domain/repos/auth_repository.dart';
-import 'package:united_formation_app/features/auth/domain/usecases/auth_usecases.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/login/login_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/otp/otp_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/register/register_cubit.dart';
-import 'package:united_formation_app/features/profile/data/datasources/profile_local_datasource.dart';
-import 'package:united_formation_app/features/profile/data/datasources/profile_remote_datasource.dart';
-import 'package:united_formation_app/features/profile/data/repos/profile_repository_impl.dart';
-import 'package:united_formation_app/features/profile/domain/repos/profile_repository.dart';
-import 'package:united_formation_app/features/profile/domain/usecases/contact_support_usecase.dart';
-import 'package:united_formation_app/features/profile/domain/usecases/get_library_items_usecase.dart';
-import 'package:united_formation_app/features/profile/domain/usecases/get_profile_usecase.dart';
-import 'package:united_formation_app/features/profile/domain/usecases/get_user_orders_usecase.dart';
-import 'package:united_formation_app/features/profile/domain/usecases/update_profile_usecase.dart';
-import 'package:united_formation_app/features/profile/ui/cubits/library/library_cubit.dart';
-import 'package:united_formation_app/features/profile/ui/cubits/orders/orders_cubit.dart';
-import 'package:united_formation_app/features/profile/ui/cubits/profile/profile_cubit.dart';
-import 'package:united_formation_app/features/profile/ui/cubits/support/support_cubit.dart';
+import 'package:united_formation_app/features/settings/domain/usecases/remove_profile_image_usecase.dart';
+import 'package:united_formation_app/features/settings/domain/usecases/upload_profile_image_usecase.dart';
+import 'package:united_formation_app/features/settings/ui/cubits/edit_profile/edit_profile_cubit.dart';
+import 'package:united_formation_app/features/settings/ui/cubits/library/library_cubit.dart';
+import 'package:united_formation_app/features/settings/ui/cubits/orders/orders_cubit.dart';
+import 'package:united_formation_app/features/settings/ui/cubits/profile/profile_cubit.dart';
+import '../../features/auth/data/datasources/auth_local_datasource.dart';
+import '../../features/auth/data/datasources/auth_remote_datasource.dart';
+import '../../features/auth/data/repos/auth_repository_impl.dart';
+import '../../features/auth/domain/repos/auth_repository.dart';
+import '../../features/auth/domain/usecases/auth_usecases.dart';
+import '../../features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
+import '../../features/auth/ui/cubits/login/login_cubit.dart';
+import '../../features/auth/ui/cubits/otp/otp_cubit.dart';
+import '../../features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
+import '../../features/auth/ui/cubits/register/register_cubit.dart';
+import '../../features/settings/data/datasources/profile_local_datasource.dart';
+import '../../features/settings/data/datasources/profile_remote_datasource.dart';
+import '../../features/settings/data/repos/profile_repository_impl.dart';
+import '../../features/settings/domain/repos/profile_repository.dart';
+import '../../features/settings/domain/usecases/contact_support_usecase.dart';
+import '../../features/settings/domain/usecases/get_library_items_usecase.dart';
+import '../../features/settings/domain/usecases/get_profile_usecase.dart';
+import '../../features/settings/domain/usecases/get_user_orders_usecase.dart';
+import '../../features/settings/domain/usecases/update_profile_usecase.dart';
+import '../../features/settings/ui/cubits/support/support_cubit.dart';
 
 import '../core.dart';
 
@@ -42,15 +45,13 @@ Future<void> setupGetIt() async {
   //? Data Sources
   //! Authentication
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    // () => AuthRemoteDataSourceImpl(service: sl()),
-    // () => AuthRemoteDataSourceImpl(service: sl()), // For mocking purposes
-    () => AuthRemoteDataSourceMock(), // For mocking purposes
+    () => AuthRemoteDataSourceMock(),
   );
   sl.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(),
   );
 
-  //! Profile
+  //! Settings
   sl.registerLazySingleton<ProfileRemoteDataSource>(
     () => ProfileRemoteDataSourceImpl(apiService: sl()),
   );
@@ -64,7 +65,7 @@ Future<void> setupGetIt() async {
     () => AuthRepositoryImpl(remoteDataSource: sl(), localDataSource: sl()),
   );
 
-  //! Profile
+  //! Settings
   sl.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(
       remoteDataSource: sl(),
@@ -83,7 +84,7 @@ Future<void> setupGetIt() async {
   sl.registerLazySingleton(() => IsLoggedInUseCase(authRepository: sl()));
   sl.registerLazySingleton(() => LogoutUseCase(authRepository: sl()));
 
-  //! Profile
+  //! Settings
   sl.registerLazySingleton(() => GetProfileUseCase(profileRepository: sl()));
   sl.registerLazySingleton(() => UpdateProfileUseCase(profileRepository: sl()));
   sl.registerLazySingleton(() => GetUserOrdersUseCase(profileRepository: sl()));
@@ -92,6 +93,12 @@ Future<void> setupGetIt() async {
   );
   sl.registerLazySingleton(
     () => ContactSupportUseCase(profileRepository: sl()),
+  );
+  sl.registerLazySingleton(
+    () => RemoveProfileImageUseCase(profileRepository: sl()),
+  );
+  sl.registerLazySingleton(
+    () => UploadProfileImageUseCase(profileRepository: sl()),
   );
 
   //? Cubits
@@ -116,9 +123,16 @@ Future<void> setupGetIt() async {
   );
   sl.registerFactory(() => LearningOptionsCubit());
 
-  //! Profile
+  //! Settings
+  sl.registerFactory(() => ProfileCubit(getProfileUseCase: sl()));
+
   sl.registerFactory(
-    () => ProfileCubit(getProfileUseCase: sl(), updateProfileUseCase: sl()),
+    () => EditProfileCubit(
+      updateProfileUseCase: sl(),
+      getProfileUseCase: sl(),
+      removeProfileImageUseCase: sl(),
+      uploadProfileImageUseCase: sl(),
+    ),
   );
 
   sl.registerFactory(() => OrdersCubit(getUserOrdersUseCase: sl()));

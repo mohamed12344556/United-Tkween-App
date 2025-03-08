@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/register/register_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/auth_header.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/social_button.dart';
+import '../../../../core/core.dart';
+import '../cubits/register/register_cubit.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/social_button.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});

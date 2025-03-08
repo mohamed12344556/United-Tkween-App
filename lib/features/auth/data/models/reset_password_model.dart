@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:united_formation_app/features/auth/domain/entities/user_reset_password_entity.dart';
+import '../../domain/entities/user_reset_password_entity.dart';
 
 part 'reset_password_model.g.dart';
 

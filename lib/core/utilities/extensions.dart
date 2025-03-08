@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:united_formation_app/generated/l10n.dart';
+import '../../generated/l10n.dart';
+import '../core.dart';
 
 extension BuildContextExtensions on BuildContext {
   //! Get screen dimensions
@@ -166,6 +167,68 @@ extension BuildContextExtensions on BuildContext {
   void showSnackBar(String message) {
     ScaffoldMessenger.of(this).showSnackBar(SnackBar(content: Text(message)));
   }
+
+  Future<void> showLogoutConfirmation() async {
+    return showDialog<void>(
+      context: this,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.darkSurface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            'تسجيل الخروج',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          content: const Text(
+            'هل أنت متأكد من تسجيل الخروج؟',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white70),
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: const Text('إلغاء'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.error,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: const Text('تسجيل الخروج'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      // تنفيذ منطق تسجيل الخروج
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 extension StringExtension on String? {
@@ -175,4 +238,3 @@ extension StringExtension on String? {
 extension ListExtension<T> on List<T>? {
   bool isNullOrEmpty() => this == null || this!.isEmpty;
 }
-

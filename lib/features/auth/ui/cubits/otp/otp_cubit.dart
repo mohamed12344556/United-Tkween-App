@@ -1,10 +1,10 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
-import 'package:united_formation_app/features/auth/domain/usecases/auth_usecases.dart';
 
 import '../../../../../core/core.dart';
+import '../../../domain/usecases/auth_usecases.dart';
 
 part 'otp_state.dart';
 

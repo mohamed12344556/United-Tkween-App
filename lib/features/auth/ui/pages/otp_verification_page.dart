@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/core/utilities/safe_controller.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/otp/otp_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/auth_header.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/otp_input_field.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/resend_otp_row.dart';
+import '../../../../core/core.dart';
+import '../../../../core/utilities/safe_controller.dart';
+import '../cubits/otp/otp_cubit.dart';
+import '../cubits/password_reset/password_reset_cubit.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/otp_input_field.dart';
+import '../widgets/resend_otp_row.dart';
 
 class OtpVerificationPage extends StatefulWidget {
   final String email;

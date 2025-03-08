@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/auth_header.dart';
+import '../../../../core/core.dart';
+import '../cubits/password_reset/password_reset_cubit.dart';
+import '../widgets/auth_header.dart';
 
 import '../../../../generated/l10n.dart';
 

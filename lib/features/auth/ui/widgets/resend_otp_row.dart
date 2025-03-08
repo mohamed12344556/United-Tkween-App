@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:united_formation_app/core/core.dart';
+
+import '../../../../core/core.dart';
 
 class ResendOtpRow extends StatelessWidget {
   final int timeRemaining;

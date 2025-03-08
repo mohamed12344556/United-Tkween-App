@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:united_formation_app/features/auth/domain/entities/user_login_entity.dart';
-import 'package:united_formation_app/features/auth/domain/entities/user_reset_password_entity.dart';
+import '../entities/user_login_entity.dart';
+import '../entities/user_reset_password_entity.dart';
 
 import '../../../../core/core.dart';
 
