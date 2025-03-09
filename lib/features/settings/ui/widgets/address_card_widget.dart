@@ -7,14 +7,20 @@ class AddressCardWidget extends StatelessWidget {
   final String? address;
   
   const AddressCardWidget({
-    Key? key,
+    super.key,
     required this.address,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppCard(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: EdgeInsets.symmetric(
+        // هوامش متجاوبة حسب حجم وتوجه الشاشة
+        horizontal: context.isTablet 
+            ? (context.isLandscape ? 8.w : 16.w) 
+            : 16.w,
+        vertical: 8.h,
+      ),
       color: AppColors.darkSurface,
       elevation: 0,
       child: Column(
@@ -22,26 +28,26 @@ class AddressCardWidget extends StatelessWidget {
         children: [
           // عنوان البطاقة
           Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: EdgeInsets.only(bottom: 16.h),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: 8.paddingAll,
                   decoration: BoxDecoration(
                     color: AppColors.primary.withValues(alpha: 51),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.r),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.location_on,
                     color: AppColors.primary,
-                    size: 18,
+                    size: context.isTablet ? 22.r : 18.r,
                   ),
                 ),
-                const SizedBox(width: 12),
-                const Text(
+                SizedBox(width: 12.w),
+                Text(
                   'العنوان',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: context.isTablet ? 18.sp : 16.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -55,6 +61,9 @@ class AddressCardWidget extends StatelessWidget {
             title: 'تفاصيل العنوان',
             value: address ?? 'غير محدد',
             isMultiLine: true,
+            iconSize: context.isTablet ? 20.r : 16.r,
+            titleSize: context.isTablet ? 14.sp : 12.sp,
+            valueSize: context.isTablet ? 16.sp : 14.sp,
           ),
         ],
       ),

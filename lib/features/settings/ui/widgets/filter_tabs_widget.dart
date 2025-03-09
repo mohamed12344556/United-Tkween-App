@@ -16,40 +16,46 @@ class FilterTabsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.isTablet ? 24.w : 16.w,
+        vertical: context.isTablet ? 16.h : 12.h,
+      ),
       decoration: BoxDecoration(
         color: AppColors.darkSurface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 26), // 0.1
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(4),
+        padding: 4.paddingAll,
         child: TabBar(
           controller: tabController,
           onTap: onTabChanged,
           indicator: BoxDecoration(
             color: AppColors.primary,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
           labelColor: AppColors.secondary,
           unselectedLabelColor: Colors.white,
-          labelStyle: const TextStyle(
-            fontSize: 14,
+          labelStyle: TextStyle(
+            fontSize: context.isTablet ? 16.sp : 14.sp,
             fontWeight: FontWeight.bold,
           ),
-          unselectedLabelStyle: const TextStyle(
-            fontSize: 14,
+          unselectedLabelStyle: TextStyle(
+            fontSize: context.isTablet ? 16.sp : 14.sp,
             fontWeight: FontWeight.normal,
           ),
           indicatorSize: TabBarIndicatorSize.tab,
           dividerColor: Colors.transparent,
-          labelPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          labelPadding: EdgeInsets.symmetric(
+            vertical: context.isTablet ? 16.h : 12.h,
+            horizontal: context.isTablet ? 12.w : 8.w,
+          ),
           splashFactory: NoSplash.splashFactory,
           overlayColor: WidgetStateProperty.resolveWith<Color?>((
             Set<WidgetState> states,
@@ -58,7 +64,10 @@ class FilterTabsWidget extends StatelessWidget {
                 ? Colors.transparent
                 : null;
           }),
-          tabs: tabTitles.map((title) => Tab(text: title, height: 30)).toList(),
+          tabs: tabTitles.map((title) => Tab(
+            text: title, 
+            height: context.isTablet ? 40.h : 30.h,
+          )).toList(),
         ),
       ),
     );

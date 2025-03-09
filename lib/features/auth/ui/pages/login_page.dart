@@ -17,6 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    ResponsiveSize.init(context);
+
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is Map &&
         args.containsKey('fresh_start') &&

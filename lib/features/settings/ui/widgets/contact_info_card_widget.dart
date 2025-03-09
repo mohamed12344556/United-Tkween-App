@@ -18,7 +18,13 @@ class ContactInfoCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: EdgeInsets.symmetric(
+        // هوامش متجاوبة حسب حجم وتوجه الشاشة
+        horizontal: context.isTablet 
+            ? (context.isLandscape ? 8.w : 16.w) 
+            : 16.w,
+        vertical: 8.h,
+      ),
       color: AppColors.darkSurface,
       elevation: 0,
       child: Column(
@@ -26,26 +32,26 @@ class ContactInfoCardWidget extends StatelessWidget {
         children: [
           // عنوان البطاقة
           Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: EdgeInsets.only(bottom: 16.h),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: 8.paddingAll,
                   decoration: BoxDecoration(
                     color: AppColors.primary.withValues(alpha: 51),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.r),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.contact_mail,
                     color: AppColors.primary,
-                    size: 18,
+                    size: context.isTablet ? 22.r : 18.r,
                   ),
                 ),
-                const SizedBox(width: 12),
-                const Text(
+                SizedBox(width: 12.w),
+                Text(
                   'معلومات الاتصال',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: context.isTablet ? 18.sp : 16.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -58,22 +64,31 @@ class ContactInfoCardWidget extends StatelessWidget {
             icon: Icons.email,
             title: 'البريد الإلكتروني',
             value: email,
+            iconSize: context.isTablet ? 20.r : 16.r,
+            titleSize: context.isTablet ? 14.sp : 12.sp,
+            valueSize: context.isTablet ? 16.sp : 14.sp,
           ),
 
-          Divider(color: Colors.grey[800], height: 24),
+          Divider(color: Colors.grey[800], height: 24.h),
 
           InfoItemWidget(
             icon: Icons.phone,
             title: 'رقم الهاتف الأساسي',
             value: phoneNumber1 ?? 'غير محدد',
+            iconSize: context.isTablet ? 20.r : 16.r,
+            titleSize: context.isTablet ? 14.sp : 12.sp,
+            valueSize: context.isTablet ? 16.sp : 14.sp,
           ),
 
           if (phoneNumber2 != null && phoneNumber2!.isNotEmpty) ...[
-            Divider(color: Colors.grey[800], height: 24),
+            Divider(color: Colors.grey[800], height: 24.h),
             InfoItemWidget(
               icon: Icons.phone_android,
               title: 'رقم الهاتف الإضافي',
               value: phoneNumber2!,
+              iconSize: context.isTablet ? 20.r : 16.r,
+              titleSize: context.isTablet ? 14.sp : 12.sp,
+              valueSize: context.isTablet ? 16.sp : 14.sp,
             ),
           ],
         ],

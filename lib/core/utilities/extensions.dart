@@ -4,16 +4,16 @@ import '../core.dart';
 
 extension BuildContextExtensions on BuildContext {
   //! Get screen dimensions
-  double get screenWidth => MediaQuery.of(this).size.width;
-  double get screenHeight => MediaQuery.of(this).size.height;
+  // // double get screenWidth => MediaQuery.of(this).size.width;
+  // double get screenHeight => MediaQuery.of(this).size.height;
   double get paddingTop => MediaQuery.of(this).padding.top;
   double get paddingBottom => MediaQuery.of(this).padding.bottom;
-  double get paddingLeft => MediaQuery.of(this).padding.left;
-  double get paddingRight => MediaQuery.of(this).padding.right;
+  // double get paddingLeft => MediaQuery.of(this).padding.left;
+  // double get paddingRight => MediaQuery.of(this).padding.right;
 
   //! Get screen orientation
-  bool get isPortrait =>
-      MediaQuery.of(this).orientation == Orientation.portrait;
+  // bool get isPortrait =>
+  //     MediaQuery.of(this).orientation == Orientation.portrait;
 
   //! get theme system
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;

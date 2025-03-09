@@ -21,6 +21,10 @@ class OtpVerificationPage extends StatefulWidget {
 class _OtpVerificationPageState extends State<OtpVerificationPage> {
   final SafeTextEditingController _otpController = SafeTextEditingController();
   String _otpValue = '';
+  
+  // تخزين مراجع للكيوبت لاستخدامها في dispose
+  OtpCubit? _otpCubit;
+  PasswordResetCubit? _passwordResetCubit;
 
   @override
   void initState() {
@@ -30,17 +34,34 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     });
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+    // تخزين مراجع للكيوبت لاستخدامها في dispose
+    try {
+      _otpCubit = context.read<OtpCubit?>();
+    } catch (e) {
+      // OtpCubit not available
+    }
+    
+    try {
+      _passwordResetCubit = context.read<PasswordResetCubit?>();
+    } catch (e) {
+      // PasswordResetCubit not available
+    }
+  }
+
   void _initOtpProcess() {
     if (mounted) {
       try {
-        if (context.read<PasswordResetCubit?>() != null) {
-          context.read<PasswordResetCubit>().requestOtp(
+        if (_passwordResetCubit != null) {
+          _passwordResetCubit!.requestOtp(
             email: widget.email,
             context: context,
           );
-        } else if (context.read<OtpCubit?>() != null) {
-          final otpCubit = context.read<OtpCubit>();
-          if (otpCubit.otpTimeRemaining <= 0) otpCubit.resendOtp();
+        } else if (_otpCubit != null) {
+          if (_otpCubit!.otpTimeRemaining <= 0) _otpCubit!.resendOtp();
         }
       } catch (e) {
         print('Error initializing OTP process: $e');
@@ -61,20 +82,13 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
   void _disposeCubits() {
     try {
-      if (mounted) {
-        try {
-          final otpCubit = context.read<OtpCubit?>();
-          if (otpCubit != null) otpCubit.cancelTimer();
-        } catch (e) {
-          // OtpCubit not available
-        }
-
-        try {
-          final passwordResetCubit = context.read<PasswordResetCubit?>();
-          if (passwordResetCubit != null) passwordResetCubit.cancelTimer();
-        } catch (e) {
-          // PasswordResetCubit not available
-        }
+      // استخدام المراجع المخزنة بدلاً من context.read
+      if (_otpCubit != null) {
+        _otpCubit!.cancelTimer();
+      }
+      
+      if (_passwordResetCubit != null) {
+        _passwordResetCubit!.cancelTimer();
       }
     } catch (e) {
       print('Error disposing cubits: $e');
@@ -90,7 +104,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     final verticalSpacing = 0.02.sh;
     final horizontalPadding = 0.06.sw;
     final isDark = context.isDarkMode;
-    final isAccountVerification = context.read<PasswordResetCubit?>() == null;
+    final isAccountVerification = _passwordResetCubit == null;
 
     return isAccountVerification
         ? _buildWithOtpCubit(
@@ -144,6 +158,9 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       },
       builder: (context, state) {
         final cubit = context.read<OtpCubit>();
+        // تحديث المرجع للاستخدام لاحقًا في dispose إذا لزم الأمر
+        _otpCubit = cubit;
+        
         final timeRemaining =
             state is OtpTimerUpdated
                 ? state.timeRemaining
@@ -206,6 +223,9 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       },
       builder: (context, state) {
         final cubit = context.read<PasswordResetCubit>();
+        // تحديث المرجع للاستخدام لاحقًا في dispose إذا لزم الأمر
+        _passwordResetCubit = cubit;
+        
         final timeRemaining =
             state is PasswordResetOtpTimerUpdated
                 ? state.timeRemaining

@@ -8,11 +8,9 @@ import 'generated/l10n.dart';
 
 class UnitedFormationApp extends StatelessWidget {
   final AppRouter appRouter;
-  // final bool hasValidSession;
   const UnitedFormationApp({
     super.key,
     required this.appRouter,
-    // required this.hasValidSession,
   });
 
   @override
@@ -42,9 +40,8 @@ class UnitedFormationApp extends StatelessWidget {
               ],
               supportedLocales: S.delegate.supportedLocales,
               title: 'Flutter Demo',
-              initialRoute: Routes.settingsView,
+              initialRoute: Routes.loginView,
               onGenerateRoute: appRouter.generateRoute,
-              // hasValidSession ? Routes.homeView : Routes.onboardingView,
             ),
           );
         },

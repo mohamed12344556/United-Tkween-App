@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:united_formation_app/core/utilities/responsive_extensions.dart';
 
 import '../core.dart';
 
