@@ -54,6 +54,8 @@ dependencies:
   retrofit: ^4.4.2
   retrofit_generator: ^9.1.9
   shared_preferences: ^2.5.2
+  curved_navigation_bar: ^1.0.6
+  fancy_shimmer_image: ^2.0.3
 
 dev_dependencies:
   build_runner: ^2.4.15

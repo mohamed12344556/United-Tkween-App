@@ -5,7 +5,7 @@ class AppColors {
   AppColors._();
   
   // الألوان الأساسية من التصميم الجديد
-  static const Color primary = Color(0xFFE9F51D); // اللون الأصفر الليموني المشرق
+  static const Color primary = Color(0xFFd1f362); // اللون الأصفر الليموني المشرق
   static const Color secondary = Color(0xFF111111); // اللون الأسود للأزرار الثانوية والنصوص
   static const Color background = Color(0xFFFFFFFF); // خلفية بيضاء
   static const Color accent = Color(0xFF4CAF50); // لون تأكيد أخضر (نحتفظ به)
@@ -28,6 +28,7 @@ class AppColors {
 
   // ألوان الحقول والمدخلات
   static const Color inputBackground = Color(0xFFFFFFFF); // خلفية حقول الإدخال (أبيض)
+  static const Color inputBackgroundDark = Color(0xFF2a2a28); // خلفية حقول الإدخال (أبيض)
   static const Color inputBorder = Color(0xFFEEEEEE); // حدود حقول الإدخال (رمادي فاتح)
 
   // ألوان التفاعل
