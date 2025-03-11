@@ -1,9 +1,8 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
+
+import '../../../../core/core.dart';
+import '../cubits/password_reset/password_reset_cubit.dart';
 
 class PasswordResetHandler {
   static void handleOtpVerified(
@@ -20,7 +19,7 @@ class PasswordResetHandler {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(LocaleKeys.otp_verified_successfully.tr()),
+            content: Text(context.localeS.otp_verified_successfully),
             backgroundColor: AppColors.success, // Use AppColors.success
           ),
         );
@@ -65,7 +64,7 @@ class PasswordResetHandler {
         } else if (state is PasswordResetOtpResent) {
           if (context.mounted) {
             context.showSuccessSnackBar(
-              LocaleKeys.otp_resent_successfully.tr(),
+              context.localeS.otp_resent_successfully,
             );
             otpController.clear();
             updateOtpValue('');
@@ -86,8 +85,8 @@ class PasswordResetHandler {
           isDark,
           timeRemaining,
           state is PasswordResetLoading,
-          cubit.resendOtp,
-          () => cubit.verifyOtp(otp: otpValue, email: email),
+          () => cubit.resendOtp(context),
+          () => cubit.verifyOtp(otp: otpValue, email: email, context: context),
         );
       },
     );

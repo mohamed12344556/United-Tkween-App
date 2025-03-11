@@ -1,9 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:united_formation_app/core/error/api_error_model.dart';
-import 'package:united_formation_app/core/usecases/use_case.dart';
-import 'package:united_formation_app/features/auth/domain/entities/user_login_entity.dart';
-import 'package:united_formation_app/features/auth/domain/entities/user_reset_password_entity.dart';
-import 'package:united_formation_app/features/auth/domain/repos/auth_repository.dart';
+import '../entities/user_login_entity.dart';
+import '../entities/user_reset_password_entity.dart';
+import '../repos/auth_repository.dart';
 
 import '../../../../core/core.dart';
 

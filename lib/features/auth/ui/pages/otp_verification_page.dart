@@ -1,15 +1,13 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/core/utilities/safe_controller.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/otp/otp_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/auth_header.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/otp_input_field.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/resend_otp_row.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
+import '../../../../core/core.dart';
+import '../../../../core/utilities/safe_controller.dart';
+import '../cubits/otp/otp_cubit.dart';
+import '../cubits/password_reset/password_reset_cubit.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/otp_input_field.dart';
+import '../widgets/resend_otp_row.dart';
 
 class OtpVerificationPage extends StatefulWidget {
   final String email;
@@ -23,6 +21,10 @@ class OtpVerificationPage extends StatefulWidget {
 class _OtpVerificationPageState extends State<OtpVerificationPage> {
   final SafeTextEditingController _otpController = SafeTextEditingController();
   String _otpValue = '';
+  
+  // تخزين مراجع للكيوبت لاستخدامها في dispose
+  OtpCubit? _otpCubit;
+  PasswordResetCubit? _passwordResetCubit;
 
   @override
   void initState() {
@@ -32,14 +34,34 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     });
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+    // تخزين مراجع للكيوبت لاستخدامها في dispose
+    try {
+      _otpCubit = context.read<OtpCubit?>();
+    } catch (e) {
+      // OtpCubit not available
+    }
+    
+    try {
+      _passwordResetCubit = context.read<PasswordResetCubit?>();
+    } catch (e) {
+      // PasswordResetCubit not available
+    }
+  }
+
   void _initOtpProcess() {
     if (mounted) {
       try {
-        if (context.read<PasswordResetCubit?>() != null) {
-          context.read<PasswordResetCubit>().requestOtp(email: widget.email);
-        } else if (context.read<OtpCubit?>() != null) {
-          final otpCubit = context.read<OtpCubit>();
-          if (otpCubit.otpTimeRemaining <= 0) otpCubit.resendOtp();
+        if (_passwordResetCubit != null) {
+          _passwordResetCubit!.requestOtp(
+            email: widget.email,
+            context: context,
+          );
+        } else if (_otpCubit != null) {
+          if (_otpCubit!.otpTimeRemaining <= 0) _otpCubit!.resendOtp();
         }
       } catch (e) {
         print('Error initializing OTP process: $e');
@@ -60,20 +82,13 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
   void _disposeCubits() {
     try {
-      if (mounted) {
-        try {
-          final otpCubit = context.read<OtpCubit?>();
-          if (otpCubit != null) otpCubit.cancelTimer();
-        } catch (e) {
-          // OtpCubit not available
-        }
-
-        try {
-          final passwordResetCubit = context.read<PasswordResetCubit?>();
-          if (passwordResetCubit != null) passwordResetCubit.cancelTimer();
-        } catch (e) {
-          // PasswordResetCubit not available
-        }
+      // استخدام المراجع المخزنة بدلاً من context.read
+      if (_otpCubit != null) {
+        _otpCubit!.cancelTimer();
+      }
+      
+      if (_passwordResetCubit != null) {
+        _passwordResetCubit!.cancelTimer();
       }
     } catch (e) {
       print('Error disposing cubits: $e');
@@ -89,20 +104,20 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     final verticalSpacing = 0.02.sh;
     final horizontalPadding = 0.06.sw;
     final isDark = context.isDarkMode;
-    final isAccountVerification = context.read<PasswordResetCubit?>() == null;
+    final isAccountVerification = _passwordResetCubit == null;
 
     return isAccountVerification
         ? _buildWithOtpCubit(
-            verticalSpacing: verticalSpacing,
-            horizontalPadding: horizontalPadding,
-            isDark: isDark,
-          )
+          verticalSpacing: verticalSpacing,
+          horizontalPadding: horizontalPadding,
+          isDark: isDark,
+        )
         : _buildWithPasswordResetCubit(
-            verticalSpacing: verticalSpacing,
-            horizontalPadding: horizontalPadding,
-            isDark: isDark,
-            email: widget.email,
-          );
+          verticalSpacing: verticalSpacing,
+          horizontalPadding: horizontalPadding,
+          isDark: isDark,
+          email: widget.email,
+        );
   }
 
   Widget _buildWithOtpCubit({
@@ -119,7 +134,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         } else if (state is OtpVerified) {
           if (mounted) {
             context.showSuccessSnackBar(
-              LocaleKeys.otp_verified_successfully.tr(),
+              context.localeS.otp_verified_successfully,
             );
 
             Future.microtask(() {
@@ -134,7 +149,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         } else if (state is OtpResent) {
           if (mounted) {
             context.showSuccessSnackBar(
-              LocaleKeys.otp_resent_successfully.tr(),
+              context.localeS.otp_resent_successfully,
             );
             _otpController.clear();
             _updateOtpValue('');
@@ -143,14 +158,19 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       },
       builder: (context, state) {
         final cubit = context.read<OtpCubit>();
+        // تحديث المرجع للاستخدام لاحقًا في dispose إذا لزم الأمر
+        _otpCubit = cubit;
+        
         final timeRemaining =
-            state is OtpTimerUpdated ? state.timeRemaining : cubit.otpTimeRemaining;
+            state is OtpTimerUpdated
+                ? state.timeRemaining
+                : cubit.otpTimeRemaining;
 
         return _buildScaffold(
           timeRemaining: timeRemaining,
           isLoading: state is OtpLoading,
           onResendOtp: () => cubit.resendOtp(),
-          onVerifyOtp: () => cubit.verifyOtp(otp: _otpValue),
+          onVerifyOtp: () => cubit.verifyOtp(otp: _otpValue, context: context),
           verticalSpacing: verticalSpacing,
           horizontalPadding: horizontalPadding,
           isDark: isDark,
@@ -181,7 +201,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
             Future.microtask(() {
               if (mounted) {
                 context.showSuccessSnackBar(
-                  LocaleKeys.otp_verified_successfully.tr(),
+                  context.localeS.otp_verified_successfully,
                 );
 
                 Navigator.of(context).pushReplacementNamed(
@@ -194,7 +214,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         } else if (state is PasswordResetOtpResent) {
           if (mounted) {
             context.showSuccessSnackBar(
-              LocaleKeys.otp_resent_successfully.tr(),
+              context.localeS.otp_resent_successfully,
             );
             _otpController.clear();
             _updateOtpValue('');
@@ -203,14 +223,24 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       },
       builder: (context, state) {
         final cubit = context.read<PasswordResetCubit>();
+        // تحديث المرجع للاستخدام لاحقًا في dispose إذا لزم الأمر
+        _passwordResetCubit = cubit;
+        
         final timeRemaining =
-            state is PasswordResetOtpTimerUpdated ? state.timeRemaining : cubit.otpTimeRemaining;
+            state is PasswordResetOtpTimerUpdated
+                ? state.timeRemaining
+                : cubit.otpTimeRemaining;
 
         return _buildScaffold(
           timeRemaining: timeRemaining,
           isLoading: state is PasswordResetLoading,
-          onResendOtp: () => cubit.resendOtp(),
-          onVerifyOtp: () => cubit.verifyOtp(otp: _otpValue, email: email),
+          onResendOtp: () => cubit.resendOtp(context),
+          onVerifyOtp:
+              () => cubit.verifyOtp(
+                otp: _otpValue,
+                email: email,
+                context: context,
+              ),
           verticalSpacing: verticalSpacing,
           horizontalPadding: horizontalPadding,
           isDark: isDark,
@@ -253,8 +283,11 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AuthHeader(
-                  title: LocaleKeys.verify_your_email.tr(),
-                  subtitle: LocaleKeys.please_enter_the_4_digit_code_sent_to_your_email_address.tr(),
+                  title: context.localeS.verify_your_email,
+                  subtitle:
+                      context
+                          .localeS
+                          .please_enter_the_4_digit_code_sent_to_your_email_address,
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: verticalSpacing),
@@ -287,7 +320,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                 ),
                 SizedBox(height: verticalSpacing * 2),
                 AppButton(
-                  text: LocaleKeys.verify.tr(),
+                  text: context.localeS.verify,
                   backgroundColor: AppColors.primary,
                   textColor: Colors.black,
                   isLoading: isLoading,

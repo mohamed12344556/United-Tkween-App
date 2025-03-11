@@ -1,24 +1,21 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/otp/otp_cubit.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
+import '../../../../core/core.dart';
+import '../cubits/otp/otp_cubit.dart';
 
 class SignupOtpHandler {
   static void handleOtpVerified(BuildContext context) {
     final cubit = context.read<OtpCubit>();
-    
+
     cubit.cancelTimer();
-    
+
     Future.microtask(() {
       if (context.mounted) {
-        context.showSuccessSnackBar(LocaleKeys.otp_verified_successfully.tr());
-        
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.learningOptionsView, 
-          (route) => false
-        );
+        context.showSuccessSnackBar(context.localeS.otp_verified_successfully);
+
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil(Routes.learningOptionsView, (route) => false);
       }
     });
   }
@@ -40,7 +37,8 @@ class SignupOtpHandler {
       bool isLoading,
       Function() onResendOtp,
       Function() onVerifyOtp,
-    ) buildScaffold,
+    )
+    buildScaffold,
   }) {
     return BlocConsumer<OtpCubit, OtpState>(
       listener: (context, state) {
@@ -52,7 +50,9 @@ class SignupOtpHandler {
           handleOtpVerified(context);
         } else if (state is OtpResent) {
           if (context.mounted) {
-            context.showSuccessSnackBar(LocaleKeys.otp_resent_successfully.tr());
+            context.showSuccessSnackBar(
+              context.localeS.otp_resent_successfully,
+            );
             otpController.clear();
             updateOtpValue('');
           }
@@ -64,7 +64,7 @@ class SignupOtpHandler {
             state is OtpTimerUpdated
                 ? state.timeRemaining
                 : cubit.otpTimeRemaining;
-        
+
         return buildScaffold(
           context,
           verticalSpacing,
@@ -73,7 +73,7 @@ class SignupOtpHandler {
           timeRemaining,
           state is OtpLoading,
           () => cubit.resendOtp(),
-          () => cubit.verifyOtp(otp: otpValue),
+          () => cubit.verifyOtp(otp: otpValue, context: context),
         );
       },
     );

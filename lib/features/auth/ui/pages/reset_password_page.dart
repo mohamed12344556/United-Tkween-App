@@ -1,11 +1,11 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/auth_header.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
+import '../../../../core/core.dart';
+import '../cubits/password_reset/password_reset_cubit.dart';
+import '../widgets/auth_header.dart';
+
+import '../../../../generated/l10n.dart';
 
 class ResetPasswordPage extends StatelessWidget {
   final String email;
@@ -29,7 +29,7 @@ class ResetPasswordPage extends StatelessWidget {
         } else if (state is PasswordResetSuccess) {
           if (context.mounted) {
             context.showSuccessSnackBar(
-              LocaleKeys.password_reset_successful.tr(),
+              context.localeS.password_reset_successful,
             );
 
             Future.microtask(() {
@@ -37,7 +37,7 @@ class ResetPasswordPage extends StatelessWidget {
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   Routes.loginView,
                   (route) => false,
-                  arguments: {'fresh_start': true}
+                  arguments: {'fresh_start': true},
                 );
               }
             });
@@ -48,9 +48,7 @@ class ResetPasswordPage extends StatelessWidget {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          iconTheme: IconThemeData(
-            color: isDark ? Colors.white : Colors.black,
-          ),
+          iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () => Navigator.of(context).pop(),
@@ -69,15 +67,14 @@ class ResetPasswordPage extends StatelessWidget {
                 children: [
                   // Header
                   AuthHeader(
-                    title: LocaleKeys.reset_password.tr(),
+                    title: context.localeS.reset_password,
                     subtitle:
-                        LocaleKeys.create_a_new_password_for_your_account
-                            .tr(),
+                        context.localeS.create_a_new_password_for_your_account,
                   ),
 
                   AppTextField(
                     controller: cubit.passwordController,
-                    hintText: LocaleKeys.new_password.tr(),
+                    hintText: context.localeS.new_password,
                     isPassword: true,
                     passwordVisible: cubit.isPasswordVisible,
                     onTogglePasswordVisibility: () {
@@ -89,7 +86,7 @@ class ResetPasswordPage extends StatelessWidget {
 
                   AppTextField(
                     controller: cubit.confirmPasswordController,
-                    hintText: LocaleKeys.confirm_new_password.tr(),
+                    hintText: context.localeS.confirm_new_password,
                     isPassword: true,
                     passwordVisible: cubit.isConfirmPasswordVisible,
                     onTogglePasswordVisibility: () {
@@ -102,7 +99,7 @@ class ResetPasswordPage extends StatelessWidget {
                   BlocBuilder<PasswordResetCubit, PasswordResetState>(
                     builder: (context, state) {
                       return AppButton(
-                        text: LocaleKeys.reset_password.tr(),
+                        text: S.of(context).reset_password,
                         backgroundColor: AppColors.primary,
                         textColor: Colors.black,
                         isLoading: state is PasswordResetLoading,
@@ -128,7 +125,7 @@ class ResetPasswordPage extends StatelessWidget {
     if (password.isEmpty || confirmPassword.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(LocaleKeys.password_is_required.tr()),
+          content: Text(context.localeS.password_is_required),
           backgroundColor: AppColors.error,
         ),
       );
@@ -138,7 +135,7 @@ class ResetPasswordPage extends StatelessWidget {
     if (password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(LocaleKeys.passwords_do_not_match.tr()),
+          content: Text(context.localeS.passwords_do_not_match),
           backgroundColor: AppColors.error,
         ),
       );
@@ -151,6 +148,7 @@ class ResetPasswordPage extends StatelessWidget {
       otp: otp,
       password: password,
       confirmPassword: confirmPassword,
+      context: context,
     );
   }
 }

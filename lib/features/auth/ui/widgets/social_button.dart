@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:united_formation_app/core/core.dart';
+
+import '../../../../core/core.dart';
 
 class SocialButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -28,10 +28,9 @@ class SocialButton extends StatelessWidget {
             ? backgroundColor ?? AppColors.darkSecondary
             : backgroundColor ?? AppColors.secondary;
 
-    final defaultTextColor =
-        isDark ? textColor ?? AppColors.textHint : textColor ?? AppColors.text;
+    final defaultTextColor = textColor ?? AppColors.textHint;
 
-    final iconColor = isDark ? AppColors.textHint : AppColors.white70;
+    final iconColor = AppColors.textHint;
 
     return SizedBox(
       width: double.infinity,

@@ -1,11 +1,10 @@
 import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:meta/meta.dart';
-import 'package:united_formation_app/features/auth/domain/usecases/auth_usecases.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
 
 import '../../../../../core/core.dart';
+import '../../../domain/usecases/auth_usecases.dart';
 
 part 'otp_state.dart';
 
@@ -81,12 +80,12 @@ class OtpCubit extends Cubit<OtpState> {
     _startOtpTimer();
   }
 
-  Future<void> verifyOtp({required String otp}) async {
+  Future<void> verifyOtp({required String otp, required BuildContext context}) async {
     try {
       if (!isActive) return;
       
       if (otp.isEmpty || otp.length < 4) {
-        emit(OtpError(message: LocaleKeys.please_enter_valid_otp.tr()));
+        emit(OtpError(message: context.localeS.please_enter_valid_otp));
         return;
       }
       

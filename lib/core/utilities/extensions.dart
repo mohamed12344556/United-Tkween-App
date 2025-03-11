@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import '../../generated/l10n.dart';
+import '../core.dart';
 
 extension BuildContextExtensions on BuildContext {
   //! Get screen dimensions
-  double get screenWidth => MediaQuery.of(this).size.width;
-  double get screenHeight => MediaQuery.of(this).size.height;
+  // // double get screenWidth => MediaQuery.of(this).size.width;
+  // double get screenHeight => MediaQuery.of(this).size.height;
   double get paddingTop => MediaQuery.of(this).padding.top;
   double get paddingBottom => MediaQuery.of(this).padding.bottom;
-  double get paddingLeft => MediaQuery.of(this).padding.left;
-  double get paddingRight => MediaQuery.of(this).padding.right;
+  // double get paddingLeft => MediaQuery.of(this).padding.left;
+  // double get paddingRight => MediaQuery.of(this).padding.right;
 
   //! Get screen orientation
-  bool get isPortrait =>
-      MediaQuery.of(this).orientation == Orientation.portrait;
+  // bool get isPortrait =>
+  //     MediaQuery.of(this).orientation == Orientation.portrait;
 
   //! get theme system
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
+
+  //! Localization
+  S get localeS => S.of(this);
 
   //! Navigation
   void navigateTo(String routeName) =>
@@ -46,6 +51,7 @@ extension BuildContextExtensions on BuildContext {
 
   void pop() => Navigator.of(this).pop();
 
+  //! Show SnackBar
   Future<T?> showSnackBarAsDialog<T>({
     required String message,
     required bool isError,
@@ -161,6 +167,68 @@ extension BuildContextExtensions on BuildContext {
   void showSnackBar(String message) {
     ScaffoldMessenger.of(this).showSnackBar(SnackBar(content: Text(message)));
   }
+
+  Future<void> showLogoutConfirmation() async {
+    return showDialog<void>(
+      context: this,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.darkSurface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            'تسجيل الخروج',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          content: const Text(
+            'هل أنت متأكد من تسجيل الخروج؟',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white70),
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: const Text('إلغاء'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.error,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: const Text('تسجيل الخروج'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      // تنفيذ منطق تسجيل الخروج
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 extension StringExtension on String? {
@@ -169,15 +237,4 @@ extension StringExtension on String? {
 
 extension ListExtension<T> on List<T>? {
   bool isNullOrEmpty() => this == null || this!.isEmpty;
-}
-
-extension ColorExtension on Color {
-  Color withValues({int? red, int? green, int? blue, double? alpha}) {
-    return Color.fromRGBO(
-      red ?? this.red,
-      green ?? this.green,
-      blue ?? this.blue,
-      alpha ?? this.opacity,
-    );
-  }
 }

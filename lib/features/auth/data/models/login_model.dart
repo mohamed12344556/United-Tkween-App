@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:united_formation_app/features/auth/domain/entities/user_login_entity.dart';
+
+import '../../domain/entities/user_login_entity.dart';
 
 part 'login_model.g.dart';
 

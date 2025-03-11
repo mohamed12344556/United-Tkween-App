@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:united_formation_app/features/auth/domain/entities/user_login_entity.dart';
-import 'package:united_formation_app/features/auth/domain/usecases/auth_usecases.dart';
-import 'package:united_formation_app/core/utilities/safe_controller.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
+import '../../../domain/entities/user_login_entity.dart';
+import '../../../domain/usecases/auth_usecases.dart';
+import '../../../../../core/utilities/safe_controller.dart';
 
 import '../../../../../core/core.dart';
 
@@ -41,7 +39,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   // Register user with email and password
-  Future<void> registerWithEmailAndPassword() async {
+  Future<void> registerWithEmailAndPassword(BuildContext context) async {
     try {
       if (!isActive) return;
 
@@ -51,19 +49,19 @@ class RegisterCubit extends Cubit<RegisterState> {
 
       // Validate inputs
       if (email.isEmpty) {
-        emit(RegisterError(errorMessage: LocaleKeys.email_is_required.tr()));
+        emit(RegisterError(errorMessage: context.localeS.email_is_required));
         return;
       }
 
       if (password.isEmpty) {
-        emit(RegisterError(errorMessage: LocaleKeys.password_is_required.tr()));
+        emit(RegisterError(errorMessage: context.localeS.password_is_required));
         return;
       }
 
       // Simple email validation
       if (!email.contains('@') || !email.contains('.')) {
         emit(
-          RegisterError(errorMessage: LocaleKeys.invalid_email_address.tr()),
+          RegisterError(errorMessage: context.localeS.invalid_email_address),
         );
         return;
       }
@@ -73,7 +71,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(
           RegisterError(
             errorMessage:
-                LocaleKeys.password_must_be_at_least_6_characters_long.tr(),
+                context.localeS.password_must_be_at_least_6_characters_long,
           ),
         );
         return;
@@ -95,12 +93,12 @@ class RegisterCubit extends Cubit<RegisterState> {
             RegisterError(
               errorMessage:
                   failure.errorMessage?.message ??
-                  LocaleKeys.something_went_wrong_please_try_again.tr(),
+                  context.localeS.something_went_wrong_please_try_again,
             ),
           ),
           (_) async {
             // Request OTP verification after successful registration
-            await requestVerificationOtp(email);
+            await requestVerificationOtp(email, context);
           },
         );
       } else {
@@ -110,13 +108,13 @@ class RegisterCubit extends Cubit<RegisterState> {
         if (!isActive) return;
 
         // Request verification OTP
-        await requestVerificationOtp(email);
+        await requestVerificationOtp(email, context);
       }
     } catch (e) {
       if (isActive) {
         emit(
           RegisterError(
-            errorMessage: LocaleKeys.something_went_wrong_please_try_again.tr(),
+            errorMessage: context.localeS.something_went_wrong_please_try_again,
           ),
         );
       }
@@ -124,7 +122,10 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   // Register with social media
-  Future<void> registerWithSocialMedia(String provider) async {
+  Future<void> registerWithSocialMedia(
+    String provider,
+    BuildContext context,
+  ) async {
     try {
       if (!isActive) return;
 
@@ -150,14 +151,17 @@ class RegisterCubit extends Cubit<RegisterState> {
       if (isActive) {
         emit(
           RegisterError(
-            errorMessage: LocaleKeys.something_went_wrong_please_try_again.tr(),
+            errorMessage: context.localeS.something_went_wrong_please_try_again,
           ),
         );
       }
     }
   }
 
-  Future<void> requestVerificationOtp(String email) async {
+  Future<void> requestVerificationOtp(
+    String email,
+    BuildContext context,
+  ) async {
     try {
       if (!isActive) return;
 
@@ -176,7 +180,7 @@ class RegisterCubit extends Cubit<RegisterState> {
             RegisterError(
               errorMessage:
                   failure.errorMessage?.message ??
-                  LocaleKeys.something_went_wrong_please_try_again.tr(),
+                  context.localeS.something_went_wrong_please_try_again,
             ),
           ),
           (_) => emit(RegisterOtpSent(email: email)),
@@ -194,7 +198,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       if (isActive) {
         emit(
           RegisterError(
-            errorMessage: LocaleKeys.something_went_wrong_please_try_again.tr(),
+            errorMessage: context.localeS.something_went_wrong_please_try_again,
           ),
         );
       }
@@ -208,7 +212,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     // استخدام isDisposed مع SafeTextEditingController
     if (!emailController.isDisposed) emailController.clear();
     if (!passwordController.isDisposed) passwordController.clear();
-    
+
     _isPasswordVisible = false;
     emit(RegisterInitial());
   }
@@ -228,7 +232,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     } catch (e) {
       print('Error disposing controllers: $e');
     }
-    
+
     return super.close();
   }
 }

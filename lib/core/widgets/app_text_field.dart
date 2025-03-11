@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:united_formation_app/core/utilities/responsive_extensions.dart';
+
 import '../core.dart';
 
 class AppTextField extends StatelessWidget {
@@ -25,11 +27,19 @@ class AppTextField extends StatelessWidget {
   final Color? fillColor; // إضافة خاصية للون الخلفية
   final double? borderRadius; // إضافة خاصية لتخصيص زوايا الحدود
   final AutovalidateMode? autovalidateMode ;
+  final bool? filled;
+  final Color? fillColor;
+  final double? borderRadius;
+  final BorderSide? borderSide;
+  final Color? prefixIconColor;
+  final TextStyle? style;
 
   const AppTextField({
     Key? key,
     this.autovalidateMode,
     this.controller,
+    super.key,
+    required this.controller,
     required this.hintText,
      this.labelText,
     this.keyboardType = TextInputType.text,
@@ -51,32 +61,37 @@ class AppTextField extends StatelessWidget {
     this.filled,
     this.fillColor,
     this.borderRadius,
-  }) : super(key: key);
+    this.borderSide,
+    this.prefixIconColor,
+    this.style,
+  });
 
   @override
+
   Widget build(BuildContext context) {
     final isDark = context.isDarkMode;
-    
+
     // حجم النص المتجاوب مع الشاشة
     final fontSize = context.screenWidth * 0.04;
     final hintSize = context.screenWidth * 0.035;
     final iconSize = context.screenWidth * 0.05;
     // تحديد زوايا الحدود
     final radius = borderRadius ?? 12.0;
-    
+
     // ألوان محسنة بناءً على وضع السمة
-    final textFieldFillColor = fillColor ?? 
-                                (isDark ? AppColors.darkSecondary : Colors.white);
-    
+    final textFieldFillColor =
+        fillColor ?? (isDark ? AppColors.darkSecondary : Colors.white);
+
     // خلفية مملوءة بشكل افتراضي ما لم يتم تحديد خلاف ذلك
     final shouldFill = filled ?? true;
-    
+
     // حساب المسافات الداخلية بشكل متجاوب
-    final defaultPadding = contentPadding ?? 
-                       EdgeInsets.symmetric(
-                         horizontal: context.screenWidth * 0.04,
-                         vertical: context.screenHeight * 0.018
-                       );
+    final defaultPadding =
+        contentPadding ??
+        EdgeInsets.symmetric(
+          horizontal: context.screenWidth * 0.04,
+          vertical: context.screenHeight * 0.018,
+        );
 
     return TextFormField(
       autovalidateMode: autovalidateMode,
@@ -92,7 +107,7 @@ class AppTextField extends StatelessWidget {
       textInputAction: textInputAction,
       onChanged: onChanged,
       onFieldSubmitted: onFieldSubmitted,
-      style: TextStyle(
+      style: style ?? TextStyle(
         fontSize: fontSize,
         color: isDark ? Colors.white : Colors.black87,
         fontWeight: FontWeight.normal,
@@ -111,59 +126,56 @@ class AppTextField extends StatelessWidget {
         fillColor: textFieldFillColor,
         contentPadding: defaultPadding,
         prefixIcon: prefixIcon,
-        suffixIcon: isPassword
-            ? IconButton(
-                icon: Icon(
-                  passwordVisible ? Icons.visibility_off : Icons.visibility,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
-                  size: iconSize,
-                ),
-                splashRadius: iconSize * 0.9,
-                onPressed: onTogglePasswordVisibility,
-              )
-            : suffixIcon,
+        suffixIcon:
+            isPassword
+                ? IconButton(
+                  icon: Icon(
+                    passwordVisible ? Icons.visibility_off : Icons.visibility,
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    size: iconSize,
+                  ),
+                  splashRadius: iconSize * 0.9,
+                  onPressed: onTogglePasswordVisibility,
+                )
+                : suffixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius),
-          borderSide: BorderSide(
-            color: isDark ? Colors.transparent : Colors.grey[300]!,
-            width: 1,
-          ),
+          borderSide:
+              borderSide ??
+              BorderSide(
+                color: isDark ? Colors.transparent : Colors.grey[300]!,
+                width: 1,
+              ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius),
-          borderSide: BorderSide(
-            color: isDark ? Colors.transparent : Colors.grey[300]!,
-            width: 1,
-          ),
+          borderSide:
+              borderSide ??
+              BorderSide(
+                color: isDark ? Colors.transparent : Colors.grey[300]!,
+                width: 1,
+              ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius),
-          borderSide: BorderSide(
-            color: AppColors.primary,
-            width: 1.5,
-          ),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius),
-          borderSide: BorderSide(
-            color: AppColors.error,
-            width: 1.5,
-          ),
+          borderSide: BorderSide(color: AppColors.error, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius),
-          borderSide: BorderSide(
-            color: AppColors.error,
-            width: 1.5,
-          ),
+          borderSide: BorderSide(color: AppColors.error, width: 1.5),
         ),
         errorStyle: TextStyle(
           color: AppColors.error,
-          fontSize: fontSize * 0.75, // حجم نص الخطأ متناسب مع حجم النص الرئيسي
+          fontSize: fontSize * 0.75,
         ),
         counterText: "",
-        // تحسين أيقونات الحقل
-        prefixIconColor: isDark ? Colors.grey[400] : Colors.grey[600],
+
+        prefixIconColor:
+            prefixIconColor ?? (isDark ? Colors.grey[400] : Colors.grey[600]),
         suffixIconColor: isDark ? Colors.grey[400] : Colors.grey[600],
       ),
     );

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/core/routes/routes.dart';
-import 'package:united_formation_app/core/api/auth_interceptor.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/otp/otp_cubit.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
+import '../routes/routes.dart';
+import '../api/auth_interceptor.dart';
+import '../../features/auth/ui/cubits/otp/otp_cubit.dart';
+import '../../features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
 
 class NavigationManager {
   // استخدام NavigationService.navigatorKey الموجود في المشروع

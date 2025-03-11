@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:united_formation_app/core/core.dart';
+
+import '../../../../core/core.dart';
 
 class OtpInputField extends StatelessWidget {
   final BuildContext context;

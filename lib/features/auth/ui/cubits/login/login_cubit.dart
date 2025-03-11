@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:united_formation_app/core/utilities/safe_controller.dart';
-import 'package:united_formation_app/features/auth/domain/entities/user_login_entity.dart';
-import 'package:united_formation_app/features/auth/domain/usecases/auth_usecases.dart';
+import '../../../../../core/core.dart';
+import '../../../../../core/utilities/safe_controller.dart';
+import '../../../domain/entities/user_login_entity.dart';
+import '../../../domain/usecases/auth_usecases.dart';
 
-import 'package:united_formation_app/generated/locale_keys.g.dart';
 
 part 'login_state.dart';
 
@@ -34,23 +33,23 @@ class LoginCubit extends Cubit<LoginState> {
     passwordController = SafeTextEditingController();
   }
 
-  Future<void> login({required String email, required String password}) async {
+  Future<void> login({required String email, required String password, required BuildContext context}) async {
     try {
       if (!isActive) return;
 
       // Validate inputs
       if (email.isEmpty) {
-        emit(LoginError(errorMessage: LocaleKeys.email_is_required.tr()));
+        emit(LoginError(errorMessage: context.localeS.email_is_required));
         return;
       }
 
       if (password.isEmpty) {
-        emit(LoginError(errorMessage: LocaleKeys.password_is_required.tr()));
+        emit(LoginError(errorMessage: context.localeS.password_is_required));
         return;
       }
 
       if (!email.contains('@') || !email.contains('.')) {
-        emit(LoginError(errorMessage: LocaleKeys.invalid_email_address.tr()));
+        emit(LoginError(errorMessage: context.localeS.invalid_email_address));
         return;
       }
 
@@ -69,7 +68,7 @@ class LoginCubit extends Cubit<LoginState> {
             LoginError(
               errorMessage:
                   failure.errorMessage?.message ??
-                  LocaleKeys.something_went_wrong_please_try_again.tr(),
+                  context.localeS.something_went_wrong_please_try_again,
             ),
           ),
           (_) => emit(
@@ -91,14 +90,14 @@ class LoginCubit extends Cubit<LoginState> {
           emit(LoginSuccess(userID: '12345', userToken: 'mock_token_value'));
         } else {
           // Failed login
-          emit(LoginError(errorMessage: LocaleKeys.invalid_email_address.tr()));
+          emit(LoginError(errorMessage: context.localeS.invalid_email_address));
         }
       }
     } catch (e) {
       if (isActive) {
         emit(
           LoginError(
-            errorMessage: LocaleKeys.something_went_wrong_please_try_again.tr(),
+            errorMessage: context.localeS.something_went_wrong_please_try_again,
           ),
         );
       }

@@ -1,10 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/features/auth/ui/widgets/selection_option_chip.dart';
-import 'package:united_formation_app/features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
+import '../../../../core/core.dart';
+import '../widgets/selection_option_chip.dart';
+import '../cubits/learning_options/learning_options_cubit.dart';
+import '../../../../generated/l10n.dart';
 
 class LearningOptionsPage extends StatefulWidget {
   const LearningOptionsPage({super.key});
@@ -17,20 +16,20 @@ class _LearningOptionsPageState extends State<LearningOptionsPage> {
   // Helper method to get localized option text
   String getLocalizedOption(String option) {
     final Map<String, String> optionsMap = {
-      'Illustration': LocaleKeys.illustration.tr(),
-      'Animation': LocaleKeys.animation.tr(),
-      'Fine Art': LocaleKeys.fine_art.tr(),
-      'Graphic Design': LocaleKeys.graphic_design.tr(),
-      'Lifestyle': LocaleKeys.lifestyle.tr(),
-      'Photography': LocaleKeys.photography.tr(),
-      'Film & Video': LocaleKeys.film_and_video.tr(),
-      'Marketing': LocaleKeys.marketing.tr(),
-      'Web Development': LocaleKeys.web_development.tr(),
-      'Music': LocaleKeys.music.tr(),
-      'UI Design': LocaleKeys.ui_design.tr(),
-      'UX Design': LocaleKeys.ux_design.tr(),
-      'Business & Management': LocaleKeys.business_and_management.tr(),
-      'Productivity': LocaleKeys.productivity.tr(),
+      'Illustration': context.localeS.illustration,
+      'Animation': context.localeS.animation,
+      'Fine Art': context.localeS.fine_art,
+      'Graphic Design': context.localeS.graphic_design,
+      'Lifestyle': context.localeS.lifestyle,
+      'Photography': context.localeS.photography,
+      'Film & Video': context.localeS.film_and_video,
+      'Marketing': context.localeS.marketing,
+      'Web Development': context.localeS.web_development,
+      'Music': context.localeS.music,
+      'UI Design': context.localeS.ui_design,
+      'UX Design': context.localeS.ux_design,
+      'Business & Management': context.localeS.business_and_management,
+      'Productivity': context.localeS.productivity,
     };
 
     return optionsMap[option] ?? option;
@@ -78,7 +77,7 @@ class _LearningOptionsPageState extends State<LearningOptionsPage> {
 
   Widget _buildHeading(BuildContext context, bool isDark) {
     return Text(
-      LocaleKeys.what_do_you_want_to_learn.tr(),
+      context.localeS.what_do_you_want_to_learn,
       style: TextStyle(
         fontSize: context.screenWidth * 0.07,
         fontWeight: FontWeight.bold,
@@ -89,7 +88,7 @@ class _LearningOptionsPageState extends State<LearningOptionsPage> {
 
   Widget _buildSubtitle(BuildContext context, bool isDark) {
     return Text(
-      LocaleKeys.select_your_areas_of_courses_you_would_like_to_learn.tr(),
+      context.localeS.select_your_areas_of_courses_you_would_like_to_learn,
       style: TextStyle(
         fontSize: context.screenWidth * 0.035,
         color: isDark ? Colors.grey[300] : AppColors.textSecondary,
@@ -130,20 +129,20 @@ class _LearningOptionsPageState extends State<LearningOptionsPage> {
     bool isDark,
   ) {
     return AppButton(
-      text: LocaleKeys.continue1.tr(),
+      text: context.localeS.continue1,
       backgroundColor: isDark ? AppColors.primary : AppColors.secondary,
       textColor: isDark ? AppColors.secondary : AppColors.background,
       isLoading: state is LearningOptionsLoading,
       onPressed: () {
-        cubit.saveOptions();
+        cubit.saveOptions( context);
       },
-      borderRadius: context.screenWidth * 0.08,
+      borderRadius: BorderRadius.circular(context.screenWidth * 0.05),
       height: context.screenHeight * 0.065,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            LocaleKeys.continue1.tr(),
+            S.of(context).continue1,
             style: TextStyle(
               fontSize: context.screenWidth * 0.04,
               fontWeight: FontWeight.w600,

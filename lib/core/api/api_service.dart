@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:united_formation_app/features/auth/data/models/login_model.dart';
-import 'package:united_formation_app/features/auth/data/models/otp_verification_model.dart';
-import 'package:united_formation_app/features/auth/data/models/reset_password_model.dart';
-import 'package:united_formation_app/features/auth/data/models/send_otp_model.dart';
+import '../../features/auth/data/models/login_model.dart';
+import '../../features/auth/data/models/otp_verification_model.dart';
+import '../../features/auth/data/models/reset_password_model.dart';
+import '../../features/auth/data/models/send_otp_model.dart';
 
 import '../core.dart';
 

@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:united_formation_app/core/utilities/safe_controller.dart';
-import 'package:united_formation_app/features/auth/domain/entities/user_reset_password_entity.dart';
-import 'package:united_formation_app/features/auth/domain/usecases/auth_usecases.dart';
-import 'package:united_formation_app/generated/locale_keys.g.dart';
+import '../../../../../core/utilities/safe_controller.dart';
+import '../../../domain/entities/user_reset_password_entity.dart';
+import '../../../domain/usecases/auth_usecases.dart';
 
 import '../../../../../core/core.dart';
 
@@ -65,17 +63,20 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
   }
 
   // Request OTP to be sent to email
-  Future<void> requestOtp({required String email}) async {
+  Future<void> requestOtp({
+    required String email,
+    required BuildContext context,
+  }) async {
     try {
       // تحقق من صحة البريد الإلكتروني أولاً
       if (email.isEmpty) {
-        emit(PasswordResetError(message: LocaleKeys.email_is_required.tr()));
+        emit(PasswordResetError(message: context.localeS.email_is_required));
         return;
       }
 
       if (!email.contains('@') || !email.contains('.')) {
         emit(
-          PasswordResetError(message: LocaleKeys.invalid_email_address.tr()),
+          PasswordResetError(message: context.localeS.invalid_email_address),
         );
         return;
       }
@@ -88,12 +89,12 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
       // استخدام حالة الاستخدام إذا كانت متوفرة، أو المحاكاة للتطوير
       if (sendOtpUseCase != null) {
         final result = await sendOtpUseCase!(
-          SendOtpParams(email: email, purpose: OtpPurpose.passwordReset)
+          SendOtpParams(email: email, purpose: OtpPurpose.passwordReset),
         );
-        
+
         // تحقق مرة أخرى من النشاط بعد العملية غير المتزامنة
         if (!isActive) return;
-        
+
         result.fold(
           (failure) => emit(
             PasswordResetError(
@@ -110,10 +111,10 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
       } else {
         // نسخة محاكاة للتطوير
         await Future.delayed(Duration(seconds: 1));
-        
+
         // تحقق مرة أخرى من النشاط بعد التأخير
         if (!isActive) return;
-        
+
         currentEmail = email;
         emit(PasswordResetOtpSent(email: email));
         _startOtpTimer();
@@ -126,12 +127,16 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
   }
 
   // Verify OTP code
-  Future<void> verifyOtp({required String otp, required String email}) async {
+  Future<void> verifyOtp({
+    required String otp,
+    required String email,
+    required BuildContext context,
+  }) async {
     try {
       // تحقق من صحة OTP
       if (otp.isEmpty || otp.length < 4) {
         emit(
-          PasswordResetError(message: LocaleKeys.please_enter_valid_otp.tr()),
+          PasswordResetError(message: context.localeS.please_enter_valid_otp),
         );
         return;
       }
@@ -146,10 +151,10 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
         final result = await verifyOtpUseCase!(
           VerifyOtpParams(otp: otp, email: email),
         );
-        
+
         // تحقق مرة أخرى من النشاط بعد العملية غير المتزامنة
         if (!isActive) return;
-        
+
         result.fold(
           (failure) => emit(
             PasswordResetError(
@@ -167,10 +172,10 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
       } else {
         // نسخة محاكاة للتطوير
         await Future.delayed(Duration(seconds: 1));
-        
+
         // تحقق مرة أخرى من النشاط بعد التأخير
         if (!isActive) return;
-        
+
         // إلغاء المؤقت قبل إرسال حالة النجاح
         _cancelTimer();
         verifiedOtp = otp;
@@ -189,20 +194,19 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
     required String otp,
     required String password,
     required String confirmPassword,
+    required BuildContext context,
   }) async {
     try {
       // تحقق من صحة المدخلات
       if (password.isEmpty) {
-        emit(
-          PasswordResetError(message: LocaleKeys.password_is_required.tr()),
-        );
+        emit(PasswordResetError(message: context.localeS.password_is_required));
         return;
       }
 
       if (confirmPassword.isEmpty) {
         emit(
           PasswordResetError(
-            message: LocaleKeys.confirm_password_is_required.tr(),
+            message: context.localeS.confirm_password_is_required,
           ),
         );
         return;
@@ -210,7 +214,7 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
 
       if (password != confirmPassword) {
         emit(
-          PasswordResetError(message: LocaleKeys.passwords_do_not_match.tr()),
+          PasswordResetError(message: context.localeS.passwords_do_not_match),
         );
         return;
       }
@@ -219,7 +223,7 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
         emit(
           PasswordResetError(
             message:
-                LocaleKeys.password_must_be_at_least_6_characters_long.tr(),
+                context.localeS.password_must_be_at_least_6_characters_long,
           ),
         );
         return;
@@ -240,10 +244,10 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
       // استخدام حالة الاستخدام إذا كانت متوفرة، أو المحاكاة للتطوير
       if (resetPasswordUseCase != null) {
         final result = await resetPasswordUseCase!(resetEntity);
-        
+
         // تحقق مرة أخرى من النشاط بعد العملية غير المتزامنة
         if (!isActive) return;
-        
+
         result.fold(
           (failure) => emit(
             PasswordResetError(
@@ -256,10 +260,10 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
       } else {
         // نسخة محاكاة للتطوير
         await Future.delayed(Duration(seconds: 1));
-        
+
         // تحقق مرة أخرى من النشاط بعد التأخير
         if (!isActive) return;
-        
+
         emit(PasswordResetSuccess());
       }
     } catch (e) {
@@ -272,12 +276,13 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
   // إعادة ضبط الحالة إلى الحالة الأولية
   void resetState() {
     if (!isActive) return;
-    
+
     // حذف المحتوى الآمن باستخدام SafeTextEditingController
     if (!emailController.isDisposed) emailController.clear();
     if (!passwordController.isDisposed) passwordController.clear();
-    if (!confirmPasswordController.isDisposed) confirmPasswordController.clear();
-    
+    if (!confirmPasswordController.isDisposed)
+      confirmPasswordController.clear();
+
     emit(PasswordResetInitial());
   }
 
@@ -317,9 +322,9 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
   }
 
   // إعادة إرسال OTP
-  Future<void> resendOtp() async {
+  Future<void> resendOtp(BuildContext context) async {
     if (currentEmail != null && _otpTimeRemaining <= 0) {
-      await requestOtp(email: currentEmail!);
+      await requestOtp(email: currentEmail!, context: context);
       if (isActive) {
         emit(PasswordResetOtpResent());
       }
@@ -356,11 +361,11 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
       if (!emailController.isDisposed) {
         emailController.dispose();
       }
-      
+
       if (!passwordController.isDisposed) {
         passwordController.dispose();
       }
-      
+
       if (!confirmPasswordController.isDisposed) {
         confirmPasswordController.dispose();
       }

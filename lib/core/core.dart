@@ -40,14 +40,19 @@ export './utilities/methods_utils.dart';
 export './utilities/storage_keys.dart';
 export './utilities/validators_utils.dart';
 // widgets
-export 'widgets/app_button.dart';
+export './widgets/app_button.dart';
 export './widgets/app_text_field.dart';
 export './widgets/custom_divider.dart';
+export './widgets/responsive_builder.dart';
+export './widgets/responsive_grid.dart';
 
 // routs
-export './routes/app_router.dart' hide sl;
+export './routes/app_router.dart';
 export './routes/routes.dart';
 // utilities
 export './utilities/enums/auth_type.dart';
 export './utilities/enums/validation_type.dart';
 export './utilities/enums/otp_purpose.dart';
+export './utilities/enums/device_type.dart';
+export './utilities/responsive_size_utils.dart';
+export './utilities/responsive_extensions.dart';
