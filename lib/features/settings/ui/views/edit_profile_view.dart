@@ -10,14 +10,14 @@ import '../../../../core/core.dart';
 import '../cubits/edit_profile/edit_profile_cubit.dart';
 import '../widgets/profile_avatar.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+class EditProfileView extends StatefulWidget {
+  const EditProfileView({super.key});
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  State<EditProfileView> createState() => _EditProfileViewState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfileViewState extends State<EditProfileView> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumber1Controller = TextEditingController();

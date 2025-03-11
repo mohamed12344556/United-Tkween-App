@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/library/library_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/orders/orders_cubit.dart';
-import 'package:united_formation_app/features/settings/ui/screens/library_screen.dart';
-import 'package:united_formation_app/features/settings/ui/screens/orders_screen.dart';
-import 'package:united_formation_app/features/settings/ui/screens/profile_screen.dart';
-import 'package:united_formation_app/features/settings/ui/screens/settings_screen.dart';
+import 'package:united_formation_app/features/settings/ui/views/library_view.dart';
+import 'package:united_formation_app/features/settings/ui/views/orders_view.dart';
+import 'package:united_formation_app/features/settings/ui/views/profile_view.dart';
+import 'package:united_formation_app/features/settings/ui/views/settings_view.dart';
 import 'routes.dart';
 import '../utilities/enums/otp_purpose.dart';
 import '../../features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
@@ -22,8 +22,8 @@ import '../../features/auth/ui/pages/reset_password_page.dart';
 import '../../features/settings/ui/cubits/edit_profile/edit_profile_cubit.dart';
 import '../../features/settings/ui/cubits/profile/profile_cubit.dart';
 import '../../features/settings/ui/cubits/support/support_cubit.dart';
-import '../../features/settings/ui/screens/edit_profile_screen.dart';
-import '../../features/settings/ui/screens/support_screen.dart';
+import '../../features/settings/ui/views/edit_profile_view.dart';
+import '../../features/settings/ui/views/support_view.dart';
 import 'package:get_it/get_it.dart';
 import 'package:united_formation_app/features/home/ui/pages/admin_edit_product.dart';
 import 'package:united_formation_app/features/home/ui/pages/product_details_page.dart';
@@ -161,7 +161,8 @@ class AppRouter {
 
       case Routes.resetPasswordView:
         print(
-          "resetPasswordView Arguments: $arguments, Type: ${arguments.runtimeType}");
+          "resetPasswordView Arguments: $arguments, Type: ${arguments.runtimeType}",
+        );
 
         Map<String, String> parsedArgs = {};
 
@@ -200,7 +201,7 @@ class AppRouter {
       case Routes.settingsView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const SettingsScreen(),
+          builder: (_) => const SettingsView(),
         );
 
       case Routes.profileView:
@@ -209,7 +210,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<ProfileCubit>(),
-                child: const ProfileScreen(),
+                child: const ProfileView(),
               ),
         );
 
@@ -219,7 +220,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<EditProfileCubit>(),
-                child: const EditProfileScreen(),
+                child: const EditProfileView(),
               ),
         );
 
@@ -229,7 +230,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<OrdersCubit>(),
-                child: const OrdersScreen(),
+                child: const OrdersView(),
               ),
         );
 
@@ -239,7 +240,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<LibraryCubit>(),
-                child: const LibraryScreen(),
+                child: const LibraryView(),
               ),
         );
 
@@ -249,7 +250,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<SupportCubit>(),
-                child: const SupportScreen(),
+                child: const SupportView(),
               ),
         );
       case Routes.homeView:
@@ -257,7 +258,7 @@ class AppRouter {
         ProductModel product = arguments as ProductModel;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) =>  AdminEditProductPage(product: product),
+          builder: (_) => AdminEditProductPage(product: product),
         );
 
       case Routes.hostView:
@@ -274,12 +275,11 @@ class AppRouter {
           builder: (_) => ProductDetailsPage(product: product),
         );
 
-
       case Routes.cartView:
         ProductModel product = arguments as ProductModel;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) =>  CartPage(),
+          builder: (_) => CartPage(),
         );
 
       default:

@@ -6,14 +6,14 @@ import '../cubits/support/support_cubit.dart';
 import '../cubits/support/support_state.dart';
 import '../widgets/support_message_input.dart';
 
-class SupportScreen extends StatefulWidget {
-  const SupportScreen({super.key});
+class SupportView extends StatefulWidget {
+  const SupportView({super.key});
 
   @override
-  State<SupportScreen> createState() => _SupportScreenState();
+  State<SupportView> createState() => _SupportViewState();
 }
 
-class _SupportScreenState extends State<SupportScreen> {
+class _SupportViewState extends State<SupportView> {
   final TextEditingController _messageController = TextEditingController();
   final FocusNode _messageFocusNode = FocusNode();
   final List<String> _supportOptions = [
@@ -48,10 +48,7 @@ class _SupportScreenState extends State<SupportScreen> {
         centerTitle: true,
         title: const Text(
           'دعم المتجر',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -63,9 +60,7 @@ class _SupportScreenState extends State<SupportScreen> {
             children: [
               _buildSupportHeader(),
               _buildSupportOptions(),
-              Expanded(
-                child: _buildMessageInput(state),
-              ),
+              Expanded(child: _buildMessageInput(state)),
             ],
           );
         },
@@ -143,10 +138,7 @@ class _SupportScreenState extends State<SupportScreen> {
           const SizedBox(height: 8),
           Text(
             'يمكنك ارسال استفسارك وسنرد عليك في أقرب وقت',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[400],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[400]),
             textAlign: TextAlign.center,
           ),
         ],
@@ -164,7 +156,7 @@ class _SupportScreenState extends State<SupportScreen> {
         itemBuilder: (context, index) {
           final option = _supportOptions[index];
           final isSelected = option == _selectedOption;
-          
+
           return GestureDetector(
             onTap: () {
               setState(() {

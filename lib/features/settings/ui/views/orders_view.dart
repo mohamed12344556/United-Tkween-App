@@ -8,14 +8,14 @@ import '../cubits/orders/orders_state.dart';
 import '../widgets/order_item_card.dart';
 import '../widgets/order_stats_widget.dart';
 
-class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({super.key});
+class OrdersView extends StatefulWidget {
+  const OrdersView({super.key});
 
   @override
-  State<OrdersScreen> createState() => _OrdersScreenState();
+  State<OrdersView> createState() => _OrdersViewState();
 }
 
-class _OrdersScreenState extends State<OrdersScreen> {
+class _OrdersViewState extends State<OrdersView> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
@@ -29,7 +29,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     // تهيئة الأحجام المتجاوبة
     context.initResponsive();
-    
+
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
       appBar: _buildAppBar(),
@@ -45,7 +45,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       title: Text(
         'مشترياتي',
         style: TextStyle(
-          color: Colors.white, 
+          color: Colors.white,
           fontWeight: FontWeight.bold,
           fontSize: context.isTablet ? 20.sp : 18.sp, // حجم خط متجاوب
         ),
@@ -84,7 +84,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     if (context.isLandscape && (context.isTablet || context.isDesktop)) {
       return _buildLandscapeLayout();
     }
-    
+
     // التخطيط العمودي الافتراضي
     return Column(
       children: [
@@ -94,13 +94,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
           pendingOrders: 3,
           deliveredOrders: 9,
         ),
-        Expanded(
-          child: _buildOrdersList(),
-        ),
+        Expanded(child: _buildOrdersList()),
       ],
     );
   }
-  
+
   // تخطيط للوضع الأفقي على الأجهزة الكبيرة
   Widget _buildLandscapeLayout() {
     return Row(
@@ -131,18 +129,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
             ],
           ),
         ),
-        
+
         // خط فاصل
-        Container(
-          width: 1,
-          color: Colors.grey[800],
-        ),
-        
+        Container(width: 1, color: Colors.grey[800]),
+
         // جزء لقائمة الطلبات
-        Expanded(
-          flex: 3,
-          child: _buildOrdersList(),
-        ),
+        Expanded(flex: 3, child: _buildOrdersList()),
       ],
     );
   }
@@ -154,9 +146,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           return Center(
             child: CircularProgressIndicator(
               color: AppColors.primary,
-              backgroundColor: AppColors.secondary.withValues(
-                alpha: 51,
-              ),
+              backgroundColor: AppColors.secondary.withValues(alpha: 51),
               strokeWidth: context.isTablet ? 3.0 : 2.0, // سمك متجاوب
             ),
           );
@@ -181,7 +171,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
           },
           child: ListView.builder(
             key: const PageStorageKey('orders_list'),
-            padding: EdgeInsets.all(context.isTablet ? 20.r : 16.r), // تباعد متجاوب
+            padding: EdgeInsets.all(
+              context.isTablet ? 20.r : 16.r,
+            ), // تباعد متجاوب
             physics: const BouncingScrollPhysics(
               parent: AlwaysScrollableScrollPhysics(),
             ),
@@ -189,7 +181,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             itemBuilder: (context, index) {
               final order = state.orders[index];
               return OrderItemCard(
-                order: order, 
+                order: order,
                 onTap: () {},
                 isResponsive: true, // إضافة خاصية للتجاوبية في المكون
               );
@@ -206,15 +198,15 @@ class _OrdersScreenState extends State<OrdersScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.error_outline, 
+            Icons.error_outline,
             size: context.isTablet ? 70.r : 60.r, // حجم متجاوب للأيقونة
-            color: AppColors.error
+            color: AppColors.error,
           ),
           SizedBox(height: 16.h), // مسافة متجاوبة
           Text(
             state.errorMessage ?? 'خطأ في تحميل المشتريات',
             style: TextStyle(
-              color: Colors.white, 
+              color: Colors.white,
               fontSize: context.isTablet ? 18.sp : 16.sp, // حجم خط متجاوب
             ),
             textAlign: TextAlign.center,
@@ -226,7 +218,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             child: ElevatedButton.icon(
               onPressed: () => context.read<OrdersCubit>().loadOrders(),
               icon: Icon(
-                Icons.refresh, 
+                Icons.refresh,
                 size: context.isTablet ? 20.r : 16.r, // حجم متجاوب للأيقونة
               ),
               label: Text(
@@ -239,7 +231,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.secondary,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.r), // نصف قطر حافة متجاوب
+                  borderRadius: BorderRadius.circular(
+                    50.r,
+                  ), // نصف قطر حافة متجاوب
                 ),
                 padding: EdgeInsets.symmetric(vertical: 12.h), // تباعد متجاوب
               ),

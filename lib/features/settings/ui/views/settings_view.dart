@@ -4,14 +4,14 @@ import 'package:united_formation_app/features/settings/ui/widgets/social_media_i
 import '../widgets/profile_menu_item.dart';
 import '../../../../core/core.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+class SettingsView extends StatefulWidget {
+  const SettingsView({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<SettingsView> createState() => _SettingsViewState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen>
+class _SettingsViewState extends State<SettingsView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 

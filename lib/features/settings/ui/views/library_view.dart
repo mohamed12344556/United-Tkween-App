@@ -7,14 +7,14 @@ import '../../../../core/core.dart';
 import '../cubits/library/library_cubit.dart';
 import '../cubits/library/library_state.dart';
 
-class LibraryScreen extends StatefulWidget {
-  const LibraryScreen({super.key});
+class LibraryView extends StatefulWidget {
+  const LibraryView({super.key});
 
   @override
-  State<LibraryScreen> createState() => _LibraryScreenState();
+  State<LibraryView> createState() => _LibraryViewState();
 }
 
-class _LibraryScreenState extends State<LibraryScreen>
+class _LibraryViewState extends State<LibraryView>
     with SingleTickerProviderStateMixin {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
@@ -60,7 +60,7 @@ class _LibraryScreenState extends State<LibraryScreen>
   Widget build(BuildContext context) {
     // تهيئة الأحجام المتجاوبة
     context.initResponsive();
-    
+
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
       appBar: _buildAppBar(),
@@ -70,9 +70,7 @@ class _LibraryScreenState extends State<LibraryScreen>
             return Center(
               child: CircularProgressIndicator(
                 color: AppColors.primary,
-                backgroundColor: AppColors.secondary.withValues(
-                  alpha: 51,
-                ),
+                backgroundColor: AppColors.secondary.withValues(alpha: 51),
                 strokeWidth: context.isTablet ? 3.0 : 2.0, // سمك متجاوب
               ),
             );
@@ -117,7 +115,10 @@ class _LibraryScreenState extends State<LibraryScreen>
         onPressed: () {},
         elevation: 4,
         shape: const CircleBorder(),
-        child: Icon(Icons.add, size: context.isTablet ? 28.r : 24.r), // حجم متجاوب للأيقونة
+        child: Icon(
+          Icons.add,
+          size: context.isTablet ? 28.r : 24.r,
+        ), // حجم متجاوب للأيقونة
       ),
     );
   }
@@ -160,7 +161,9 @@ class _LibraryScreenState extends State<LibraryScreen>
         icon: const Icon(Icons.arrow_back_ios),
       ),
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(context.isTablet ? 110.h : 100.h), // ارتفاع متجاوب
+        preferredSize: Size.fromHeight(
+          context.isTablet ? 110.h : 100.h,
+        ), // ارتفاع متجاوب
         child: FilterTabsWidget(
           tabController: _tabController,
           tabTitles: _tabTitles,
@@ -176,15 +179,15 @@ class _LibraryScreenState extends State<LibraryScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.error_outline, 
+            Icons.error_outline,
             size: context.isTablet ? 70.r : 60.r, // حجم متجاوب للأيقونة
-            color: AppColors.error
+            color: AppColors.error,
           ),
           SizedBox(height: 16.h), // مسافة متجاوبة
           Text(
             state.errorMessage ?? 'خطأ في تحميل المكتبة',
             style: TextStyle(
-              color: Colors.white, 
+              color: Colors.white,
               fontSize: context.isTablet ? 18.sp : 16.sp, // حجم خط متجاوب
             ),
             textAlign: TextAlign.center,
@@ -196,7 +199,7 @@ class _LibraryScreenState extends State<LibraryScreen>
             child: ElevatedButton.icon(
               onPressed: () => context.read<LibraryCubit>().loadLibraryItems(),
               icon: Icon(
-                Icons.refresh, 
+                Icons.refresh,
                 size: context.isTablet ? 20.r : 16.r, // حجم متجاوب للأيقونة
               ),
               label: Text(
@@ -209,7 +212,9 @@ class _LibraryScreenState extends State<LibraryScreen>
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.secondary,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.r), // نصف قطر حافة متجاوب
+                  borderRadius: BorderRadius.circular(
+                    50.r,
+                  ), // نصف قطر حافة متجاوب
                 ),
                 padding: EdgeInsets.symmetric(vertical: 12.h), // تباعد متجاوب
               ),

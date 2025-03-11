@@ -8,14 +8,14 @@ import '../widgets/contact_info_card_widget.dart';
 import '../widgets/address_card_widget.dart';
 import '../widgets/edit_profile_button_widget.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class ProfileView extends StatefulWidget {
+  const ProfileView({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     // تهيئة الأحجام المتجاوبة
