@@ -3,7 +3,7 @@ class Routes {
 
   // Profile routes
   static const String hostView = "/host-view";
-  static const String profileView = "/profile";
+  // static const String profileView = "/profile";
   static const String settingsView = "/settings";
   static const String profileView = "/settings/profile";
   static const String editProfileView = "/settings/profile/edit";

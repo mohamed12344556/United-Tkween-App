@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/features/home/data/product_model.dart';
-import '../widgets/add_product_card.dart';
 import '../widgets/home_products_grid_view.dart';
 import '../widgets/home_widgets/categories_listview.dart';
-import '../widgets/order_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,18 +25,18 @@ class _HomePageState extends State<HomePage> {
       price: 250.0,
       offer: false,
     ),
-    ProductModel(
-      id: '2',
-      dateTime: DateTime.now().toString(),
-      category: 'Science Fiction',
-      brand: 'HarperCollins',
-      description: 'A fascinating journey through space and time.',
-      imageUrl:
-          'https://images.unsplash.com/photo-1518744946-39d48f3b2464?q=80&w=1000',
-      name: 'Dune',
-      price: 300.0,
-      offer: true,
-    ),
+    // ProductModel(
+    //   id: '2',
+    //   dateTime: DateTime.now().toString(),
+    //   category: 'Science Fiction',
+    //   brand: 'HarperCollins',
+    //   description: 'A fascinating journey through space and time.',
+    //   imageUrl:
+    //       'https://images.unsplash.com/photo-1518744946-39d48f3b2464?q=80&w=1000',
+    //   name: 'Dune',
+    //   price: 300.0,
+    //   offer: true,
+    // ),
     ProductModel(
       id: '3',
       dateTime: DateTime.now().toString(),

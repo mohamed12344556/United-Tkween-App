@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/core/core.dart';
 import '../../data/product_model.dart';
 
@@ -40,6 +39,7 @@ class _AdminEditProductPageState extends State<AdminEditProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    context.initResponsive();
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(

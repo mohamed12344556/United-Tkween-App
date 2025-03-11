@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:united_formation_app/core/utilities/responsive_extensions.dart';
 
 import '../core.dart';
 
@@ -26,22 +25,21 @@ class AppTextField extends StatelessWidget {
   final bool? filled; // إضافة خاصية للتحكم في تعبئة الخلفية
   final Color? fillColor; // إضافة خاصية للون الخلفية
   final double? borderRadius; // إضافة خاصية لتخصيص زوايا الحدود
-  final AutovalidateMode? autovalidateMode ;
-  final bool? filled;
-  final Color? fillColor;
-  final double? borderRadius;
+  final AutovalidateMode? autovalidateMode;
+  // final bool? filled;
+  // final Color? fillColor;
+  // final double? borderRadius;
   final BorderSide? borderSide;
   final Color? prefixIconColor;
   final TextStyle? style;
 
   const AppTextField({
-    Key? key,
     this.autovalidateMode,
     this.controller,
     super.key,
-    required this.controller,
+    // required this.controller,
     required this.hintText,
-     this.labelText,
+    this.labelText,
     this.keyboardType = TextInputType.text,
     this.isPassword = false,
     this.passwordVisible = false,
@@ -67,7 +65,6 @@ class AppTextField extends StatelessWidget {
   });
 
   @override
-
   Widget build(BuildContext context) {
     final isDark = context.isDarkMode;
 
@@ -107,11 +104,13 @@ class AppTextField extends StatelessWidget {
       textInputAction: textInputAction,
       onChanged: onChanged,
       onFieldSubmitted: onFieldSubmitted,
-      style: style ?? TextStyle(
-        fontSize: fontSize,
-        color: isDark ? Colors.white : Colors.black87,
-        fontWeight: FontWeight.normal,
-      ),
+      style:
+          style ??
+          TextStyle(
+            fontSize: fontSize,
+            color: isDark ? Colors.white : Colors.black87,
+            fontWeight: FontWeight.normal,
+          ),
       cursorColor: AppColors.primary,
       cursorWidth: 1.5,
       cursorRadius: const Radius.circular(2),

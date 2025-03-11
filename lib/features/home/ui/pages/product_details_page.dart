@@ -28,7 +28,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   @override
   Widget build(BuildContext context) {
     double totalPrice = widget.product.price * quantity;
-
     return Scaffold(
       backgroundColor: Colors.grey[900],
       appBar: AppBar(

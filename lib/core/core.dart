@@ -47,7 +47,6 @@ export './widgets/responsive_builder.dart';
 export './widgets/responsive_grid.dart';
 
 // routs
-export './routes/app_router.dart';
 export './routes/routes.dart';
 // utilities
 export './utilities/enums/auth_type.dart';

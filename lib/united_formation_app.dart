@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/core.dart';
+import 'core/routes/app_router.dart';
 import 'core/themes/cubit/theme_cubit.dart';
 import 'generated/l10n.dart';
 
@@ -41,7 +42,7 @@ class UnitedFormationApp extends StatelessWidget {
               ],
               supportedLocales: S.delegate.supportedLocales,
               title: 'Flutter Demo',
-              initialRoute: Routes.loginView,
+              initialRoute: Routes.hostView,
               onGenerateRoute: appRouter.generateRoute,
             ),
           );
