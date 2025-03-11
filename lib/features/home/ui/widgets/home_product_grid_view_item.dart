@@ -15,13 +15,11 @@ class HomeProductsGridViewItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if(Constants.isAdmin)
-          {
-            context.pushNamed(Routes.adminEditProductView,arguments: product);
-          }else
-            {
-              context.pushNamed(Routes.productDetailsView, arguments: product);
-            }
+        if (Constants.isAdmin) {
+          context.pushNamed(Routes.adminEditProductView, arguments: product);
+        } else {
+          context.pushNamed(Routes.productDetailsView, arguments: product);
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -36,7 +34,10 @@ class HomeProductsGridViewItem extends StatelessWidget {
               Stack(
                 alignment: Alignment.topRight,
                 children: [
-                  ProductsGridViewBanner(product: product),
+                  Hero(
+                    tag: product.id,
+                    child: ProductsGridViewBanner(product: product),
+                  ),
                   GestureDetector(
                     onTap: () {
                       print("Likeeeeeed");
@@ -90,7 +91,7 @@ class HomeProductsGridViewItem extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height:12),
+              const SizedBox(height: 12),
               ProductOfferAndPrice(product: product),
             ],
           ),

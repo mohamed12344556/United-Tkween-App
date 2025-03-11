@@ -1,7 +1,6 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/core/core.dart';
-import '../../../../core/themes/app_colors.dart';
 import '../../data/product_model.dart';
 
 class ProductDetailsPage extends StatefulWidget {
@@ -47,22 +46,27 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       body: Stack(
         children: [
           Container(
-            height: MediaQuery.of(context).size.height*.3,
+            height: MediaQuery.of(context).size.height * .3,
             color: Colors.black,
             child: Center(
-              child: FancyShimmerImage(
-                imageUrl:
-                    widget.product.imageUrl ??
+              child: Hero(
+                tag: widget.product.id,
+                child: FancyShimmerImage(
+                  imageUrl:
+                      widget.product.imageUrl ??
+                      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png',
+                  errorWidget: Image.network(
                     'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png',
-                errorWidget: Image.network(
-                  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png',
+                  ),
                 ),
               ),
             ),
           ),
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*.3),
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * .3,
+              ),
               child: Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -90,7 +94,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         ),
                         Row(
                           children: [
-                            Icon(Icons.star, color:AppColors.primary, size: 20),
+                            Icon(
+                              Icons.star,
+                              color: AppColors.primary,
+                              size: 20,
+                            ),
                             Text(
                               " 4.9 (862)",
                               style: TextStyle(color: Colors.white),
@@ -105,7 +113,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       style: TextStyle(color: Colors.white70),
                     ),
                     SizedBox(height: 16),
-            
+
                     Text(
                       "Category",
                       style: TextStyle(color: Colors.white, fontSize: 20),
@@ -139,22 +147,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   category,
                                   style: TextStyle(
                                     color:
-                                        isSelected ? Colors.black : Colors.white,
+                                        isSelected
+                                            ? Colors.black
+                                            : Colors.white,
                                   ),
                                 ),
                               ),
                             );
                           }).toList(),
                     ),
-            
+
                     SizedBox(height: 25),
-            
+
                     Text(
                       "Price: \$${widget.product.price}",
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     SizedBox(height: 16),
-            
+
                     Row(
                       children: [
                         Text(
@@ -179,7 +189,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
                               child: Text(
                                 "$quantity",
                                 style: TextStyle(
@@ -202,7 +214,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         ),
                       ],
                     ),
-            
+
                     SizedBox(height: 30),
                     Row(
                       children: [
@@ -221,7 +233,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         ),
                         SizedBox(width: 8),
                         Expanded(
-                          child: AppButton(text:"Add to cart" , onPressed: (){},height: 55,),
+                          child: AppButton(
+                            text: "Add to cart",
+                            onPressed: () {},
+                            height: 55,
+                          ),
                         ),
                       ],
                     ),
