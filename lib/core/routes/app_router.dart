@@ -37,22 +37,15 @@ final sl = GetIt.instance;
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
     final arguments = settings.arguments;
-    print(
-      "Route: ${settings.name}, Arguments Type: ${arguments?.runtimeType}, Arguments: $arguments",
-    );
-
     switch (settings.name) {
       case Routes.loginView:
-        // تأكد من أن Cubit جديد يتم إنشاؤه في كل مرة
         return MaterialPageRoute(
           settings: settings,
           builder:
               (_) => BlocProvider(
                 create: (context) {
-                  // استخدم sl<LoginCubit>() لإنشاء مثيل جديد في كل مرة
                   final cubit = sl<LoginCubit>();
 
-                  // إذا كانت هناك وسيطات تشير إلى بدء جديد
                   if (arguments is Map &&
                       arguments.containsKey('fresh_start')) {
                     cubit.resetState();
@@ -90,7 +83,6 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) {
-                  // التأكد من تنظيف أي مؤقتات أو موارد قبل إنشاء جديد
                   final cubit = sl<PasswordResetCubit>();
                   return cubit;
                 },
@@ -99,29 +91,20 @@ class AppRouter {
         );
 
       case Routes.verifyOtpView:
-        print("verifyOtpView Arguments Type: ${arguments.runtimeType}");
         String email;
         bool isFromRegister = false;
-
         if (arguments is String) {
-          // Coming from registration
           email = arguments;
           isFromRegister = true;
-          print("From Register with email: $email");
         } else if (arguments is Map) {
-          // Coming from password reset
           email = arguments['email'] as String;
           isFromRegister = false;
-          print("From ForgetPassword with email: $email");
         } else {
-          // Unexpected arguments type
-          print("Unexpected arguments type: ${arguments.runtimeType}");
-          email = "example@email.com"; // Default value
+          email = "example@email.com";
           isFromRegister = true;
         }
 
         if (isFromRegister) {
-          // If coming from registration, use OtpCubit
           return MaterialPageRoute(
             settings: settings,
             builder:
@@ -137,21 +120,13 @@ class AppRouter {
                 ),
           );
         } else {
-          // If coming from password reset, use PasswordResetCubit
-          print(
-            "Creating PasswordResetCubit for OTP verification with email: $email",
-          );
           return MaterialPageRoute(
             settings: settings,
             builder:
                 (_) => BlocProvider(
                   create: (context) {
-                    // إنشاء مثيل جديد تمامًا من PasswordResetCubit
                     final cubit = sl<PasswordResetCubit>();
-
-                    // تعيين البريد الإلكتروني بشكل آمن
                     cubit.setEmail(email);
-
                     return cubit;
                   },
                   child: OtpVerificationPage(email: email),
@@ -160,12 +135,7 @@ class AppRouter {
         }
 
       case Routes.resetPasswordView:
-        print(
-          "resetPasswordView Arguments: $arguments, Type: ${arguments.runtimeType}",
-        );
-
         Map<String, String> parsedArgs = {};
-
         if (arguments is Map) {
           parsedArgs = Map<String, String>.from(
             arguments.map(
@@ -173,31 +143,23 @@ class AppRouter {
             ),
           );
         }
-
         String email = parsedArgs['email'] ?? "example@email.com";
         String otp = parsedArgs['otp'] ?? "0000";
-
-        print("Creating ResetPasswordView with email: $email, otp: $otp");
-
         return MaterialPageRoute(
           settings: settings,
           builder:
               (_) => BlocProvider(
                 create: (context) {
-                  // إنشاء مثيل جديد كل مرة لتجنب استخدام cubit متخلص منه
                   final cubit = sl<PasswordResetCubit>();
-
-                  // تعيين البيانات بشكل آمن
                   cubit.setEmail(email);
                   cubit.setVerifiedOtp(otp);
-
                   return cubit;
                 },
                 child: ResetPasswordPage(email: email, otp: otp),
               ),
         );
 
-      // Profile Routes
+      // Settings Routes
       case Routes.settingsView:
         return MaterialPageRoute(
           settings: settings,
