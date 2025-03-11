@@ -151,13 +151,19 @@ class _HomePageState extends State<HomePage> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
                     ),
-
                   ),
                 ),
                 const SizedBox(height: 20),
                 CategoriesListView(categoryItems: categories),
                 const SizedBox(height: 20),
-                Text("Popular" , style: TextStyle(color: Colors.white ,fontWeight:FontWeight.bold,fontSize: 20),),
+                Text(
+                  "Popular",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
                 const SizedBox(height: 20),
                 HomeProductsGridView(products: products),
               ],
@@ -171,8 +177,8 @@ class _HomePageState extends State<HomePage> {
   AppBar buildAppBar() {
     return AppBar(
       backgroundColor: AppColors.darkBackground,
-      leading: Icon(Icons.person,color:Colors.white),
-      title:Text('M7m7' ,style: TextStyle(color: Colors.white),),
+      leading: Icon(Icons.person, color: Colors.white),
+      title: Text('M7m7', style: TextStyle(color: Colors.white)),
       centerTitle: false,
       actions: [
         Container(

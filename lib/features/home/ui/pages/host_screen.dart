@@ -14,12 +14,7 @@ class HostPage extends StatefulWidget {
 class _HostPageState extends State<HostPage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    HomePage(),
-    CartPage(),
-    Scaffold(),
-    Scaffold(),
-  ];
+  final List<Widget> _pages = [HomePage(), CartPage(), Scaffold(), Scaffold()];
 
   void _onItemTapped(int index) {
     setState(() {
