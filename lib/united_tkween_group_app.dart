@@ -9,10 +9,7 @@ import 'generated/l10n.dart';
 
 class UnitedFormationApp extends StatelessWidget {
   final AppRouter appRouter;
-  const UnitedFormationApp({
-    super.key,
-    required this.appRouter,
-  });
+  const UnitedFormationApp({super.key, required this.appRouter});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +39,7 @@ class UnitedFormationApp extends StatelessWidget {
               ],
               supportedLocales: S.delegate.supportedLocales,
               title: 'Flutter Demo',
-              initialRoute: Routes.hostView,
+              initialRoute: Routes.loginView,
               onGenerateRoute: appRouter.generateRoute,
             ),
           );
