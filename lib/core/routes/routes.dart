@@ -1,14 +1,21 @@
 class Routes {
-  static const String onboardingView = "/onboarding";
   static const String homeView = "/home";
-  static const String profileView = "/profile";
+
+  // Profile routes
   static const String settingsView = "/settings";
+  static const String profileView = "/settings/profile";
+  static const String editProfileView = "/settings/profile/edit";
+  static const String ordersView = "/settings/orders";
+  static const String libraryView = "/settings/library";
+  static const String supportView = "/settings/support";
+
   static const String aboutView = "/about";
-  static const String sigUpSigninView = "/sig-up-signin";
   static const String loginView = "/login";
   static const String registerView = "/register";
+  static const String learningOptionsView = "/learning-options";
   static const String otpAuthenticateView = "/otp-authenticate";
   static const String forgetPasswordView = "/forget-password";
   static const String resetPasswordView = "/reset-password";
-  static const String authTest = '/auth-test';
+  static const String requestOtpView = "/request-otp";
+  static const String verifyOtpView = "/verify-otp";
 }
