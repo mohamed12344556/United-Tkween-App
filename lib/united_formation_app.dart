@@ -8,6 +8,7 @@ import 'core/routes/app_router.dart';
 import 'core/routes/routes.dart';
 import 'core/themes/app_theme.dart';
 import 'core/themes/cubit/theme_cubit.dart';
+import 'features/home/ui/pages/host_screen.dart';
 
 class UnitedFormationApp extends StatelessWidget {
   final AppRouter appRouter;
@@ -33,15 +34,17 @@ class UnitedFormationApp extends StatelessWidget {
               // useInheritedMediaQuery: true,
               // locale: DevicePreview.locale(context),
               // builder: DevicePreview.appBuilder,
-              themeMode: state,
-              theme: AppTheme.light,
-              darkTheme: AppTheme.dark,
+              // themeMode: state,
+              // theme: AppTheme.light,
+              // darkTheme: AppTheme.dark,
+              theme: AppTheme.dark,
               debugShowCheckedModeBanner: false,
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
               locale: context.locale,
-              initialRoute: Routes.loginView,
+              initialRoute: Routes.hostView,
               onGenerateRoute: appRouter.generateRoute,
+              // home:HostPage(),
               // hasValidSession ? Routes.homeView : Routes.onboardingView,
             ),
           );

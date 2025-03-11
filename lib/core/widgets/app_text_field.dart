@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import '../core.dart';
 
 class AppTextField extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String hintText;
+  final String? labelText;
   final TextInputType keyboardType;
   final bool isPassword;
   final bool passwordVisible;
@@ -23,11 +24,14 @@ class AppTextField extends StatelessWidget {
   final bool? filled; // إضافة خاصية للتحكم في تعبئة الخلفية
   final Color? fillColor; // إضافة خاصية للون الخلفية
   final double? borderRadius; // إضافة خاصية لتخصيص زوايا الحدود
+  final AutovalidateMode? autovalidateMode ;
 
   const AppTextField({
     Key? key,
-    required this.controller,
+    this.autovalidateMode,
+    this.controller,
     required this.hintText,
+     this.labelText,
     this.keyboardType = TextInputType.text,
     this.isPassword = false,
     this.passwordVisible = false,
@@ -75,6 +79,7 @@ class AppTextField extends StatelessWidget {
                        );
 
     return TextFormField(
+      autovalidateMode: autovalidateMode,
       controller: controller,
       keyboardType: keyboardType,
       obscureText: isPassword && !passwordVisible,
@@ -97,6 +102,7 @@ class AppTextField extends StatelessWidget {
       cursorRadius: const Radius.circular(2),
       decoration: InputDecoration(
         hintText: hintText,
+        labelText: labelText,
         hintStyle: TextStyle(
           color: isDark ? Colors.grey[400] : Colors.grey[500],
           fontSize: hintSize,

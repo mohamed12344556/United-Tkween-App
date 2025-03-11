@@ -14,7 +14,13 @@ import 'package:united_formation_app/features/auth/ui/pages/otp_verification_pag
 import 'package:united_formation_app/features/auth/ui/pages/register_page.dart';
 import 'package:united_formation_app/features/auth/ui/pages/request_otp_page.dart';
 import 'package:united_formation_app/features/auth/ui/pages/reset_password_page.dart';
-import 'package:united_formation_app/features/home/home_view.dart';
+import 'package:united_formation_app/features/home/ui/pages/admin_edit_product.dart';
+import 'package:united_formation_app/features/home/ui/pages/home_page.dart';
+import 'package:united_formation_app/features/home/ui/pages/product_details_page.dart';
+
+import '../../features/cart/presentation/pages/cart_page.dart';
+import '../../features/home/data/product_model.dart';
+import '../../features/home/ui/pages/host_screen.dart';
 
 final sl = GetIt.instance;
 
@@ -137,8 +143,7 @@ class AppRouter {
 
       case Routes.resetPasswordView:
         print(
-          "resetPasswordView Arguments: $arguments, Type: ${arguments.runtimeType}",
-        );
+          "resetPasswordView Arguments: $arguments, Type: ${arguments.runtimeType}");
 
         Map<String, String> parsedArgs = {};
 
@@ -172,10 +177,33 @@ class AppRouter {
           ),
         );
 
-      case Routes.homeView:
+      case Routes.adminEditProductView:
+        ProductModel product = arguments as ProductModel;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const HomeView(),
+          builder: (_) =>  AdminEditProductPage(product: product),
+        );
+
+      case Routes.hostView:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const HostPage(),
+        );
+
+      case Routes.productDetailsView:
+        ProductModel product = arguments as ProductModel;
+
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => ProductDetailsPage(product: product),
+        );
+
+
+      case Routes.cartView:
+        ProductModel product = arguments as ProductModel;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) =>  CartPage(),
         );
 
       default:
