@@ -1,6 +1,6 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
-import '../../data/product_model.dart';
+import '../../../admin/data/models/product_model.dart';
 
 class ProductsGridViewBanner extends StatelessWidget {
   const ProductsGridViewBanner({

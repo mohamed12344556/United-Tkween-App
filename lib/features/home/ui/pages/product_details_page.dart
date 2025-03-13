@@ -1,6 +1,7 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/core/core.dart';
+import '../../../admin/data/models/product_model.dart';
 import '../../data/product_model.dart';
 
 class ProductDetailsPage extends StatefulWidget {
@@ -109,7 +110,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      widget.product.description,
+                      widget.product.description!,
                       style: TextStyle(color: Colors.white70),
                     ),
                     SizedBox(height: 16),

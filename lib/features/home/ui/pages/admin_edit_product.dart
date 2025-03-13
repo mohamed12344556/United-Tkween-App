@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/core/core.dart';
+import '../../../admin/data/models/product_model.dart';
 import '../../data/product_model.dart';
 
 class AdminEditProductPage extends StatefulWidget {
@@ -24,7 +25,7 @@ class _AdminEditProductPageState extends State<AdminEditProductPage> {
     productDescriptionController = TextEditingController();
     productPriceController = TextEditingController();
     productNameController.text = widget.product.name;
-    productDescriptionController.text = widget.product.description;
+    productDescriptionController.text = widget.product.description!;
     productPriceController.text = widget.product.price.toString();
     super.initState();
   }
@@ -70,7 +71,8 @@ class _AdminEditProductPageState extends State<AdminEditProductPage> {
                 const SizedBox(height: 20),
                 AppTextField(
                   labelText: 'Product Description ',
-                  hintText: widget.product.description,
+                  hintText: widget.product.description!,
+
                   maxLines: 4,
                   controller: productDescriptionController,
                   validator:
@@ -104,7 +106,7 @@ class _AdminEditProductPageState extends State<AdminEditProductPage> {
                 const Text('OR', style: TextStyle(fontSize: 16)),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     ///Upload Image Here
                   },
                   child: Container(
@@ -113,7 +115,10 @@ class _AdminEditProductPageState extends State<AdminEditProductPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16 , horizontal:16),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 16,
+                      ),
                       child: Row(
                         children: [
                           const Text(

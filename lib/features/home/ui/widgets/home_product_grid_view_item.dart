@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/constants.dart';
 import 'package:united_formation_app/core/utilities/extensions.dart';
+import 'package:united_formation_app/features/admin/data/models/product_model.dart';
 import '../../../../core/routes/routes.dart';
 import '../../data/product_model.dart';
 import 'product_offer_and_price.dart';

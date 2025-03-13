@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/features/home/data/product_model.dart';
+import '../../../admin/data/models/product_model.dart';
 import '../widgets/home_products_grid_view.dart';
 import '../widgets/home_widgets/categories_listview.dart';
 
@@ -23,7 +24,9 @@ class _HomePageState extends State<HomePage> {
           'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000',
       name: 'The Silent Patient',
       price: 250.0,
-      offer: false,
+      offer: '20%',
+      quantity: 10,
+      type: "pdf",
     ),
     // ProductModel(
     //   id: '2',
@@ -47,7 +50,9 @@ class _HomePageState extends State<HomePage> {
           'https://images.unsplash.com/photo-1531988042231-d39a9cc12a9a?q=80&w=1000',
       name: 'Atomic Habits',
       price: 200.0,
-      offer: false,
+      offer: '20%',
+      quantity: 10,
+      type: "pdf",
     ),
     ProductModel(
       id: '4',
@@ -60,7 +65,9 @@ class _HomePageState extends State<HomePage> {
           'https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=1000',
       name: 'Steve Jobs',
       price: 350.0,
-      offer: true,
+      offer: '20%',
+      quantity: 10,
+      type: "pdf",
     ),
     ProductModel(
       id: '5',
@@ -72,7 +79,9 @@ class _HomePageState extends State<HomePage> {
           'https://images.unsplash.com/photo-1629992101753-56d196c8aabb?q=80&w=1000',
       name: 'Harry Potter and the Sorcerer\'s Stone',
       price: 280.0,
-      offer: false,
+      offer: '20%',
+      quantity: 10,
+      type: "pdf",
     ),
     ProductModel(
       id: '6',
@@ -84,7 +93,9 @@ class _HomePageState extends State<HomePage> {
           'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1000',
       name: 'The Second World War',
       price: 400.0,
-      offer: true,
+      offer: '20%',
+      quantity: 10,
+      type: "pdf",
     ),
     ProductModel(
       id: '7',
@@ -97,7 +108,9 @@ class _HomePageState extends State<HomePage> {
           'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1000',
       name: 'Thinking, Fast and Slow',
       price: 270.0,
-      offer: false,
+      offer: '20%',
+      quantity: 10,
+      type: "pdf",
     ),
     ProductModel(
       id: '8',
@@ -109,7 +122,9 @@ class _HomePageState extends State<HomePage> {
           'https://images.unsplash.com/photo-1589998059171-988d887df646?q=80&w=1000',
       name: 'The Lean Startup',
       price: 320.0,
-      offer: true,
+      offer: '20%',
+      quantity: 10,
+      type: "pdf",
     ),
   ];
 

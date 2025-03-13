@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:united_formation_app/features/admin/ui/cubits/add_product/add_product_admin_cubit.dart';
+import 'package:united_formation_app/features/admin/ui/cubits/edit_product/edit_product_admin_cubit.dart';
+import 'package:united_formation_app/features/admin/ui/cubits/orders/orders_admin_cubit.dart';
+import 'package:united_formation_app/features/admin/ui/cubits/products/products_admin_cubit.dart';
+import 'package:united_formation_app/features/admin/ui/cubits/support/support_admin_cubit.dart';
+import 'package:united_formation_app/features/admin/ui/views/add_product_admin_view.dart';
+import 'package:united_formation_app/features/admin/ui/views/edit_product_admin_view.dart';
+import 'package:united_formation_app/features/admin/ui/views/order_details_admin_view.dart';
+import 'package:united_formation_app/features/admin/ui/views/products_admin_view.dart';
+import 'package:united_formation_app/features/admin/ui/views/support_chat_admin_view.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/library/library_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/orders/orders_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/views/library_view.dart';
@@ -25,11 +35,9 @@ import '../../features/settings/ui/cubits/support/support_cubit.dart';
 import '../../features/settings/ui/views/edit_profile_view.dart';
 import '../../features/settings/ui/views/support_view.dart';
 import 'package:get_it/get_it.dart';
-import 'package:united_formation_app/features/home/ui/pages/admin_edit_product.dart';
-import 'package:united_formation_app/features/home/ui/pages/product_details_page.dart';
 
 import '../../features/cart/presentation/pages/cart_page.dart';
-import '../../features/home/data/product_model.dart';
+import '../../features/admin/data/models/product_model.dart';
 import '../../features/home/ui/pages/host_screen.dart';
 
 final sl = GetIt.instance;
@@ -216,12 +224,12 @@ class AppRouter {
               ),
         );
       case Routes.homeView:
-      case Routes.adminEditProductView:
-        ProductModel product = arguments as ProductModel;
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => AdminEditProductPage(product: product),
-        );
+      // case Routes.adminEditProductView:
+      //   ProductModel product = arguments as ProductModel;
+      //   return MaterialPageRoute(
+      //     settings: settings,
+      //     builder: (_) => AdminEditProductPage(product: product),
+      //   );
 
       case Routes.hostView:
         return MaterialPageRoute(
@@ -229,19 +237,95 @@ class AppRouter {
           builder: (_) => const HostPage(),
         );
 
-      case Routes.productDetailsView:
-        ProductModel product = arguments as ProductModel;
+      // case Routes.productDetailsView:
+      //   ProductModel product = arguments as ProductModel;
 
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => ProductDetailsPage(product: product),
-        );
+      //   return MaterialPageRoute(
+      //     settings: settings,
+      //     builder: (_) => ProductDetailsPage(product: product),
+      //   );
 
       case Routes.cartView:
         ProductModel product = arguments as ProductModel;
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => CartPage(),
+        );
+
+      case Routes.adminOrdersView:
+        return MaterialPageRoute(
+          settings: settings,
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<OrdersCubit>(),
+                child: const OrdersView(),
+              ),
+        );
+
+      case Routes.adminOrderDetailsView:
+        final orderId = settings.arguments as String;
+        return MaterialPageRoute(
+          settings: settings,
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<OrdersAdminCubit>(),
+                child: OrderDetailsAdminView(orderId: orderId),
+              ),
+        );
+
+      case Routes.adminProductsView:
+        return MaterialPageRoute(
+          settings: settings,
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<ProductsAdminCubit>(),
+                child: const ProductsAdminView(),
+              ),
+        );
+
+      case Routes.adminAddProductView:
+        return MaterialPageRoute(
+          settings: settings,
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<AddProductAdminCubit>(),
+                child: const AddProductAdminView(),
+              ),
+        );
+
+      case Routes.adminEditProductView:
+        final product = settings.arguments as ProductModel;
+        return MaterialPageRoute(
+          settings: settings,
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<EditProductAdminCubit>(),
+                child: EditProductAdminView(product: product),
+              ),
+        );
+
+      case Routes.adminSupportView:
+        return MaterialPageRoute(
+          settings: settings,
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<SupportAdminCubit>(),
+                child: const SupportView(),
+              ),
+        );
+
+      case Routes.adminSupportChatView:
+        final args = settings.arguments as Map<String, String>;
+        return MaterialPageRoute(
+          settings: settings,
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<SupportAdminCubit>(),
+                child: SupportChatAdminView(
+                  customerId: args['customerId']!,
+                  customerName: args['customerName']!,
+                ),
+              ),
         );
 
       default:

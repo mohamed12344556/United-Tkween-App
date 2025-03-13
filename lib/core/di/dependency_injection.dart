@@ -1,12 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:united_formation_app/features/admin/data/repos/admin_repository_impl.dart';
+import 'package:united_formation_app/features/admin/domain/repos/admin_repository.dart';
+import 'package:united_formation_app/features/admin/ui/cubits/add_product/add_product_admin_cubit.dart';
+import 'package:united_formation_app/features/admin/ui/cubits/edit_product/edit_product_admin_cubit.dart';
+import 'package:united_formation_app/features/admin/ui/cubits/products/products_admin_cubit.dart';
+import 'package:united_formation_app/features/admin/ui/cubits/support/support_admin_cubit.dart';
 import 'package:united_formation_app/features/settings/domain/usecases/remove_profile_image_usecase.dart';
 import 'package:united_formation_app/features/settings/domain/usecases/upload_profile_image_usecase.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/edit_profile/edit_profile_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/library/library_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/orders/orders_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/profile/profile_cubit.dart';
+import '../../features/admin/ui/cubits/orders/orders_admin_cubit.dart';
 import '../../features/auth/data/datasources/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repos/auth_repository_impl.dart';
@@ -74,6 +81,9 @@ Future<void> setupGetIt() async {
     ),
   );
 
+  //! Admin
+  sl.registerLazySingleton<AdminRepository>(() => AdminRepositoryImpl());
+
   //? Use Cases
   //! Authentication
   sl.registerLazySingleton(() => LoginUseCase(authRepository: sl()));
@@ -140,6 +150,17 @@ Future<void> setupGetIt() async {
   sl.registerFactory(() => LibraryCubit(getLibraryItemsUseCase: sl()));
 
   sl.registerFactory(() => SupportCubit(contactSupportUseCase: sl()));
+
+  //! Admin
+  sl.registerFactory(() => OrdersAdminCubit(repository: sl()));
+
+  sl.registerFactory(() => ProductsAdminCubit(repository: sl()));
+
+  sl.registerFactory(() => SupportAdminCubit(repository: sl()));
+
+  sl.registerFactory(() => AddProductAdminCubit(repository: sl()));
+
+  sl.registerFactory(() => EditProductAdminCubit(repository: sl()));
 }
 
 ///! 1. `registerSingleton`
