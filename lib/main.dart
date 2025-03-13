@@ -10,7 +10,7 @@ import 'core/core.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupGetIt();
-  // Initialize BLoC system
+  // Initialize BLoC system 
   await initBloc();
   // Initialize Hydrated Bloc
   HydratedBloc.storage = await HydratedStorage.build(
