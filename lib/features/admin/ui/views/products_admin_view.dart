@@ -48,7 +48,7 @@ class _ProductsAdminViewState extends State<ProductsAdminView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AdminAppBar(title: 'المنتجات الحالية'),
-      drawer: const AdminDrawer(currentRoute: Routes.libraryView),
+      drawer: const AdminDrawer(currentRoute: Routes.adminProductsView),
       body: Column(
         children: [
           _buildSearchAndFilterSection(),

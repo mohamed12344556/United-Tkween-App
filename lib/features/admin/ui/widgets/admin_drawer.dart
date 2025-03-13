@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/core/core.dart';
 
@@ -8,6 +10,7 @@ class AdminDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('AdminDrawer: currentRoute: $currentRoute');
     return Drawer(
       backgroundColor: AppColors.secondary,
       child: SafeArea(
