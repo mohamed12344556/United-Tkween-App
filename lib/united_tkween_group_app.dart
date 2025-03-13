@@ -39,7 +39,7 @@ class UnitedFormationApp extends StatelessWidget {
               ],
               supportedLocales: S.delegate.supportedLocales,
               title: 'Flutter Demo',
-              initialRoute: Routes.adminProductsView,
+              initialRoute: Routes.adminOrdersView,
               onGenerateRoute: appRouter.generateRoute,
             ),
           );

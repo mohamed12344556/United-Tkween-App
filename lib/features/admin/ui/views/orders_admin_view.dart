@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/features/admin/ui/views/order_details_admin_view.dart';
-import 'package:united_formation_app/features/admin/ui/views/orders_admin_view.dart';
+import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/features/admin/ui/widgets/admin_appbar.dart';
 import 'package:united_formation_app/features/admin/ui/widgets/admin_drawer.dart';
 import 'package:united_formation_app/features/admin/ui/widgets/error_widget.dart';
 import 'package:united_formation_app/features/admin/ui/widgets/loading_widget.dart';
 import 'package:united_formation_app/features/admin/ui/widgets/order_list_item.dart';
 
-import '../../../../../core/routes/routes.dart';
 import '../../data/models/order_model.dart';
 import '../cubits/orders/orders_admin_cubit.dart';
 
@@ -120,13 +118,9 @@ class _OrdersAdminViewState extends State<OrdersAdminView> {
                       return OrderListItem(
                         order: order,
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                      OrderDetailsAdminView(orderId: order.id),
-                            ),
+                          context.pushNamed(
+                            Routes.adminOrderDetailsView,
+                            arguments: {'orderId': order.id},
                           );
                         },
                       );

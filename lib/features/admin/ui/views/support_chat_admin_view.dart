@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/features/admin/data/models/support_message_model.dart';
 import '../cubits/support/support_admin_cubit.dart';
 import '../widgets/admin_appbar.dart';
+import '../widgets/admin_drawer.dart';
 import '../widgets/loading_widget.dart';
+import '../widgets/error_widget.dart';
+import '../../../../core/routes/routes.dart';
 import 'package:intl/intl.dart';
 
 class SupportChatAdminView extends StatefulWidget {
@@ -25,6 +28,15 @@ class _SupportChatAdminViewState extends State<SupportChatAdminView> {
   final _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    // تحميل الرسائل عند بدء الصفحة
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SupportAdminCubit>().loadMessages();
+    });
+  }
+
+  @override
   void dispose() {
     _messageController.dispose();
     _scrollController.dispose();
@@ -35,18 +47,19 @@ class _SupportChatAdminViewState extends State<SupportChatAdminView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AdminAppBar(title: 'محادثة ${widget.customerName}'),
+      drawer: const AdminDrawer(currentRoute: Routes.adminSupportView),
+      backgroundColor: Colors.black,
       body: BlocBuilder<SupportAdminCubit, SupportAdminState>(
         builder: (context, state) {
           if (state is SupportLoading) {
             return const LoadingWidget();
           } else if (state is SupportError) {
-            return Center(
-              child: Text(
-                state.message,
-                style: const TextStyle(color: Colors.red),
-              ),
+            return ErrorDisplayWidget(
+              message: state.message,
+              onRetry: () => context.read<SupportAdminCubit>().loadMessages(),
             );
           } else if (state is SupportLoaded) {
+            // تصفية الرسائل لهذا العميل فقط
             final filteredMessages =
                 state.messages
                     .where((msg) => msg.id == widget.customerId)
@@ -54,35 +67,143 @@ class _SupportChatAdminViewState extends State<SupportChatAdminView> {
 
             return Column(
               children: [
+                _buildChatHeader(),
                 Expanded(
                   child:
                       filteredMessages.isEmpty
-                          ? const Center(
-                            child: Text(
-                              'لا توجد رسائل',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
-                          : ListView.builder(
-                            controller: _scrollController,
-                            itemCount: filteredMessages.length,
-                            itemBuilder: (context, index) {
-                              final message = filteredMessages[index];
-                              return _buildMessageItem(message);
-                            },
-                          ),
+                          ? _buildEmptyMessages()
+                          : _buildMessagesList(filteredMessages),
                 ),
                 _buildMessageInput(),
               ],
             );
           } else {
-            return const Center(child: Text('حدث خطأ غير متوقع'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'حدث خطأ غير متوقع',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('العودة'),
+                  ),
+                ],
+              ),
+            );
           }
         },
       ),
+    );
+  }
+
+  Widget _buildChatHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.grey[800],
+            child: Text(
+              widget.customerName.isNotEmpty
+                  ? widget.customerName.substring(0, 1).toUpperCase()
+                  : '?',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.customerName,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  'رقم العميل: ${widget.customerId}',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.white),
+            onPressed: () => context.read<SupportAdminCubit>().loadMessages(),
+            tooltip: 'تحديث',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyMessages() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.chat_bubble_outline, size: 80, color: Colors.grey[700]),
+          const SizedBox(height: 16),
+          const Text(
+            'لا توجد رسائل مع هذا العميل',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'ابدأ محادثة جديدة مع العميل',
+            style: TextStyle(color: Colors.grey[400], fontSize: 14),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessagesList(List<SupportMessageModel> messages) {
+    // ترتيب الرسائل حسب التاريخ
+    messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
+    return ListView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.all(12),
+      itemCount: messages.length,
+      itemBuilder: (context, index) {
+        final message = messages[index];
+        return _buildMessageItem(message);
+      },
     );
   }
 
@@ -90,46 +211,87 @@ class _SupportChatAdminViewState extends State<SupportChatAdminView> {
     final isUserMessage = message.customerName == widget.customerName;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       child: Row(
         mainAxisAlignment:
             isUserMessage ? MainAxisAlignment.start : MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (isUserMessage)
+          if (isUserMessage) ...[
             CircleAvatar(
-              backgroundColor: Colors.grey,
+              backgroundColor: Colors.grey[700],
+              radius: 18,
               child: Text(
-                message.customerName.substring(0, 1),
-                style: const TextStyle(color: Colors.white),
+                message.customerName.isNotEmpty
+                    ? message.customerName.substring(0, 1).toUpperCase()
+                    : '?',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          const SizedBox(width: 8),
+            const SizedBox(width: 8),
+          ],
           Flexible(
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isUserMessage ? Colors.grey[300] : Colors.red[100],
-                borderRadius: BorderRadius.circular(12),
+                color: isUserMessage ? Colors.grey[800] : Colors.red.shade900,
+                borderRadius: BorderRadius.circular(16).copyWith(
+                  bottomLeft: isUserMessage ? Radius.zero : null,
+                  bottomRight: !isUserMessage ? Radius.zero : null,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 3,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(message.message, style: const TextStyle(fontSize: 16)),
-                  const SizedBox(height: 4),
                   Text(
-                    _formatDateTime(message.timestamp),
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    message.message,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: isUserMessage ? Colors.white : Colors.white,
+                      height: 1.3,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      _formatDateTime(message.timestamp),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color:
+                            isUserMessage ? Colors.grey[400] : Colors.white70,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-          const SizedBox(width: 8),
-          if (!isUserMessage)
-            const CircleAvatar(
+          if (!isUserMessage) ...[
+            const SizedBox(width: 8),
+            CircleAvatar(
               backgroundColor: Colors.red,
-              child: Text('أنا', style: TextStyle(color: Colors.white)),
+              radius: 18,
+              child: const Text(
+                'أنا',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
             ),
+          ],
         ],
       ),
     );
@@ -139,10 +301,10 @@ class _SupportChatAdminViewState extends State<SupportChatAdminView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.grey[850],
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.3),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, -2),
@@ -150,31 +312,51 @@ class _SupportChatAdminViewState extends State<SupportChatAdminView> {
         ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
             child: TextField(
               controller: _messageController,
               decoration: InputDecoration(
                 hintText: 'اكتب رسالتك هنا...',
+                hintStyle: TextStyle(color: Colors.grey[400]),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
+                  borderSide: BorderSide(color: Colors.grey[700]!),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide: BorderSide(color: Colors.grey[700]!),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide: const BorderSide(color: Colors.red, width: 2),
                 ),
                 filled: true,
-                fillColor: Colors.grey[100],
+                fillColor: Colors.grey[800],
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 8,
+                  vertical: 12,
                 ),
               ),
+              style: const TextStyle(color: Colors.white),
+              cursorColor: Colors.red,
+              maxLines: 3,
+              minLines: 1,
             ),
           ),
           const SizedBox(width: 8),
-          CircleAvatar(
-            backgroundColor: Colors.red,
-            radius: 24,
-            child: IconButton(
-              onPressed: _sendMessage,
-              icon: const Icon(Icons.send, color: Colors.white),
+          Material(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(30),
+            elevation: 2,
+            child: InkWell(
+              onTap: _sendMessage,
+              borderRadius: BorderRadius.circular(30),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                child: const Icon(Icons.send, color: Colors.white, size: 24),
+              ),
             ),
           ),
         ],
@@ -194,6 +376,15 @@ class _SupportChatAdminViewState extends State<SupportChatAdminView> {
 
     _messageController.clear();
     _scrollToBottom();
+
+    // إظهار رسالة تأكيد
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('تم إرسال الرسالة بنجاح'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 1),
+      ),
+    );
   }
 
   void _scrollToBottom() {
@@ -211,11 +402,15 @@ class _SupportChatAdminViewState extends State<SupportChatAdminView> {
   String _formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
+    final yesterday = DateTime(now.year, now.month, now.day - 1);
     final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
 
     if (messageDate == today) {
       // Today, show time only
-      return DateFormat.jm().format(dateTime);
+      return 'اليوم ${DateFormat.jm().format(dateTime)}';
+    } else if (messageDate == yesterday) {
+      // Yesterday
+      return 'أمس ${DateFormat.jm().format(dateTime)}';
     } else {
       // Not today, show date and time
       return DateFormat('yyyy-MM-dd HH:mm').format(dateTime);

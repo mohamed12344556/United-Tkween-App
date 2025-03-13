@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:united_formation_app/features/admin/ui/views/add_product_admin_view.dart';
-import 'package:united_formation_app/features/admin/ui/views/edit_product_admin_view.dart';
+import 'package:united_formation_app/core/utilities/extensions.dart';
+import '../../../../core/themes/app_colors.dart';
 import '../cubits/products/products_admin_cubit.dart';
 import '../widgets/admin_appbar.dart';
 import '../widgets/admin_drawer.dart';
@@ -9,6 +9,7 @@ import '../widgets/error_widget.dart';
 import '../widgets/loading_widget.dart';
 import '../widgets/product_list_item.dart';
 import '../../../../core/routes/routes.dart';
+import '../../data/models/product_model.dart';
 
 class ProductsAdminView extends StatefulWidget {
   const ProductsAdminView({super.key});
@@ -18,10 +19,29 @@ class ProductsAdminView extends StatefulWidget {
 }
 
 class _ProductsAdminViewState extends State<ProductsAdminView> {
+  String _searchQuery = '';
+  String _selectedCategory = 'جميع الأقسام';
+  final List<String> _categories = [
+    'جميع الأقسام',
+    'كتب التنمية',
+    'الكتب الأدبية',
+    'كتب علمية',
+    'كتب دينية',
+    'قصص وروايات',
+  ];
+
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     context.read<ProductsAdminCubit>().loadProducts();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -31,6 +51,7 @@ class _ProductsAdminViewState extends State<ProductsAdminView> {
       drawer: const AdminDrawer(currentRoute: Routes.libraryView),
       body: Column(
         children: [
+          _buildSearchAndFilterSection(),
           Expanded(
             child: BlocBuilder<ProductsAdminCubit, ProductsAdminState>(
               builder: (context, state) {
@@ -50,52 +71,301 @@ class _ProductsAdminViewState extends State<ProductsAdminView> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                     );
                   }
 
-                  return ListView.builder(
-                    itemCount: state.products.length,
-                    itemBuilder: (context, index) {
-                      final product = state.products[index];
-                      return ProductListItem(
-                        product: product,
-                        onEdit: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                      EditProductAdminView(product: product),
+                  // تطبيق الفلتر والبحث
+                  final filteredProducts = _filterProducts(state.products);
+
+                  if (filteredProducts.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.search_off,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'لا توجد منتجات تطابق معايير البحث',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white70,
                             ),
-                          );
-                        },
-                        onDelete: () {
-                          _showDeleteConfirmationDialog(context, product.id);
-                        },
+                          ),
+                          const SizedBox(height: 8),
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _searchQuery = '';
+                                _selectedCategory = 'جميع الأقسام';
+                                _searchController.clear();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text('إعادة ضبط الفلتر'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(8),
+                    itemCount: filteredProducts.length,
+                    itemBuilder: (context, index) {
+                      final product = filteredProducts[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: ProductListItem(
+                          product: product,
+                          onEdit: () {
+                            context.pushNamed(
+                              Routes.adminEditProductView,
+                              arguments: product,
+                            );
+                          },
+                          onDelete: () {
+                            _showDeleteConfirmationDialog(context, product.id);
+                          },
+                        ),
                       );
                     },
                   );
                 } else {
-                  return const Center(child: Text('حدث خطأ غير متوقع'));
+                  return const Center(
+                    child: Text(
+                      'حدث خطأ غير متوقع',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
                 }
               },
             ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddProductAdminView()),
-          );
+          context.pushNamed(Routes.adminAddProductView);
         },
-        backgroundColor: Colors.red,
-        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: AppColors.primary,
+        icon: Icon(Icons.add, color: AppColors.darkBackground),
+        label: const Text(
+          'إضافة منتج',
+          style: TextStyle(
+            color: AppColors.darkBackground,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
+  }
+
+  Widget _buildSearchAndFilterSection() {
+    double spacing = 12;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        spacing: spacing,
+        children: [
+          // رقم إحصائيات
+          BlocBuilder<ProductsAdminCubit, ProductsAdminState>(
+            builder: (context, state) {
+              if (state is ProductsLoaded) {
+                final filteredProducts = _filterProducts(state.products);
+                final totalValue = filteredProducts.fold(
+                  0.0,
+                  (sum, product) => sum + (product.price * product.quantity),
+                );
+                return Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  decoration: BoxDecoration(
+                    // color: Colors.red.shade900.withOpacity(0.3),
+                    color: AppColors.lightGrey,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColors.primary, width: 1.5),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(0, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildStatCard(
+                        icon: Icons.inventory_2,
+                        title: 'عدد المنتجات',
+                        value: '${filteredProducts.length}',
+                      ),
+                      const VerticalDivider(color: Colors.red, thickness: 1),
+                      _buildStatCard(
+                        icon: Icons.shopping_bag,
+                        title: 'إجمالي الكمية',
+                        value:
+                            '${filteredProducts.fold(0, (sum, p) => sum + p.quantity)}',
+                      ),
+                      const VerticalDivider(color: Colors.red, thickness: 1),
+                      _buildStatCard(
+                        icon: Icons.attach_money,
+                        title: 'إجمالي القيمة',
+                        value: '${totalValue.toStringAsFixed(2)} جنيه',
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return const SizedBox();
+            },
+          ),
+          // البحث
+          TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'البحث عن منتج...',
+              hintStyle: const TextStyle(color: Colors.grey),
+              prefixIcon: const Icon(Icons.search, color: Colors.grey),
+              suffixIcon:
+                  _searchQuery.isNotEmpty
+                      ? IconButton(
+                        icon: const Icon(Icons.clear, color: Colors.grey),
+                        onPressed: () {
+                          setState(() {
+                            _searchQuery = '';
+                            _searchController.clear();
+                          });
+                        },
+                      )
+                      : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade700),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade700),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red, width: 2),
+              ),
+              filled: true,
+              fillColor: Colors.grey[800],
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
+            ),
+            style: const TextStyle(color: Colors.white),
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value;
+              });
+            },
+          ),
+          // الفلتر حسب القسم
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            decoration: BoxDecoration(
+              color: Colors.grey[800],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade700),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                isExpanded: true,
+                value: _selectedCategory,
+                icon: const Icon(Icons.filter_list, color: Colors.red),
+                dropdownColor: Colors.grey[800],
+                style: const TextStyle(color: Colors.white),
+                hint: const Text(
+                  'تصفية حسب القسم',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                items:
+                    _categories.map((category) {
+                      return DropdownMenuItem<String>(
+                        value: category,
+                        child: Text(category),
+                      );
+                    }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _selectedCategory = value;
+                    });
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatCard({
+    required IconData icon,
+    required String title,
+    required String value,
+  }) {
+    return Column(
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: Colors.red, size: 16),
+            const SizedBox(width: 4),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 12, color: Colors.red),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<ProductModel> _filterProducts(List<ProductModel> products) {
+    return products.where((product) {
+      // تطبيق فلتر البحث
+      final matchesSearch =
+          _searchQuery.isEmpty ||
+          product.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          (product.description?.toLowerCase().contains(
+                _searchQuery.toLowerCase(),
+              ) ??
+              false);
+
+      // تطبيق فلتر القسم
+      final matchesCategory =
+          _selectedCategory == 'جميع الأقسام' ||
+          product.category == _selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    }).toList();
   }
 
   Future<void> _showDeleteConfirmationDialog(
@@ -107,17 +377,34 @@ class _ProductsAdminViewState extends State<ProductsAdminView> {
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('تأكيد الحذف'),
-          content: const Text('هل أنت متأكد من حذف هذا المنتج؟'),
+          backgroundColor: Colors.grey[850],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Row(
+            children: [
+              Icon(Icons.delete, color: Colors.red, size: 24),
+              SizedBox(width: 8),
+              Text('تأكيد الحذف', style: TextStyle(color: Colors.white)),
+            ],
+          ),
+          content: const Text(
+            'هل أنت متأكد من حذف هذا المنتج؟ هذا الإجراء لا يمكن التراجع عنه.',
+            style: TextStyle(color: Colors.white70),
+          ),
           actions: <Widget>[
             TextButton(
-              child: const Text('إلغاء'),
+              child: const Text('إلغاء', style: TextStyle(color: Colors.grey)),
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
             ),
-            TextButton(
-              child: const Text('حذف', style: TextStyle(color: Colors.red)),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('حذف'),
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 context.read<ProductsAdminCubit>().deleteProduct(productId);

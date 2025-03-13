@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/app_colors.dart';
 import '../../data/models/order_model.dart';
 
 class OrderListItem extends StatelessWidget {
   final OrderModel order;
   final VoidCallback onTap;
 
-  const OrderListItem({
-    super.key,
-    required this.order,
-    required this.onTap,
-  });
+  const OrderListItem({super.key, required this.order, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: AppColors.lightGrey,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: InkWell(
         onTap: onTap,
@@ -36,9 +34,7 @@ class OrderListItem extends StatelessWidget {
                 flex: 2,
                 child: Text(
                   order.customerName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
               Expanded(

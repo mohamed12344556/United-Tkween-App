@@ -16,6 +16,8 @@ import 'package:united_formation_app/features/settings/ui/views/library_view.dar
 import 'package:united_formation_app/features/settings/ui/views/orders_view.dart';
 import 'package:united_formation_app/features/settings/ui/views/profile_view.dart';
 import 'package:united_formation_app/features/settings/ui/views/settings_view.dart';
+import '../../features/admin/ui/views/orders_admin_view.dart';
+import '../../features/admin/ui/views/support_admin_view.dart';
 import 'routes.dart';
 import '../utilities/enums/otp_purpose.dart';
 import '../../features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
@@ -257,13 +259,14 @@ class AppRouter {
           settings: settings,
           builder:
               (_) => BlocProvider(
-                create: (context) => sl<OrdersCubit>(),
-                child: const OrdersView(),
+                create: (context) => sl<OrdersAdminCubit>(),
+                child: const OrdersAdminView(),
               ),
         );
 
       case Routes.adminOrderDetailsView:
-        final orderId = settings.arguments as String;
+        final args = settings.arguments as Map<String, dynamic>;
+        final orderId = args['orderId'] as String;
         return MaterialPageRoute(
           settings: settings,
           builder:
@@ -294,6 +297,19 @@ class AppRouter {
         );
 
       case Routes.adminEditProductView:
+        if (settings.arguments == null) {
+          // الانتقال إلى صفحة إضافة منتج جديد
+          return MaterialPageRoute(
+            settings: settings,
+            builder:
+                (_) => BlocProvider(
+                  create: (context) => sl<AddProductAdminCubit>(),
+                  child: const AddProductAdminView(),
+                ),
+          );
+        }
+
+        // في حالة وجود منتج، انتقل إلى صفحة التعديل
         final product = settings.arguments as ProductModel;
         return MaterialPageRoute(
           settings: settings,
@@ -303,14 +319,13 @@ class AppRouter {
                 child: EditProductAdminView(product: product),
               ),
         );
-
       case Routes.adminSupportView:
         return MaterialPageRoute(
           settings: settings,
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<SupportAdminCubit>(),
-                child: const SupportView(),
+                child: const SupportAdminView(),
               ),
         );
 
