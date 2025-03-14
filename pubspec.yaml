@@ -76,7 +76,6 @@ flutter_intl:
   enabled: true
   generate: true
 
-
 icons_launcher:
   image_path: "assets/images/app_logo.jpg"
   platforms:
