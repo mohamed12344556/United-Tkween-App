@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
 
 class Constants {
-  static const isAdmin =true;
+  static const isAdmin = false;
 }

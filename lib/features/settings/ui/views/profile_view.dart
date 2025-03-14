@@ -17,6 +17,15 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   @override
+  void initState() {
+    super.initState();
+    // تحميل البيانات مباشرة عند فتح الصفحة
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileCubit>().loadProfile();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     // تهيئة الأحجام المتجاوبة
     context.initResponsive();
@@ -43,20 +52,16 @@ class _ProfileViewState extends State<ProfileView> {
         },
         builder: (context, state) {
           if (state.isLoading && state.profile == null) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primary,
-                backgroundColor: AppColors.secondary.withValues(alpha: 51),
-              ),
-            );
+            return _buildLoadingState();
           }
 
-          if (state.isError && state.profile == null) {
+          if (state.isError) {
             return _buildErrorState();
           }
 
+          // إذا كانت البيانات غير متوفرة، نعرض نموذج فارغ بدلاً من رسالة الخطأ
           if (state.profile == null) {
-            return _buildEmptyState();
+            return _buildEmptyProfileUI();
           }
 
           return _buildProfileInfo(state);
@@ -74,12 +79,12 @@ class _ProfileViewState extends State<ProfileView> {
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
-          fontSize: 18.sp, // حجم خط متجاوب
+          fontSize: 18.sp,
         ),
       ),
       centerTitle: true,
       elevation: 0,
-      toolbarHeight: 56.h, // ارتفاع متجاوب
+      toolbarHeight: 56.h,
       actions: [
         IconButton(
           icon: Container(
@@ -91,15 +96,24 @@ class _ProfileViewState extends State<ProfileView> {
             child: Icon(
               Icons.edit,
               color: AppColors.primary,
-              size: 20.r, // حجم متجاوب للأيقونة
+              size: 20.r,
             ),
           ),
           onPressed: () {
             context.navigateToNamed(Routes.editProfileView);
           },
         ),
-        SizedBox(width: 8.w), // مسافة متجاوبة
+        SizedBox(width: 8.w),
       ],
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Center(
+      child: CircularProgressIndicator(
+        color: AppColors.primary,
+        backgroundColor: AppColors.secondary.withValues(alpha: 51),
+      ),
     );
   }
 
@@ -110,35 +124,35 @@ class _ProfileViewState extends State<ProfileView> {
         children: [
           Icon(
             Icons.error_outline,
-            size: 60.r, // حجم متجاوب للأيقونة
+            size: 60.r,
             color: AppColors.error,
           ),
-          SizedBox(height: 16.h), // مسافة متجاوبة
+          SizedBox(height: 16.h),
           Text(
             'خطأ في تحميل الملف الشخصي',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16.sp, // حجم خط متجاوب
+              fontSize: 16.sp,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 24.h), // مسافة متجاوبة
+          SizedBox(height: 24.h),
           SizedBox(
-            width: context.isPhone ? 200.w : 180.w, // عرض متجاوب حسب نوع الجهاز
+            width: context.isPhone ? 200.w : 180.w,
             child: ElevatedButton.icon(
               onPressed: () => context.read<ProfileCubit>().loadProfile(),
-              icon: Icon(Icons.refresh, size: 16.r), // حجم متجاوب للأيقونة
+              icon: Icon(Icons.refresh, size: 16.r),
               label: Text(
                 'إعادة المحاولة',
-                style: TextStyle(fontSize: 14.sp), // حجم خط متجاوب
+                style: TextStyle(fontSize: 14.sp),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.secondary,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.r), // حجم منحني متجاوب
+                  borderRadius: BorderRadius.circular(50.r),
                 ),
-                padding: 12.paddingVertical, // تباعد متجاوب
+                padding: 12.paddingVertical,
               ),
             ),
           ),
@@ -147,37 +161,49 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  Widget _buildEmptyState() {
-    return Center(
+  // نموذج فارغ للملف الشخصي
+  Widget _buildEmptyProfileUI() {
+    // نستخدم بيانات افتراضية
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            'لم يتم العثور على بيانات الملف الشخصي',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.sp, // حجم خط متجاوب
-            ),
-            textAlign: TextAlign.center,
+          // رأس الملف الشخصي مع بيانات افتراضية
+          ProfileHeaderWidget(
+            profileImageUrl: null,
+            fullName: "المستخدم",
+            email: "",
           ),
-          SizedBox(height: 16.h), // مسافة متجاوبة
-          SizedBox(
-            width: context.isPhone ? 200.w : 180.w, // عرض متجاوب حسب نوع الجهاز
-            child: ElevatedButton.icon(
-              onPressed: () => context.read<ProfileCubit>().loadProfile(),
-              icon: Icon(Icons.refresh, size: 16.r), // حجم متجاوب للأيقونة
-              label: Text(
-                'إعادة المحاولة',
-                style: TextStyle(fontSize: 14.sp), // حجم خط متجاوب
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.secondary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.r), // حجم منحني متجاوب
+
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: context.isTablet ? 24.w : 16.w,
+            ),
+            child: Column(
+              children: [
+                // بطاقة معلومات الاتصال فارغة
+                ContactInfoCardWidget(
+                  email: "",
+                  phoneNumber1: "",
+                  phoneNumber2: "",
                 ),
-                padding: 12.paddingVertical, // تباعد متجاوب
-              ),
+
+                // بطاقة العنوان فارغة
+                AddressCardWidget(address: ""),
+
+                SizedBox(
+                  width: context.isTablet
+                      ? context.screenWidth * 0.6
+                      : double.infinity,
+                  child: EditProfileButtonWidget(
+                    onPressed: () {
+                      context.navigateToNamed(Routes.editProfileView);
+                    },
+                  ),
+                ),
+
+                SizedBox(height: 24.h),
+              ],
             ),
           ),
         ],
@@ -188,7 +214,6 @@ class _ProfileViewState extends State<ProfileView> {
   Widget _buildProfileInfo(ProfileState state) {
     final profile = state.profile!;
 
-    // التحقق من اتجاه الشاشة لتغيير التخطيط في الوضع الأفقي
     if (context.isLandscape && !context.isPhone) {
       return _buildLandscapeLayout(profile);
     }
@@ -197,18 +222,15 @@ class _ProfileViewState extends State<ProfileView> {
       physics: const BouncingScrollPhysics(),
       child: Column(
         children: [
-          // استخدام المكونات المنفصلة مع إضافة التجاوبية
           ProfileHeaderWidget(
             profileImageUrl: profile.profileImageUrl,
             fullName: profile.fullName,
             email: profile.email,
           ),
 
-          // تحسين المسافات لتكون متجاوبة
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal:
-                  context.isTablet ? 24.w : 16.w, // هوامش متجاوبة حسب الجهاز
+              horizontal: context.isTablet ? 24.w : 16.w,
             ),
             child: Column(
               children: [
@@ -221,10 +243,9 @@ class _ProfileViewState extends State<ProfileView> {
                 AddressCardWidget(address: profile.address),
 
                 SizedBox(
-                  width:
-                      context.isTablet
-                          ? context.screenWidth * 0.6
-                          : double.infinity,
+                  width: context.isTablet
+                      ? context.screenWidth * 0.6
+                      : double.infinity,
                   child: EditProfileButtonWidget(
                     onPressed: () {
                       context.navigateToNamed(Routes.editProfileView);
@@ -232,7 +253,7 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                 ),
 
-                SizedBox(height: 24.h), // مسافة متجاوبة
+                SizedBox(height: 24.h),
               ],
             ),
           ),
@@ -241,7 +262,6 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  // تخطيط مخصص للوضع الأفقي على الأجهزة الكبيرة
   Widget _buildLandscapeLayout(profile) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -250,7 +270,6 @@ class _ProfileViewState extends State<ProfileView> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // جانب للصورة والمعلومات الأساسية
             Expanded(
               flex: 4,
               child: ProfileHeaderWidget(
@@ -260,7 +279,6 @@ class _ProfileViewState extends State<ProfileView> {
               ),
             ),
 
-            // جانب للمعلومات التفصيلية
             Expanded(
               flex: 6,
               child: Padding(
