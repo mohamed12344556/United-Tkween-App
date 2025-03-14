@@ -1,6 +1,7 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/core/core.dart';
+import 'package:united_formation_app/core/helper/format_double_number.dart';
 import '../../../admin/data/models/product_model.dart';
 import '../../data/product_model.dart';
 
@@ -16,6 +17,7 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   int quantity = 1;
   String selectedCategory = "روايات";
+  String selectedType = "ورقي";
 
   List<String> bookCategories = [
     "روايات",
@@ -24,40 +26,42 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     "الكتب الدينية",
     "الكتب التقنية",
   ];
+  List<String> bookTypes = [
+    "PDF",
+    "ورقي",
+  ];
 
   @override
   Widget build(BuildContext context) {
     double totalPrice = widget.product.price * quantity;
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.favorite_border, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.black,
+      //   elevation: 0,
+      //   leading: IconButton(
+      //     icon: Icon(Icons.arrow_back, color: Colors.white),
+      //     onPressed: () => Navigator.pop(context),
+      //   ),
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(Icons.favorite_border, color: Colors.white),
+      //       onPressed: () {},
+      //     ),
+      //   ],
+      // ),
       body: Stack(
         children: [
-          Container(
-            height: MediaQuery.of(context).size.height * .3,
-            color: Colors.black,
-            child: Center(
-              child: Hero(
-                tag: widget.product.id,
-                child: FancyShimmerImage(
-                  imageUrl:
-                      widget.product.imageUrl ??
-                      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png',
-                  errorWidget: Image.network(
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png',
+          Hero(
+            tag: widget.product.id,
+            child: Container(
+              height: MediaQuery.of(context).size.height * .5,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    widget.product.imageUrl ??
+                        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png',
                   ),
                 ),
               ),
@@ -66,7 +70,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * .3,
+                top: MediaQuery.of(context).size.height * .5,
               ),
               child: Container(
                 padding: EdgeInsets.all(16),
@@ -128,9 +132,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             bool isSelected = category == selectedCategory;
                             return GestureDetector(
                               onTap: () {
-                                setState(() {
-                                  selectedCategory = category;
-                                });
+                                // setState(() {
+                                //   selectedCategory = category;
+                                // });
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(
@@ -159,9 +163,47 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
 
                     SizedBox(height: 25),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children:
+                      bookTypes.map((type) {
+                        bool isSelected = type == selectedType;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedType = type;
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                              isSelected
+                                  ? AppColors.primary
+                                  : Colors.grey[800],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              type,
+                              style: TextStyle(
+                                color:
+                                isSelected
+                                    ? Colors.black
+                                    : Colors.white,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 25),
 
                     Text(
-                      "Price: \$${widget.product.price}",
+                      "Price: ${formatNumber(widget.product.price)}\$",
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     SizedBox(height: 16),
@@ -169,8 +211,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     Row(
                       children: [
                         Text(
-                          "Total: \$${totalPrice.toStringAsFixed(2)}",
-                          style: TextStyle(color: Colors.yellow, fontSize: 20),
+                          "Total: ${formatNumber(totalPrice)}\$",
+                          style: TextStyle(color: AppColors.primary, fontSize: 20),
                         ),
                         Spacer(),
                         Row(
@@ -222,13 +264,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.grey[700],
+                            color: Colors.grey[800],
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Icon(
                               Icons.favorite_border,
-                              color: Colors.white,
+                              color: AppColors.primary,
                             ),
                           ),
                         ),
@@ -243,6 +285,28 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       ],
                     ),
                   ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 50, left: 10),
+            child: GestureDetector(
+              onTap: (){
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: 40,
+                height: 30,
+                padding: EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.lightGrey,
+                ),
+                child: Icon(
+                  Icons.arrow_back,
+                  color:AppColors.primary,
+                  size: 20,
                 ),
               ),
             ),

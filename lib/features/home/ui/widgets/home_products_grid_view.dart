@@ -23,7 +23,7 @@ class HomeProductsGridView extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: screenWidth / screenHeight * 1.50,
+          childAspectRatio: screenWidth / screenHeight * 1.65,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
         ),

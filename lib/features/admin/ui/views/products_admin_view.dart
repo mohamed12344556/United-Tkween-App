@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:united_formation_app/core/helper/format_double_number.dart';
 import 'package:united_formation_app/core/utilities/extensions.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../cubits/products/products_admin_cubit.dart';
@@ -49,11 +50,11 @@ class _ProductsAdminViewState extends State<ProductsAdminView> {
     return Scaffold(
       appBar: const AdminAppBar(title: 'المنتجات الحالية'),
       drawer: const AdminDrawer(currentRoute: Routes.adminProductsView),
-      body: Column(
-        children: [
-          _buildSearchAndFilterSection(),
-          Expanded(
-            child: BlocBuilder<ProductsAdminCubit, ProductsAdminState>(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildSearchAndFilterSection(),
+            BlocBuilder<ProductsAdminCubit, ProductsAdminState>(
               builder: (context, state) {
                 if (state is ProductsLoading) {
                   return const LoadingWidget();
@@ -112,7 +113,13 @@ class _ProductsAdminViewState extends State<ProductsAdminView> {
                               backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
                             ),
-                            child: const Text('إعادة ضبط الفلتر'),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 2,
+                                horizontal: 16,
+                              ),
+                              child: const Text('إعادة ضبط الفلتر'),
+                            ),
                           ),
                         ],
                       ),
@@ -122,6 +129,8 @@ class _ProductsAdminViewState extends State<ProductsAdminView> {
                   return ListView.builder(
                     padding: const EdgeInsets.all(8),
                     itemCount: filteredProducts.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       final product = filteredProducts[index];
                       return Padding(
@@ -151,8 +160,8 @@ class _ProductsAdminViewState extends State<ProductsAdminView> {
                 }
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -173,209 +182,216 @@ class _ProductsAdminViewState extends State<ProductsAdminView> {
   }
 
   Widget _buildSearchAndFilterSection() {
-    double spacing = 12;
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
-        spacing: spacing,
+        spacing: 12,
         children: [
-          // رقم إحصائيات
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: '...البحث عن منتج',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    prefixIcon: const Icon(Icons.search, color: AppColors.primary),
+                    suffixIcon:
+                        _searchQuery.isNotEmpty
+                            ? IconButton(
+                              icon: const Icon(Icons.clear, color: AppColors.primary),
+                              onPressed: () {
+                                setState(() {
+                                  _searchQuery = '';
+                                  _searchController.clear();
+                                });
+                              },
+                            )
+                            : null,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade700),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade700),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[800],
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                  ),
+                  style: const TextStyle(color: Colors.white),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(width: 8),
+              // الفلتر حسب القسم
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[800],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade700),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: _selectedCategory,
+                      icon: const Icon(Icons.filter_list, color: AppColors.primary),
+                      dropdownColor: Colors.grey[800],
+                      style: const TextStyle(color: Colors.white),
+                      hint: const Text(
+                        'تصفية حسب القسم',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      items:
+                          _categories.map((category) {
+                            return DropdownMenuItem<String>(
+                              value: category,
+                              child: Text(category),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            _selectedCategory = value;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 4),
           BlocBuilder<ProductsAdminCubit, ProductsAdminState>(
             builder: (context, state) {
               if (state is ProductsLoaded) {
                 final filteredProducts = _filterProducts(state.products);
                 final totalValue = filteredProducts.fold(
                   0.0,
-                  (sum, product) => sum + (product.price * product.quantity),
+                      (sum, product) => sum + (product.price * product.quantity),
                 );
-                // return Container(
-                //   padding: const EdgeInsets.symmetric(vertical: 20),
-                //   decoration: BoxDecoration(
-                //     // color: Colors.red.shade900.withOpacity(0.3),
-                //     color: AppColors.lightGrey,
-                //     borderRadius: BorderRadius.circular(8),
-                //     border: Border.all(color: AppColors.primary, width: 1.5),
-                //     boxShadow: const [
-                //       BoxShadow(
-                //         color: Colors.black26,
-                //         offset: Offset(0, 2),
-                //         blurRadius: 4,
-                //       ),
-                //     ],
-                //   ),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //     children: [
-                //       _buildStatCard(
-                //         icon: Icons.inventory_2,
-                //         title: 'عدد المنتجات',
-                //         value: '${filteredProducts.length}',
-                //       ),
-                //       const VerticalDivider(color: Colors.red, thickness: 1),
-                //       _buildStatCard(
-                //         icon: Icons.shopping_bag,
-                //         title: 'إجمالي الكمية',
-                //         value:
-                //             '${filteredProducts.fold(0, (sum, p) => sum + p.quantity)}',
-                //       ),
-                //       const VerticalDivider(color: Colors.red, thickness: 1),
-                //       _buildStatCard(
-                //         icon: Icons.attach_money,
-                //         title: 'إجمالي القيمة',
-                //         value: '${totalValue.toStringAsFixed(2)} جنيه',
-                //       ),
-                //     ],
-                //   ),
-                // );
-
-                return Card(
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.lightGrey,
-                          border: Border.all(color: Colors.white, width: 1.3),
-                          borderRadius: BorderRadius.circular(8),
+                return Column(
+                  spacing: 5,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildHeaderCardItem(
+                            icon: Icons.inventory_2,
+                            label: "عدد المنتجات",
+                            labelValue: filteredProducts.length.toString(),
+                          ),
                         ),
-
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.shopping_bag,
-                              color: AppColors.primary,
-                              size: 25,
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Text(
-                                  filteredProducts.length.toString(),
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                Text(
-                                  ' : عدد المنتجات',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ],
+                        Expanded(
+                          child: _buildHeaderCardItem(
+                            icon: Icons.shopping_bag,
+                            label: 'إجمالي الكمية',
+                            labelValue:
+                            '${filteredProducts.fold(0, (sum, p) => sum + p.quantity)}',
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildHeaderCardItem(
+                              icon: Icons.attach_money,
+                              label: 'إجمالي القيمة',
+                              labelValue: ' ${formatNumber(totalValue)}' +" ج.م ",
+                              isRow: true
+                          ),
+                        ),
+                        // Expanded(child: SizedBox()),
+                      ],
+                    ),
+                  ],
                 );
               }
               return const SizedBox();
             },
           ),
-          // البحث
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'البحث عن منتج...',
-              hintStyle: const TextStyle(color: Colors.grey),
-              prefixIcon: const Icon(Icons.search, color: Colors.grey),
-              suffixIcon:
-                  _searchQuery.isNotEmpty
-                      ? IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.grey),
-                        onPressed: () {
-                          setState(() {
-                            _searchQuery = '';
-                            _searchController.clear();
-                          });
-                        },
-                      )
-                      : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey.shade700),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey.shade700),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Colors.red, width: 2),
-              ),
-              filled: true,
-              fillColor: Colors.grey[800],
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-            ),
-            style: const TextStyle(color: Colors.white),
-            onChanged: (value) {
-              setState(() {
-                _searchQuery = value;
-              });
-            },
-          ),
-          // الفلتر حسب القسم
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderCardItem({
+    required IconData icon,
+    required String label,
+    required String labelValue,
+    bool isRow = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 7),
+      decoration: BoxDecoration(
+        color: AppColors.lightGrey,
+        border: Border.all(color: Colors.white, width: 1.3),
+        borderRadius: BorderRadius.circular(16),
+      ),
+
+      child: Column(
+        children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
+              shape: BoxShape.circle,
               color: Colors.grey[800],
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade700),
             ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                isExpanded: true,
-                value: _selectedCategory,
-                icon: const Icon(Icons.filter_list, color: Colors.red),
-                dropdownColor: Colors.grey[800],
-                style: const TextStyle(color: Colors.white),
-                hint: const Text(
-                  'تصفية حسب القسم',
-                  style: TextStyle(color: Colors.grey),
+            child: Icon(icon, color: AppColors.primary, size: 20),
+          ),
+          const SizedBox(height: 4),
+          if(isRow)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  labelValue,
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
-                items:
-                    _categories.map((category) {
-                      return DropdownMenuItem<String>(
-                        value: category,
-                        child: Text(category),
-                      );
-                    }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                  }
-                },
+                const SizedBox(width: 8),
+                Text(
+                  label,
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ],
+            )
+          else
+          Column(
+            children: [
+              Text(
+                label,
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
-            ),
+              const SizedBox(height: 2),
+
+              Text(
+                labelValue,
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ],
       ),
     );
-
-    // return Card(
-    //   child: Row(
-    //     children: [
-    //       Container(
-    //         padding: const EdgeInsets.all(16),
-    //         decoration: BoxDecoration(
-    //           color: AppColors.lightGrey,
-    //           border: Border.all(color: AppColors.primary, width: 1.3),
-    //           borderRadius: BorderRadius.circular(8),
-    //         ),
-
-    //         child: Column(
-    //           children: [
-    //             Icon(Icons.shopping_bag, color: Colors.white, size: 25),
-    //             const SizedBox(height: 5),
-    //             Text('عدد المنتجات', style: TextStyle(color: Colors.white)),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 
   Widget _buildStatCard({

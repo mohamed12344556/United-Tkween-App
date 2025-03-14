@@ -50,5 +50,11 @@
     <string>en</string>
     <string>ar</string>
 	</array>
+
+    <!-- إضافة أذونات الوصول إلى الكاميرا والمعرض -->
+    <key>NSCameraUsageDescription</key>
+    <string>نحتاج إلى الوصول إلى الكاميرا لالتقاط الصور والفيديوهات.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>نحتاج إلى الوصول إلى المعرض لعرض الصور والفيديوهات.</string>
 </dict>
 </plist>

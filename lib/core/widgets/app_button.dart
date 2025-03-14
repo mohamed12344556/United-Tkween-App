@@ -92,9 +92,12 @@ class AppButton extends StatelessWidget {
               SizedBox(
                 width: 16,
                 height: 16,
-                child: CircularProgressIndicator.adaptive(
-                  valueColor: AlwaysStoppedAnimation<Color>(defaultTextColor),
-                  strokeWidth: 2,
+                // child: CircularProgressIndicator.adaptive(
+                //   valueColor: AlwaysStoppedAnimation<Color>(defaultTextColor),
+                //   strokeWidth: 2,
+                // ),
+                child: CircularProgressIndicator(
+                 color:  AppColors.primary,
                 ),
               ),
               const SizedBox(width: 12),

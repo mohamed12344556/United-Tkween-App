@@ -10,6 +10,7 @@ import 'package:united_formation_app/features/admin/ui/views/edit_product_admin_
 import 'package:united_formation_app/features/admin/ui/views/order_details_admin_view.dart';
 import 'package:united_formation_app/features/admin/ui/views/products_admin_view.dart';
 import 'package:united_formation_app/features/admin/ui/views/support_chat_admin_view.dart';
+import 'package:united_formation_app/features/favorites/presentation/views/favorites_view.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/library/library_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/orders/orders_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/views/library_view.dart';
@@ -18,6 +19,7 @@ import 'package:united_formation_app/features/settings/ui/views/profile_view.dar
 import 'package:united_formation_app/features/settings/ui/views/settings_view.dart';
 import '../../features/admin/ui/views/orders_admin_view.dart';
 import '../../features/admin/ui/views/support_admin_view.dart';
+import '../../features/home/ui/pages/product_details_page.dart';
 import 'routes.dart';
 import '../utilities/enums/otp_purpose.dart';
 import '../../features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
@@ -239,13 +241,13 @@ class AppRouter {
           builder: (_) => const HostPage(),
         );
 
-      // case Routes.productDetailsView:
-      //   ProductModel product = arguments as ProductModel;
+      case Routes.productDetailsView:
+        ProductModel product = arguments as ProductModel;
 
-      //   return MaterialPageRoute(
-      //     settings: settings,
-      //     builder: (_) => ProductDetailsPage(product: product),
-      //   );
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => ProductDetailsPage(product: product),
+        );
 
       case Routes.cartView:
         ProductModel product = arguments as ProductModel;
@@ -342,7 +344,15 @@ class AppRouter {
                 ),
               ),
         );
-
+      case Routes.favoritesView:
+        return MaterialPageRoute(
+          settings: settings,
+          builder:
+              (_) => BlocProvider(
+            create: (context) => sl<SupportAdminCubit>(),
+            child:  FavoritesView(),
+          ),
+        );
       default:
         return MaterialPageRoute(
           settings: settings,

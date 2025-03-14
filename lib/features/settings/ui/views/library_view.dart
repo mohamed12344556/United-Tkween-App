@@ -93,7 +93,6 @@ class _LibraryViewState extends State<LibraryView>
                 await context.read<LibraryCubit>().loadLibraryItems();
               }
             },
-            // استخدام المكون المتجاوب بناءً على نوع الجهاز
             child: ResponsiveBuilder(
               builder: (context, deviceType) {
                 switch (deviceType) {
@@ -109,17 +108,6 @@ class _LibraryViewState extends State<LibraryView>
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.secondary,
-        onPressed: () {},
-        elevation: 4,
-        shape: const CircleBorder(),
-        child: Icon(
-          Icons.add,
-          size: context.isTablet ? 28.r : 24.r,
-        ), // حجم متجاوب للأيقونة
-      ),
     );
   }
 
@@ -128,6 +116,7 @@ class _LibraryViewState extends State<LibraryView>
       backgroundColor: AppColors.darkBackground,
       elevation: 0,
       centerTitle: true,
+      scrolledUnderElevation: 0,
       title: Text(
         'مكتبتي',
         style: TextStyle(
@@ -251,7 +240,7 @@ class _LibraryViewState extends State<LibraryView>
         crossAxisCount: columns,
         crossAxisSpacing: context.isTablet ? 16.w : 12.w, // تباعد متجاوب أفقي
         mainAxisSpacing: context.isTablet ? 16.h : 12.h, // تباعد متجاوب رأسي
-        childAspectRatio: 0.75, // يمكن تعديله حسب الجهاز إذا لزم الأمر
+        childAspectRatio: 0.6, // يمكن تعديله حسب الجهاز إذا لزم الأمر
       ),
       itemCount: state.items.length,
       itemBuilder: (context, index) {

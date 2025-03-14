@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:united_formation_app/features/admin/data/models/product_model.dart';
+import '../../../../core/themes/app_colors.dart';
 import '../cubits/edit_product/edit_product_admin_cubit.dart';
 import '../widgets/admin_appbar.dart';
 import '../widgets/loading_widget.dart';
@@ -88,7 +89,7 @@ class _EditProductAdminViewState extends State<EditProductAdminView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AdminAppBar(title: 'تعديل المنتج'),
+      appBar: const AdminAppBar(title: 'تعديل المنتج',isHasBackButtonOnAction: false),
       body: BlocConsumer<EditProductAdminCubit, EditProductAdminState>(
         listener: (context, state) {
           if (state is EditProductSuccess) {
@@ -224,7 +225,7 @@ class _EditProductAdminViewState extends State<EditProductAdminView> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.grey),
+        labelStyle: const TextStyle(color: Colors.white),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -232,7 +233,7 @@ class _EditProductAdminViewState extends State<EditProductAdminView> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.red, width: 2),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -242,7 +243,7 @@ class _EditProductAdminViewState extends State<EditProductAdminView> {
         fillColor: Colors.grey[800],
       ),
       style: const TextStyle(color: Colors.white),
-      cursorColor: Colors.red,
+      cursorColor:AppColors.primary,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       validator: validator,
@@ -262,7 +263,7 @@ class _EditProductAdminViewState extends State<EditProductAdminView> {
         value: value,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.grey),
+          labelStyle: const TextStyle(color: Colors.white),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -270,7 +271,7 @@ class _EditProductAdminViewState extends State<EditProductAdminView> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.red, width: 2),
+            borderSide: const BorderSide(color: AppColors.primary, width: 2),
           ),
           filled: true,
           fillColor: Colors.grey[800],
@@ -282,7 +283,7 @@ class _EditProductAdminViewState extends State<EditProductAdminView> {
               return DropdownMenuItem<String>(value: value, child: Text(value));
             }).toList(),
         onChanged: onChanged,
-        icon: const Icon(Icons.arrow_drop_down, color: Colors.red),
+        icon: const Icon(Icons.arrow_drop_down, color:AppColors.primary,),
       ),
     );
   }
@@ -302,7 +303,7 @@ class _EditProductAdminViewState extends State<EditProductAdminView> {
           children: [
             const Row(
               children: [
-                Icon(Icons.image, color: Colors.red),
+                Icon(Icons.image, color: AppColors.primary,),
                 SizedBox(width: 8),
                 Text(
                   'رفع صور المنتج',
@@ -382,17 +383,20 @@ class _EditProductAdminViewState extends State<EditProductAdminView> {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey.shade600, width: 2),
         ),
-        child: const Center(
+        child:  Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.file_upload, color: Colors.red, size: 48),
+              Container(
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey[700],
+                  ),
+                  child: Icon(Icons.file_upload, color: AppColors.primary, size: 35)),
               SizedBox(height: 8),
               Text('اضغط لاختيار صورة', style: TextStyle(color: Colors.white)),
-              Text(
-                'أو اسحب وأفلت الملف هنا',
-                style: TextStyle(color: Colors.grey, fontSize: 12),
-              ),
+
             ],
           ),
         ),

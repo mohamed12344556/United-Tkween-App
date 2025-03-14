@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:united_formation_app/features/favorites/presentation/views/favorites_view.dart';
+import 'package:united_formation_app/features/settings/ui/views/settings_view.dart';
 import '../../../../core/themes/app_colors.dart';
 import 'home_page.dart';
 import 'package:united_formation_app/features/cart/presentation/pages/cart_page.dart';
@@ -14,7 +16,7 @@ class HostPage extends StatefulWidget {
 class _HostPageState extends State<HostPage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [HomePage(), CartPage(), Scaffold(), Scaffold()];
+  final List<Widget> _pages = [HomePage(), CartPage(), FavoritesView(), SettingsView()];
 
   void _onItemTapped(int index) {
     setState(() {

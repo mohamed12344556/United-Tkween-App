@@ -25,9 +25,8 @@ class FilterTabsWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 26), // 0.1
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
+            color: AppColors.primary,
+            blurRadius: 2.r,
           ),
         ],
       ),

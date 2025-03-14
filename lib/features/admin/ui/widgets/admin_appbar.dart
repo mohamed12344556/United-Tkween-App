@@ -4,8 +4,9 @@ import 'package:united_formation_app/core/themes/app_colors.dart';
 class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
+  final bool isHasBackButtonOnAction ;
 
-  const AdminAppBar({super.key, required this.title, this.actions});
+  const AdminAppBar({super.key, required this.title, this.actions ,this.isHasBackButtonOnAction =true});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,13 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: true,
       iconTheme: const IconThemeData(color: Colors.white),
-      actions: actions,
+      actions: [
+        if(isHasBackButtonOnAction)
+        Transform.rotate(
+          angle:3.14159 ,
+          child: BackButton(),),
+        if (actions != null) ...actions!,
+      ],
     );
   }
 

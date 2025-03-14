@@ -42,6 +42,7 @@ class _OrdersViewState extends State<OrdersView> {
       backgroundColor: AppColors.darkBackground,
       elevation: 0,
       centerTitle: true,
+      scrolledUnderElevation: 0,
       title: Text(
         'مشترياتي',
         style: TextStyle(

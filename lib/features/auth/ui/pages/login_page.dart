@@ -42,9 +42,14 @@ class _LoginPageState extends State<LoginPage> {
             context.showSuccessSnackBar(context.localeS.login_successful);
             Future.microtask(() {
               if (mounted) {
+                // Navigator.of(context).pushNamedAndRemoveUntil(
+                //   Routes.settingsView,
+                //   (route) => false,
+                // );
+
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.settingsView,
-                  (route) => false,
+                  Routes.loginView,
+                      (route) => false,
                 );
               }
             });
@@ -102,11 +107,12 @@ class _LoginPageState extends State<LoginPage> {
                         isLoading: state is LoginLoading,
                         onPressed: () {
                           if (mounted) {
-                            cubit.login(
-                              email: cubit.emailController.text.trim(),
-                              password: cubit.passwordController.text,
-                              context: context,
-                            );
+                            // cubit.login(
+                            //   email: cubit.emailController.text.trim(),
+                            //   password: cubit.passwordController.text,
+                            //   context: context,
+                            // );
+                            context.pushNamed(Routes.hostView);
                           }
                         },
                       ),

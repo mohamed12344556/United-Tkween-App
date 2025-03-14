@@ -71,7 +71,7 @@ class _AddProductAdminViewState extends State<AddProductAdminView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AdminAppBar(title: 'إضافة منتج جديد'),
+      appBar: const AdminAppBar(title: 'إضافة منتج جديد' ),
       drawer: AdminDrawer(currentRoute: Routes.adminAddProductView),
       body: BlocConsumer<AddProductAdminCubit, AddProductAdminState>(
         listener: (context, state) {
@@ -309,7 +309,7 @@ class _AddProductAdminViewState extends State<AddProductAdminView> {
           children: [
             const Row(
               children: [
-                Icon(Icons.image, color: Colors.red),
+                Icon(Icons.image, color: AppColors.primary),
                 SizedBox(width: 8),
                 Text(
                   'رفع صور المنتج',
@@ -389,17 +389,19 @@ class _AddProductAdminViewState extends State<AddProductAdminView> {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey.shade600, width: 2),
         ),
-        child: const Center(
+        child:  Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.file_upload, color: Colors.red, size: 48),
+              Container(
+                padding: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey[700],
+                ),
+                  child: Icon(Icons.file_upload, color: AppColors.primary, size: 35)),
               SizedBox(height: 8),
               Text('اضغط لاختيار صورة', style: TextStyle(color: Colors.white)),
-              Text(
-                'أو اسحب وأفلت الملف هنا',
-                style: TextStyle(color: Colors.grey, fontSize: 12),
-              ),
             ],
           ),
         ),

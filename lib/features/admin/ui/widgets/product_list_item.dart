@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/helper/format_double_number.dart';
+import '../../../../core/themes/app_colors.dart';
 import '../../data/models/product_model.dart';
 
 class ProductListItem extends StatelessWidget {
@@ -27,7 +28,6 @@ class ProductListItem extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // صورة المنتج (أو مكان الصورة)
                 Container(
                   width: 80,
                   height: 80,
@@ -58,7 +58,6 @@ class ProductListItem extends StatelessWidget {
                           ),
                 ),
                 const SizedBox(width: 16),
-                // معلومات المنتج
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +118,7 @@ class ProductListItem extends StatelessWidget {
                           Text(
                             '${formatNumber(product.price)} ج.م',
                             style: const TextStyle(
-                              color: Colors.green,
+                              color: AppColors.primary,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -149,7 +148,7 @@ class ProductListItem extends StatelessWidget {
                     _buildActionButton(
                       onPressed: onEdit,
                       icon: Icons.edit,
-                      color: Colors.blue,
+                      color:  AppColors.primary,
                       tooltip: 'تعديل',
                     ),
                     const SizedBox(height: 8),
@@ -193,7 +192,6 @@ class ProductListItem extends StatelessWidget {
                 ],
               ),
             ],
-            // قسم إجمالي القيمة
             const Divider(height: 24, color: Colors.grey),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -204,15 +202,23 @@ class ProductListItem extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.yellow.shade800,
+                    color: AppColors.lightGrey,
                     borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary,
+                          blurRadius: 1,
+                          spreadRadius: 1
+
+                        )
+                    ]
                   ),
                   child: Row(
                     children: [
                       Text(
                         'ج.م',
                         style: const TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -220,7 +226,7 @@ class ProductListItem extends StatelessWidget {
                       Text(
                         formatNumber(product.price * product.quantity),
                         style: const TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -251,7 +257,7 @@ class ProductListItem extends StatelessWidget {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(8),
       ),
       child: IconButton(

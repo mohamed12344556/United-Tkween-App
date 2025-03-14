@@ -10,9 +10,9 @@ class AppColors {
   static const Color darkBackgroundColor = Color(0xFF1C1B1B);
 
   // الألوان الأساسية من التصميم الجديد
-  static const Color primary = Color(
-    0xFFd1f362,
-  ); // اللون الأصفر الليموني المشرق
+  // static const Color primary = Color(0xFFd1f362);
+  static const Color primary = Color(0xFFa8d032);
+
   static const Color secondary = Color(
     0xFF111111,
   ); // اللون الأسود للأزرار الثانوية والنصوص

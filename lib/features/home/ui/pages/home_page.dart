@@ -203,7 +203,7 @@ class _HomePageState extends State<HomePage> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(4.0),
-            child: Icon(Icons.notifications_none, color: Colors.white),
+            child: Icon(Icons.notifications_none, color:AppColors.primary,  size: 20,),
           ),
         ),
         SizedBox(width: 10),

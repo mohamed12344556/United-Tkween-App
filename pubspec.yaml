@@ -45,6 +45,7 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
+  icons_launcher: ^3.0.0
 
 # Flutter configuration
 flutter:
@@ -74,3 +75,12 @@ flutter:
 flutter_intl:
   enabled: true
   generate: true
+
+
+icons_launcher:
+  image_path: "assets/images/app_logo.jpg"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true

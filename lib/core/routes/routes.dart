@@ -22,6 +22,7 @@ class Routes {
   static const String productDetailsView = "/product-details-view";
   static const String adminEditProductView = "/admin-edit-product-view";
   static const String cartView = "/cart-view";
+  static const String favoritesView = "/favorites-view";
 
   // مسارات الإدارة الجديدة
   static const String adminOrdersView = "/admin/orders";

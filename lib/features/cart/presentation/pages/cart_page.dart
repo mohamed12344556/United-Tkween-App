@@ -12,22 +12,22 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   List<Map<String, dynamic>> cartItems = [
     {
-      'name': 'Air Jordan Shoes',
-      'color': 'Pink, 40',
-      'price': 150,
-      'quantity': 1,
+      'name': 'The Great Gatsby',  // اسم الكتاب الأول
+      'color': 'Hardcover, 400 pages',  // هذا يمكن أن يكون وصف الكتاب أو طبعته
+      'price': 15,  // السعر
+      'quantity': 1,  // الكمية
     },
     {
-      'name': 'Air Jordan Shoes',
-      'color': 'Cream & Black 40',
-      'price': 120,
-      'quantity': 1,
+      'name': '1984',  // اسم الكتاب الثاني
+      'color': 'Paperback, 328 pages',  // وصف الكتاب
+      'price': 12,  // السعر
+      'quantity': 1,  // الكمية
     },
     {
-      'name': 'Air Jordan Shoes',
-      'color': 'Yellow, 40',
-      'price': 140,
-      'quantity': 1,
+      'name': 'To Kill a Mockingbird',  // اسم الكتاب الثالث
+      'color': 'Hardcover, 324 pages',  // وصف الكتاب
+      'price': 18,  // السعر
+      'quantity': 1,  // الكمية
     },
   ];
 
@@ -53,6 +53,7 @@ class _CartPageState extends State<CartPage> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        scrolledUnderElevation: 0,
         leading: SizedBox(),
         elevation: 0,
         actions: [
@@ -95,6 +96,7 @@ class _CartPageState extends State<CartPage> {
                             color: Colors.grey[800],
                             borderRadius: BorderRadius.circular(8),
                           ),
+                          child: Icon(Icons.book,color: AppColors.primary),
                         ),
                         SizedBox(width: 12),
                         Expanded(
@@ -130,7 +132,7 @@ class _CartPageState extends State<CartPage> {
                         Row(
                           children: [
                             IconButton(
-                              icon: Icon(Icons.remove, color: Colors.white),
+                              icon: Icon(Icons.remove,color:AppColors.primary),
                               onPressed: () => updateQuantity(index, -1),
                             ),
                             Text(
@@ -141,7 +143,7 @@ class _CartPageState extends State<CartPage> {
                               ),
                             ),
                             IconButton(
-                              icon: Icon(Icons.add, color: Colors.white),
+                              icon: Icon(Icons.add, color:AppColors.primary),
                               onPressed: () => updateQuantity(index, 1),
                             ),
                           ],

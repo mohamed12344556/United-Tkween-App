@@ -101,7 +101,7 @@ class AdminDrawer extends StatelessWidget {
       child: Container(
         color:
             isSelected
-                ? AppColors.primaryYellow
+                ? AppColors.primary
                 : isLoggedOut
                 ? Colors.red
                 : AppColors.lightGrey,

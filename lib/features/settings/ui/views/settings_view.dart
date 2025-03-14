@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:united_formation_app/constants.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/build_user_info_header.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/social_media_icons.dart';
 import '../widgets/profile_menu_item.dart';
@@ -39,6 +40,7 @@ class _SettingsViewState extends State<SettingsView>
         backgroundColor: AppColors.darkSurface,
         elevation: 0,
         centerTitle: true,
+        scrolledUnderElevation: 0,
         title: const Text(
           'مجموعة تكوين المتحدة',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -58,7 +60,6 @@ class _SettingsViewState extends State<SettingsView>
               ),
             ),
             onPressed: () {
-              // إعدادات الإشعارات
             },
           ),
           const SizedBox(width: 8),
@@ -73,19 +74,34 @@ class _SettingsViewState extends State<SettingsView>
   }
 
   Widget _buildMenuItems(BuildContext context) {
-    return Column(
-      children: [
-        // User info section
-        BuildUserInfoHeader(context: context),
-
-        // Menu items with improved animations
-        Expanded(
-          child: ListView(
-            physics: const BouncingScrollPhysics(),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          BuildUserInfoHeader(context: context),
+          if(Constants.isAdmin)
+          Column(
+            children: [
+              Divider(color: AppColors.primary),
+              _buildAnimatedMenuItem(
+                index: 3,
+                child: ProfileMenuItem(
+                  title: "اداره النظام",
+                  icon: Icons.settings,
+                  onTap: () {
+                    context.navigateToNamed(Routes.adminOrdersView);
+                  },
+                ),
+              ),
+              Divider(color: AppColors.primary),
+            ],
+          ),
+          ListView(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             children: [
               _buildSectionTitle('الحساب'),
-
+          
               _buildAnimatedMenuItem(
                 index: 0,
                 child: ProfileMenuItem(
@@ -106,7 +122,7 @@ class _SettingsViewState extends State<SettingsView>
                   },
                 ),
               ),
-
+          
               _buildAnimatedMenuItem(
                 index: 2,
                 child: ProfileMenuItem(
@@ -117,10 +133,11 @@ class _SettingsViewState extends State<SettingsView>
                   },
                 ),
               ),
-
+              Divider(color: AppColors.primary),
+          
               const SizedBox(height: 16),
               _buildSectionTitle('الدعم'),
-
+          
               _buildAnimatedMenuItem(
                 index: 3,
                 child: ProfileMenuItem(
@@ -131,7 +148,7 @@ class _SettingsViewState extends State<SettingsView>
                   },
                 ),
               ),
-
+          
               _buildAnimatedMenuItem(
                 index: 4,
                 child: ProfileMenuItem(
@@ -142,10 +159,10 @@ class _SettingsViewState extends State<SettingsView>
                   },
                 ),
               ),
-
+          
               const SizedBox(height: 8),
-              Divider(color: Colors.grey[800], height: 32),
-
+              Divider(color: AppColors.primary),
+          
               // Logout Button
               _buildAnimatedMenuItem(
                 index: 5,
@@ -161,11 +178,11 @@ class _SettingsViewState extends State<SettingsView>
               ),
             ],
           ),
-        ),
-
-        // Social Media Icons
-        SocialMediaIcons(),
-      ],
+      
+          // Social Media Icons
+          SocialMediaIcons(),
+        ],
+      ),
     );
   }
 
