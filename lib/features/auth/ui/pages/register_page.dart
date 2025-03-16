@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../../../core/core.dart';
 import '../cubits/register/register_cubit.dart';
 import '../widgets/auth_header.dart';
@@ -59,9 +62,9 @@ class RegisterViewContent extends StatelessWidget {
                     AuthHeader(
                       title: context.localeS.create_account,
                       subtitle:
-                          context.localeS
-                              .create_your_account_it_takes_less_than_a_minute_enter_your_email_and_password
-                              ,
+                          context
+                              .localeS
+                              .create_your_account_it_takes_less_than_a_minute_enter_your_email_and_password,
                     ),
 
                     // Email field
@@ -107,7 +110,8 @@ class RegisterViewContent extends StatelessWidget {
                     // Google sign in
                     SocialButton(
                       onPressed: () {
-                        cubit.registerWithSocialMedia('google',context);
+                        // cubit.registerWithSocialMedia('google', context);
+                        signInWithGoogle();
                       },
                       icon: Assets.google,
                       text: context.localeS.continue_with_google,
@@ -118,7 +122,7 @@ class RegisterViewContent extends StatelessWidget {
                     // Facebook sign in
                     SocialButton(
                       onPressed: () {
-                        cubit.registerWithSocialMedia('facebook',context);
+                        cubit.registerWithSocialMedia('facebook', context);
                       },
                       icon: Assets.facebook,
                       text: context.localeS.continue_with_facebook,
@@ -128,8 +132,9 @@ class RegisterViewContent extends StatelessWidget {
 
                     // Apple sign in
                     SocialButton(
-                      onPressed: () {
-                        cubit.registerWithSocialMedia('apple',context);
+                      onPressed: () async {
+                        // cubit.registerWithSocialMedia('apple', context);
+                        await GoogleSignInApi.logout();
                       },
                       icon: Assets.apple,
                       text: context.localeS.continue_with_apple,
@@ -172,4 +177,20 @@ class RegisterViewContent extends StatelessWidget {
       },
     );
   }
+
+  Future signInWithGoogle() async {
+    final googleUser = await GoogleSignInApi.login();
+    if (googleUser != null) {
+      log('Google Sign In Success: ${googleUser.email}');
+      log('Google Sign In Success: ${googleUser.displayName}');
+    } else {
+      log('Google Sign In Failed');
+    }
+  }
+}
+
+class GoogleSignInApi {
+  static final googleSignIn = GoogleSignIn();
+  static Future<GoogleSignInAccount?> login() => googleSignIn.signIn();
+  static Future logout() => googleSignIn.disconnect();
 }

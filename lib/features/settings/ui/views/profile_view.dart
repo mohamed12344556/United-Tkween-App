@@ -74,6 +74,7 @@ class _ProfileViewState extends State<ProfileView> {
     return AppBar(
       backgroundColor: AppColors.darkBackground,
       iconTheme: const IconThemeData(color: Colors.white),
+      scrolledUnderElevation: 0,
       title: Text(
         'الملف الشخصي',
         style: TextStyle(
@@ -93,11 +94,7 @@ class _ProfileViewState extends State<ProfileView> {
               color: AppColors.darkSecondary,
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              Icons.edit,
-              color: AppColors.primary,
-              size: 20.r,
-            ),
+            child: Icon(Icons.edit, color: AppColors.primary, size: 20.r),
           ),
           onPressed: () {
             context.navigateToNamed(Routes.editProfileView);
@@ -122,18 +119,11 @@ class _ProfileViewState extends State<ProfileView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 60.r,
-            color: AppColors.error,
-          ),
+          Icon(Icons.error_outline, size: 60.r, color: AppColors.error),
           SizedBox(height: 16.h),
           Text(
             'خطأ في تحميل الملف الشخصي',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.sp,
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 16.sp),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 24.h),
@@ -142,10 +132,7 @@ class _ProfileViewState extends State<ProfileView> {
             child: ElevatedButton.icon(
               onPressed: () => context.read<ProfileCubit>().loadProfile(),
               icon: Icon(Icons.refresh, size: 16.r),
-              label: Text(
-                'إعادة المحاولة',
-                style: TextStyle(fontSize: 14.sp),
-              ),
+              label: Text('إعادة المحاولة', style: TextStyle(fontSize: 14.sp)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.secondary,
@@ -192,9 +179,10 @@ class _ProfileViewState extends State<ProfileView> {
                 AddressCardWidget(address: ""),
 
                 SizedBox(
-                  width: context.isTablet
-                      ? context.screenWidth * 0.6
-                      : double.infinity,
+                  width:
+                      context.isTablet
+                          ? context.screenWidth * 0.6
+                          : double.infinity,
                   child: EditProfileButtonWidget(
                     onPressed: () {
                       context.navigateToNamed(Routes.editProfileView);
@@ -243,9 +231,10 @@ class _ProfileViewState extends State<ProfileView> {
                 AddressCardWidget(address: profile.address),
 
                 SizedBox(
-                  width: context.isTablet
-                      ? context.screenWidth * 0.6
-                      : double.infinity,
+                  width:
+                      context.isTablet
+                          ? context.screenWidth * 0.6
+                          : double.infinity,
                   child: EditProfileButtonWidget(
                     onPressed: () {
                       context.navigateToNamed(Routes.editProfileView);

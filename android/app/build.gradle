@@ -30,6 +30,15 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        debug {
+            keyAlias = "androiddebugkey"
+            keyPassword = "123123"
+            storeFile file("united_tkween_group_app-keystore.jks")
+            storePassword = "123123"
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
