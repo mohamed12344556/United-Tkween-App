@@ -38,7 +38,7 @@ android {
             storePassword = "123123"
         }
         release{
-            keyAlias = "united_tkween_group_app"
+            keyAlias = "androidreleasekey"
             keyPassword = "123123"
             storeFile file("united_tkween_group_app-keystore.jks")
             storePassword = "123123"
