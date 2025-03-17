@@ -1,9 +1,14 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../../../../core/core.dart';
+import 'package:united_formation_app/core/core.dart';
+import 'package:united_formation_app/core/utilities/responsive_extensions.dart';
+import 'package:united_formation_app/features/auth/ui/pages/social_auth_repo.dart';
+import 'package:united_formation_app/features/auth/ui/pages/social_auth_repo_imp.dart';
+// import '../../../../core/core.dart';
 import '../cubits/register/register_cubit.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/social_button.dart';
@@ -122,7 +127,13 @@ class RegisterViewContent extends StatelessWidget {
                     // Facebook sign in
                     SocialButton(
                       onPressed: () {
-                        cubit.registerWithSocialMedia('facebook', context);
+                        // cubit.registerWithSocialMedia('facebook', context);
+                        SocialAuthRepo signInWithFacebook =
+                            SocialAuthRepoImpl();
+
+                        signInWithFacebook.signInWithFacebook(
+                          firebaseToken: '',
+                        );
                       },
                       icon: Assets.facebook,
                       text: context.localeS.continue_with_facebook,

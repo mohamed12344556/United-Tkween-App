@@ -57,5 +57,27 @@
 		<string>نحتاج إلى الوصول إلى المعرض لعرض الصور والفيديوهات.</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		
+		<key>CFBundleURLTypes</key>
+		<array>
+		  <dict>
+		  <key>CFBundleURLSchemes</key>
+		  <array>
+		    <string>fb2039511746475921</string>
+		  </array>
+		  </dict>
+		</array>
+		<key>FacebookAppID</key>
+		<string>2039511746475921</string>
+		<key>FacebookClientToken</key>
+		<string>37dfc9867a3ef87cf98f81b9520ec4e5</string>
+		<key>FacebookDisplayName</key>
+		<string>United Tkween Group</string>
+
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+		  <string>fbapi</string>
+		  <string>fb-messenger-share-api</string>
+		</array>
 	</dict>
 </plist>
