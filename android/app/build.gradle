@@ -37,12 +37,21 @@ android {
             storeFile file("united_tkween_group_app-keystore.jks")
             storePassword = "123123"
         }
+        release{
+            keyAlias = "united_tkween_group_app"
+            keyPassword = "123123"
+            storeFile file("united_tkween_group_app-keystore.jks")
+            storePassword = "123123"
+        }
     }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig = signingConfigs.getByName("release")
+        }
+        debug {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
