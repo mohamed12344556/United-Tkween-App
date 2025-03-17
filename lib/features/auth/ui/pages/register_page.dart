@@ -134,7 +134,8 @@ class RegisterViewContent extends StatelessWidget {
                     SocialButton(
                       onPressed: () async {
                         // cubit.registerWithSocialMedia('apple', context);
-                        await GoogleSignInApi.logout();
+                        signInWithGoogle();
+                        // await GoogleSignInApi.logout();
                       },
                       icon: Assets.apple,
                       text: context.localeS.continue_with_apple,
@@ -181,8 +182,7 @@ class RegisterViewContent extends StatelessWidget {
   Future signInWithGoogle() async {
     final googleUser = await GoogleSignInApi.login();
     if (googleUser != null) {
-      log('Google Sign In Success: ${googleUser.email}');
-      log('Google Sign In Success: ${googleUser.displayName}');
+      log('Google Sign In Success: $googleUser');
     } else {
       log('Google Sign In Failed');
     }
@@ -190,7 +190,7 @@ class RegisterViewContent extends StatelessWidget {
 }
 
 class GoogleSignInApi {
-  static final googleSignIn = GoogleSignIn();
+  static final googleSignIn = GoogleSignIn(scopes: ['email']);
   static Future<GoogleSignInAccount?> login() => googleSignIn.signIn();
   static Future logout() => googleSignIn.disconnect();
 }
