@@ -71,6 +71,6 @@ class ProductsAdminCubit extends Cubit<ProductsAdminState> {
   }
 
   String _mapFailureToMessage(ApiErrorModel failure) {
-    return failure.errorMessage?.message ?? 'حدث خطأ غير متوقع';
+    return failure.errorMessage?? 'حدث خطأ غير متوقع';
   }
 }

@@ -66,23 +66,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
           } else {
             return Left(
               ApiErrorModel(
-                errorMessage: ErrorData(
-                  message: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
-                  code: 0,
-                ),
-                status: false,
+                errorMessage: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
               ),
             );
           }
         });
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -106,23 +97,10 @@ class ProfileRepositoryImpl implements ProfileRepository {
           return Right(success);
         });
       } else {
-        return Left(
-          ApiErrorModel(
-            errorMessage: ErrorData(
-              message: 'لا يوجد اتصال بالإنترنت',
-              code: 0,
-            ),
-            status: false,
-          ),
-        );
+        return Left(ApiErrorModel(errorMessage: 'لا يوجد اتصال بالإنترنت'));
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -164,23 +142,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
           } else {
             return Left(
               ApiErrorModel(
-                errorMessage: ErrorData(
-                  message: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
-                  code: 0,
-                ),
-                status: false,
+                errorMessage: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
               ),
             );
           }
         });
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -211,22 +180,13 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
           return Left(
             ApiErrorModel(
-              errorMessage: ErrorData(
-                message: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
-                code: 0,
-              ),
-              status: false,
+              errorMessage: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
             ),
           );
         });
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -269,23 +229,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
           } else {
             return Left(
               ApiErrorModel(
-                errorMessage: ErrorData(
-                  message: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
-                  code: 0,
-                ),
-                status: false,
+                errorMessage: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
               ),
             );
           }
         });
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -317,22 +268,13 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
           return Left(
             ApiErrorModel(
-              errorMessage: ErrorData(
-                message: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
-                code: 0,
-              ),
-              status: false,
+              errorMessage: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
             ),
           );
         });
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -351,21 +293,12 @@ class ProfileRepositoryImpl implements ProfileRepository {
       } else {
         return Left(
           ApiErrorModel(
-            errorMessage: ErrorData(
-              message: 'لا يوجد اتصال بالإنترنت، يجب الاتصال للتحميل',
-              code: 0,
-            ),
-            status: false,
+            errorMessage: 'لا يوجد اتصال بالإنترنت، يجب الاتصال للتحميل',
           ),
         );
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -382,21 +315,12 @@ class ProfileRepositoryImpl implements ProfileRepository {
       } else {
         return Left(
           ApiErrorModel(
-            errorMessage: ErrorData(
-              message: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
-              code: 0,
-            ),
-            status: false,
+            errorMessage: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
           ),
         );
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -412,35 +336,24 @@ class ProfileRepositoryImpl implements ProfileRepository {
       } else {
         return Left(
           ApiErrorModel(
-            errorMessage: ErrorData(
-              message: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
-              code: 0,
-            ),
-            status: false,
+            errorMessage: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
           ),
         );
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
-  
-  @override
-  Future<Either<ApiErrorModel, String>> uploadProfileImage(File file) {
-    // TODO: implement uploadProfileImage
-    throw UnimplementedError();
-  }
-
-  }
 
   @override
   Future<Either<ApiErrorModel, String>> uploadProfileImage(File file) {
     // TODO: implement uploadProfileImage
     throw UnimplementedError();
   }
+}
 
+@override
+Future<Either<ApiErrorModel, String>> uploadProfileImage(File file) {
+  // TODO: implement uploadProfileImage
+  throw UnimplementedError();
+}

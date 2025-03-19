@@ -104,11 +104,7 @@ class AdminRepositoryImpl implements AdminRepository {
       await Future.delayed(const Duration(milliseconds: 500));
       return Right(_mockOrders);
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ أثناء جلب الطلبات'),
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ أثناء جلب الطلبات'));
     }
   }
 
@@ -122,11 +118,7 @@ class AdminRepositoryImpl implements AdminRepository {
       );
       return Right(order);
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'لم يتم العثور على الطلب'),
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'لم يتم العثور على الطلب'));
     }
   }
 
@@ -146,9 +138,7 @@ class AdminRepositoryImpl implements AdminRepository {
       throw Exception('Order not found');
     } catch (e) {
       return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ أثناء تحديث حالة الطلب'),
-        ),
+        ApiErrorModel(errorMessage: 'حدث خطأ أثناء تحديث حالة الطلب'),
       );
     }
   }
@@ -159,11 +149,7 @@ class AdminRepositoryImpl implements AdminRepository {
       await Future.delayed(const Duration(milliseconds: 500));
       return Right(_mockProducts);
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ أثناء جلب المنتجات'),
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ أثناء جلب المنتجات'));
     }
   }
 
@@ -177,11 +163,7 @@ class AdminRepositoryImpl implements AdminRepository {
       );
       return Right(product);
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'لم يتم العثور على المنتج'),
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'لم يتم العثور على المنتج'));
     }
   }
 
@@ -193,11 +175,7 @@ class AdminRepositoryImpl implements AdminRepository {
       // For now, just simulate success
       return const Right(unit);
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ أثناء إضافة المنتج'),
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ أثناء إضافة المنتج'));
     }
   }
 
@@ -215,11 +193,7 @@ class AdminRepositoryImpl implements AdminRepository {
       }
       throw Exception('Product not found');
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ أثناء تحديث المنتج'),
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ أثناء تحديث المنتج'));
     }
   }
 
@@ -235,11 +209,7 @@ class AdminRepositoryImpl implements AdminRepository {
       }
       throw Exception('Product not found');
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ أثناء حذف المنتج'),
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ أثناء حذف المنتج'));
     }
   }
 
@@ -250,11 +220,7 @@ class AdminRepositoryImpl implements AdminRepository {
       await Future.delayed(const Duration(milliseconds: 500));
       return Right(_mockSupportMessages);
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ أثناء جلب رسائل الدعم'),
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ أثناء جلب رسائل الدعم'));
     }
   }
 
@@ -269,11 +235,7 @@ class AdminRepositoryImpl implements AdminRepository {
       // For now, just simulate success
       return const Right(unit);
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ أثناء إرسال الرسالة'),
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ أثناء إرسال الرسالة'));
     }
   }
 
@@ -293,11 +255,7 @@ class AdminRepositoryImpl implements AdminRepository {
       }
       throw Exception('Message not found');
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ أثناء تحديث الرسالة'),
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ أثناء تحديث الرسالة'));
     }
   }
 }

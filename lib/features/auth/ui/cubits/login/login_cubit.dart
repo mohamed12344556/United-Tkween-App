@@ -1,43 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:united_formation_app/features/auth/data/models/login/login_model_response.dart';
 import '../../../../../core/core.dart';
 import '../../../../../core/utilities/safe_controller.dart';
 import '../../../domain/entities/user_login_entity.dart';
 import '../../../domain/usecases/auth_usecases.dart';
 
-
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  final LoginUseCase? loginUseCase;
+  final LoginUseCase loginUseCase;
 
+  // متغير لمراقبة حالة الـ Cubit (مستخدم أم تم التخلص منه)
   bool _isDisposed = false;
 
+  // تحكم في حقول الإدخال
   late final SafeTextEditingController emailController;
   late final SafeTextEditingController passwordController;
 
+  // متغير للتحكم في رؤية كلمة المرور
   bool _isPasswordVisible = false;
-
   bool get isPasswordVisible => _isPasswordVisible;
 
-  set isPasswordVisible(bool value) {
-    if (!isActive) return;
-
-    _isPasswordVisible = value;
-  }
-
+  // متغير للتحقق من حالة الـ Cubit
   bool get isActive => !_isDisposed;
 
-  LoginCubit({this.loginUseCase}) : super(LoginInitial()) {
+  LoginCubit({required this.loginUseCase}) : super(LoginInitial()) {
     emailController = SafeTextEditingController();
     passwordController = SafeTextEditingController();
   }
 
-  Future<void> login({required String email, required String password, required BuildContext context}) async {
-    try {
-      if (!isActive) return;
+  /// تبديل حالة رؤية كلمة المرور
+  void togglePasswordVisibility() {
+    if (!isActive) return;
+    _isPasswordVisible = !_isPasswordVisible;
+    emit(LoginFormUpdated());
+  }
 
-      // Validate inputs
+  /// إعادة تعيين حالة الـ Cubit
+  void resetState() {
+    if (!isActive) return;
+    
+    emailController.clear();
+    passwordController.clear();
+    
+    _isPasswordVisible = false;
+    emit(LoginInitial());
+  }
+
+  /// التحقق من صحة البريد الإلكتروني
+  bool _isValidEmail(String email) {
+    final emailRegExp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return emailRegExp.hasMatch(email);
+  }
+
+  /// تسجيل الدخول
+  Future<void> login({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    if (!isActive) return;
+
+    try {
+      // التحقق من البيانات المدخلة
       if (email.isEmpty) {
         emit(LoginError(errorMessage: context.localeS.email_is_required));
         return;
@@ -48,84 +74,60 @@ class LoginCubit extends Cubit<LoginState> {
         return;
       }
 
-      if (!email.contains('@') || !email.contains('.')) {
+      if (!_isValidEmail(email)) {
         emit(LoginError(errorMessage: context.localeS.invalid_email_address));
         return;
       }
 
       emit(LoginLoading());
 
-      // Use actual login UseCase if available
-      if (loginUseCase != null) {
-        final result = await loginUseCase!(
-          UserLoginEntity(email: email, password: password),
-        );
+      // استدعاء حالة الاستخدام للتسجيل
+      final result = await loginUseCase(
+        UserLoginEntity(email: email, password: password),
+      );
 
-        if (!isActive) return;
+      if (!isActive) return;
 
-        result.fold(
-          (failure) => emit(
-            LoginError(
-              errorMessage:
-                  failure.errorMessage?.message ??
-                  context.localeS.something_went_wrong_please_try_again,
-            ),
-          ),
-          (_) => emit(
-            LoginSuccess(
-              userID: 'user_123', // Assuming these would come from API
-              userToken: 'token_123',
-            ),
-          ),
-        );
-      } else {
-        // Mock implementation for development
-        await Future.delayed(const Duration(seconds: 2));
-
-        if (!isActive) return;
-
-        // Check credentials (this is just a mock)
-        if (email == 'test@example.com' && password == 'password123') {
-          // Successful login
-          emit(LoginSuccess(userID: '12345', userToken: 'mock_token_value'));
-        } else {
-          // Failed login
-          emit(LoginError(errorMessage: context.localeS.invalid_email_address));
-        }
-      }
-    } catch (e) {
+      result.fold(
+        (failure) {
+          // معالجة حالة الفشل
+          emit(LoginError(
+            errorMessage: failure.errorMessage ?? 
+                context.localeS.something_went_wrong_please_try_again,
+          ));
+        },
+        (loginResponse) {
+          // معالجة حالة النجاح
+          debugPrint("Login successful: ${loginResponse.token}");
+          
+          // التحقق من صحة البيانات المُرجعة
+          if (loginResponse.token.isEmpty) {
+            emit(LoginError(
+              errorMessage: context.localeS.something_went_wrong_please_try_again,
+            ));
+            return;
+          }
+          
+          // إرسال حالة النجاح
+          emit(LoginSuccess(loginModelResponse: loginResponse));
+        },
+      );
+    } catch (e, stackTrace) {
+      debugPrint("Login error: $e");
+      debugPrint("Stack trace: $stackTrace");
+      
       if (isActive) {
-        emit(
-          LoginError(
-            errorMessage: context.localeS.something_went_wrong_please_try_again,
-          ),
-        );
+        emit(LoginError(
+          errorMessage: context.localeS.something_went_wrong_please_try_again,
+        ));
       }
     }
-  }
-
-  void togglePasswordVisibility() {
-    if (!isActive) return;
-    isPasswordVisible = !isPasswordVisible;
-    emit(LoginFormUpdated());
-  }
-
-  void resetState() {
-    if (!isActive) return;
-    
-    // آمن للاستخدام مع SafeTextEditingController
-    emailController.clear();
-    passwordController.clear();
-    
-    _isPasswordVisible = false;
-    emit(LoginInitial());
   }
 
   @override
   Future<void> close() {
     _isDisposed = true;
     
-    // استخدام فحص isDisposed
     if (!emailController.isDisposed) {
       emailController.dispose();
     }

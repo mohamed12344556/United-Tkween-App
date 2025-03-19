@@ -44,7 +44,7 @@ class _LearningOptionsPageState extends State<LearningOptionsPage> {
         } else if (state is LearningOptionsSuccess) {
           Navigator.of(
             context,
-          ).pushNamedAndRemoveUntil(Routes.homeView, (route) => false);
+          ).pushNamedAndRemoveUntil(Routes.hostView, (route) => false);
         }
       },
       builder: (context, state) {

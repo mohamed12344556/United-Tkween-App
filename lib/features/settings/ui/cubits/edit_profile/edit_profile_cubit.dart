@@ -39,7 +39,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
         state.copyWith(
           status: EditProfileStatus.error,
           errorMessage:
-              error.errorMessage?.message ?? 'خطأ في تحميل الملف الشخصي',
+              error.errorMessage?? 'خطأ في تحميل الملف الشخصي',
         ),
       ),
       (profile) => emit(
@@ -77,7 +77,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
         (error) {
           emit(state.copyWith(
             status: EditProfileStatus.error,
-            errorMessage: error.errorMessage?.message ?? 'خطأ في تحميل الصورة',
+            errorMessage: error.errorMessage?? 'خطأ في تحميل الصورة',
           ));
           return; // Exit early if image upload failed
         },
@@ -109,7 +109,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
         state.copyWith(
           status: EditProfileStatus.error,
           errorMessage:
-              error.errorMessage?.message ?? 'خطأ في تحديث الملف الشخصي',
+              error.errorMessage?? 'خطأ في تحديث الملف الشخصي',
         ),
       ),
       (success) {
@@ -148,7 +148,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       (error) => emit(
         state.copyWith(
           status: EditProfileStatus.error,
-          errorMessage: error.errorMessage?.message ?? 'خطأ في تحميل الصورة',
+          errorMessage: error.errorMessage?? 'خطأ في تحميل الصورة',
         ),
       ),
       (imageUrl) {
@@ -184,7 +184,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       (error) => emit(
         state.copyWith(
           status: EditProfileStatus.error,
-          errorMessage: error.errorMessage?.message ?? 'خطأ في إزالة الصورة',
+          errorMessage: error.errorMessage?? 'خطأ في إزالة الصورة',
         ),
       ),
       (success) {

@@ -27,6 +27,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "تم إنشاء الحساب بنجاح!",
     ),
     "address": MessageLookupByLibrary.simpleMessage("العنوان"),
+    "address_is_required": MessageLookupByLibrary.simpleMessage(
+      "العنوان مطلوب",
+    ),
     "already_have_an_account": MessageLookupByLibrary.simpleMessage(
       "هل لديك حساب بالفعل؟",
     ),
@@ -151,6 +154,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "music": MessageLookupByLibrary.simpleMessage("الموسيقى"),
     "my_library": MessageLookupByLibrary.simpleMessage("مكتبتي"),
     "my_orders": MessageLookupByLibrary.simpleMessage("مشترياتي"),
+    "name_is_required": MessageLookupByLibrary.simpleMessage("الاسم مطلوب"),
     "new_password": MessageLookupByLibrary.simpleMessage("كلمة المرور الجديدة"),
     "next": MessageLookupByLibrary.simpleMessage("التالي"),
     "no": MessageLookupByLibrary.simpleMessage("لا"),
@@ -186,6 +190,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "كلمات المرور غير متطابقة",
     ),
     "pdf": MessageLookupByLibrary.simpleMessage("PDF"),
+    "phone": MessageLookupByLibrary.simpleMessage("الهاتف"),
+    "phone_is_required": MessageLookupByLibrary.simpleMessage("الهاتف مطلوب"),
     "phone_number_1": MessageLookupByLibrary.simpleMessage("رقم الهاتف 1"),
     "phone_number_2": MessageLookupByLibrary.simpleMessage(
       "رقم الهاتف 2 (اختياري)",

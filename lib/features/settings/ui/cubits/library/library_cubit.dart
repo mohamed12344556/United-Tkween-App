@@ -26,7 +26,7 @@ class LibraryCubit extends Cubit<LibraryState> {
       (error) => emit(
         state.copyWith(
           status: LibraryStatus.error,
-          errorMessage: error.errorMessage?.message ?? 'خطأ في تحميل المكتبة',
+          errorMessage: error.errorMessage?? 'خطأ في تحميل المكتبة',
         ),
       ),
       (items) =>

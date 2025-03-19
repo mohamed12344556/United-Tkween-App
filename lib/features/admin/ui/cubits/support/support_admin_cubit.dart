@@ -48,6 +48,6 @@ class SupportAdminCubit extends Cubit<SupportAdminState> {
   }
 
   String _mapFailureToMessage(ApiErrorModel failure) {
-    return failure.errorMessage?.message ?? "حدث خطأ غير متوقع";
+    return failure.errorMessage?? "حدث خطأ غير متوقع";
   }
 }

@@ -28,7 +28,7 @@ class OrdersCubit extends Cubit<OrdersState> {
       (error) => emit(
         state.copyWith(
           status: OrdersStatus.error,
-          errorMessage: error.errorMessage?.message ?? 'خطأ في تحميل المشتريات',
+          errorMessage: error.errorMessage?? 'خطأ في تحميل المشتريات',
         ),
       ),
       (orders) =>

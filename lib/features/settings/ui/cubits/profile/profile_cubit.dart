@@ -26,7 +26,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         state.copyWith(
           status: ProfileStatus.error,
           errorMessage:
-              error.errorMessage?.message ?? 'خطأ في تحميل الملف الشخصي',
+              error.errorMessage?? 'خطأ في تحميل الملف الشخصي',
         ),
       ),
       (profile) => emit(

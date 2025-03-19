@@ -31,7 +31,7 @@ class SupportCubit extends Cubit<SupportState> {
     result.fold(
       (error) => emit(state.copyWith(
         status: SupportStatus.error,
-        errorMessage: error.errorMessage?.message ?? 'خطأ في إرسال الرسالة',
+        errorMessage: error.errorMessage?? 'خطأ في إرسال الرسالة',
       )),
       (success) {
         if (success) {

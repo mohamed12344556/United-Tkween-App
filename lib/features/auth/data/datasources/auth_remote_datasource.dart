@@ -1,112 +1,21 @@
-// import 'package:dartz/dartz.dart';
-// import 'package:united_formation_app/features/auth/data/models/otp_verification_model.dart';
-// import 'package:united_formation_app/features/auth/data/models/reset_password_model.dart';
-
-// import 'package:united_formation_app/features/auth/data/models/send_otp_model.dart';
-// import 'package:united_formation_app/features/auth/domain/entities/user_login_entity.dart';
-// import 'package:united_formation_app/features/auth/domain/entities/user_reset_password_entity.dart';
-
-// import '../../../../core/core.dart';
-// import '../models/login_model.dart';
-
-// abstract class AuthRemoteDataSource {
-//   Future<Unit> login({required UserLoginEntity userLoginEntity});
-//   Future<Unit> register({required UserLoginEntity userLoginEntity});
-//   Future<Unit> resetPassword({required UserResetPasswordEntity userResetPasswordEntity});
-//   Future<Unit> sendOtp({required String email, required OtpPurpose purpose});
-//   Future<Unit> verifyOtp({required String otp, required String email});
-// }
-
-// class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-//   final ApiService service;
-
-//   AuthRemoteDataSourceImpl({required this.service});
-
-//   @override
-//   Future<Unit> login({required UserLoginEntity userLoginEntity}) async {
-//     final loginModel = LoginModel(
-//       email: userLoginEntity.email,
-//       password: userLoginEntity.password,
-//     );
-//     return await service
-//         .login(loginModel)
-//         .then((response) {
-//           return unit;
-//         })
-//         .catchError((error) {
-//           throw error;
-//         });
-//   }
-
-//   @override
-//   Future<Unit> register({required UserLoginEntity userLoginEntity}) async {
-//     final loginModel = LoginModel(
-//       email: userLoginEntity.email,
-//       password: userLoginEntity.password,
-//     );
-//     return await service
-//         .signup(loginModel)
-//         .then((response) {
-//           return unit;
-//         })
-//         .catchError((error) {
-//           throw error;
-//         });
-//   }
-
-//   @override
-//   Future<Unit> resetPassword({required UserResetPasswordEntity userResetPasswordEntity}) async {
-//     final resetPasswordModel = ResetPasswordModel(
-//       email: userResetPasswordEntity.email,
-//       resetToken: userResetPasswordEntity.resetToken,
-//       password: userResetPasswordEntity.password,
-//       passwordConfirmation: userResetPasswordEntity.passwordConfirmation,
-//     );
-
-//     return await service
-//         .resetPassword(resetPasswordModel)
-//         .then((response) {
-//           return unit;
-//         })
-//         .catchError((error) {
-//           throw error;
-//         });
-//   }
-
-//   @override
-//   Future<Unit> sendOtp({required String email, required OtpPurpose purpose}) async {
-//     return await service
-//         .sendOtp(SendOtpModel(email: email))
-//         .then((response) {
-//           return unit;
-//         })
-//         .catchError((error) {
-//           throw error;
-//         });
-//   }
-
-//   @override
-//   Future<Unit> verifyOtp({required String otp, required String email}) async {
-//     return await service
-//         .verifyOtp(OtpVerificationModel(otp: otp, email: email))
-//         .then((response) {
-//           return unit;
-//         })
-//         .catchError((error) {
-//           throw error;
-//         });
-//   }
-// }
-
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:united_formation_app/features/auth/data/models/login/login_model_request_body.dart';
+import 'package:united_formation_app/features/auth/data/models/login/login_model_response.dart';
+import 'package:united_formation_app/features/auth/data/models/register/register_model_request_body.dart';
+import 'package:united_formation_app/features/auth/data/models/register/register_model_response.dart';
 import 'package:united_formation_app/features/auth/domain/entities/user_login_entity.dart';
+import 'package:united_formation_app/features/auth/domain/entities/user_register_entity.dart';
 import 'package:united_formation_app/features/auth/domain/entities/user_reset_password_entity.dart';
 
 import '../../../../core/core.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<Unit> login({required UserLoginEntity userLoginEntity});
-  Future<Unit> register({required UserLoginEntity userLoginEntity});
+  Future<LoginModelResponse> login({required UserLoginEntity userLoginEntity});
+  Future<RegisterModelResponse> register({
+    required UserRegisterEntity userRegisterEntity,
+  });
   Future<Unit> resetPassword({
     required UserResetPasswordEntity userResetPasswordEntity,
   });
@@ -114,32 +23,76 @@ abstract class AuthRemoteDataSource {
   Future<Unit> verifyOtp({required String otp, required String email});
 }
 
-class AuthRemoteDataSourceMock implements AuthRemoteDataSource {
+class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+  final Dio dio;
+  final ApiService service;
+
+  AuthRemoteDataSourceImpl({required this.dio, required this.service});
+
   @override
-  Future<Unit> login({required UserLoginEntity userLoginEntity}) async {
-    await Future.delayed(const Duration(seconds: 2));
-    if (userLoginEntity.email == "test@example.com" &&
-        userLoginEntity.password == "password123") {
-      print("✅ Mock Login Success");
-      return unit;
-    } else {
-      throw Exception("❌ Mock Login Failed: Invalid credentials");
+  Future<LoginModelResponse> login({
+    required UserLoginEntity userLoginEntity,
+  }) async {
+    try {
+      final requestModel = LoginRequestModel(
+        email: userLoginEntity.email,
+        password: userLoginEntity.password,
+      );
+
+      debugPrint('Calling login API with email: ${userLoginEntity.email}');
+
+      final response = await service.login(requestModel);
+
+      // حفظ التوكن مباشرة بعد نجاح الاستجابة
+      debugPrint(
+        'Login successful, saving token: ${response.token.substring(0, 10)}...',
+      );
+
+      await TokenManager.saveTokens(
+        token: response.token,
+        refreshToken: response.token, // استخدام نفس التوكن كـ refresh token
+      );
+
+      return response;
+    } catch (e) {
+      debugPrint('Login error: $e');
+      throw Exception('فشل تسجيل الدخول: $e');
     }
   }
 
   @override
-  Future<Unit> register({required UserLoginEntity userLoginEntity}) async {
-    await Future.delayed(const Duration(seconds: 2));
-    print("✅ Mock Registration Success for ${userLoginEntity.email}");
-    return unit;
+  Future<RegisterModelResponse> register({
+    required UserRegisterEntity userRegisterEntity,
+  }) async {
+    try {
+      final requestModel = RegisterModelRequestBody(
+        fullName: userRegisterEntity.fullName,
+        email: userRegisterEntity.email,
+        phone: userRegisterEntity.phoneNumber,
+        password: userRegisterEntity.password,
+        address: userRegisterEntity.address,
+      );
+
+      debugPrint('Calling register API with requestModel: $requestModel');
+
+      final response = await service.register(requestModel);
+
+      return response;
+    } catch (e) {
+      debugPrint('Login error: $e');
+      throw Exception('فشل تسجيل الدخول: $e');
+    }
   }
 
+  // الوظائف التالية تبقى كما هي لأن API تكوين لا يدعمها حاليًا
   @override
   Future<Unit> resetPassword({
     required UserResetPasswordEntity userResetPasswordEntity,
   }) async {
     await Future.delayed(const Duration(seconds: 2));
-    print("✅ Mock Reset Password Success for ${userResetPasswordEntity.email}");
+    print(
+      "✅ تم إعادة تعيين كلمة المرور بنجاح لـ ${userResetPasswordEntity.email}",
+    );
     return unit;
   }
 
@@ -149,7 +102,7 @@ class AuthRemoteDataSourceMock implements AuthRemoteDataSource {
     required OtpPurpose purpose,
   }) async {
     await Future.delayed(const Duration(seconds: 2));
-    print("✅ Mock OTP Sent to $email");
+    print("✅ تم إرسال رمز التحقق إلى $email");
     return unit;
   }
 
@@ -157,10 +110,10 @@ class AuthRemoteDataSourceMock implements AuthRemoteDataSource {
   Future<Unit> verifyOtp({required String otp, required String email}) async {
     await Future.delayed(const Duration(seconds: 2));
     if (otp == "1234") {
-      print("✅ Mock OTP Verification Success for $email");
+      print("✅ تم التحقق من رمز OTP بنجاح لـ $email");
       return unit;
     } else {
-      throw Exception("❌ Mock OTP Verification Failed: Incorrect OTP");
+      throw Exception("❌ فشل التحقق من رمز OTP: رمز غير صحيح");
     }
   }
 }

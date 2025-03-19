@@ -21,7 +21,6 @@ import '../../features/auth/domain/repos/auth_repository.dart';
 import '../../features/auth/domain/usecases/auth_usecases.dart';
 import '../../features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
 import '../../features/auth/ui/cubits/login/login_cubit.dart';
-import '../../features/auth/ui/cubits/otp/otp_cubit.dart';
 import '../../features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
 import '../../features/auth/ui/cubits/register/register_cubit.dart';
 import '../../features/settings/data/datasources/profile_local_datasource.dart';
@@ -52,7 +51,7 @@ Future<void> setupGetIt() async {
   //? Data Sources
   //! Authentication
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceMock(),
+    () => AuthRemoteDataSourceImpl(dio: dio, service: sl()),
   );
   sl.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(),
@@ -114,20 +113,18 @@ Future<void> setupGetIt() async {
   //? Cubits
   //! Authentication
   sl.registerFactory(() => LoginCubit(loginUseCase: sl()));
-  sl.registerFactory(
-    () => RegisterCubit(registerUseCase: sl(), sendOtpUseCase: sl()),
-  );
-  sl.registerFactory<OtpCubit>(
-    () => OtpCubit(
-      email: '', // Will be provided when creating instance
-      verifyOtpUseCase: sl(),
-      sendOtpUseCase: sl(),
-    ),
-  );
+  sl.registerFactory(() => RegisterCubit(registerUseCase: sl()));
+  // sl.registerFactory<OtpCubit>(
+  //   () => OtpCubit(
+  //     email: '', // Will be provided when creating instance
+  //     verifyOtpUseCase: sl(),
+  //     sendOtpUseCase: sl(),
+  //   ),
+  // );
   sl.registerFactory(
     () => PasswordResetCubit(
-      sendOtpUseCase: sl(),
-      verifyOtpUseCase: sl(),
+      // sendOtpUseCase: sl(),
+      // verifyOtpUseCase: sl(),
       resetPasswordUseCase: sl(),
     ),
   );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../domain/entities/user_login_entity.dart';
+import '../../../domain/entities/user_register_entity.dart';
 import '../../../domain/usecases/auth_usecases.dart';
 import '../../../../../core/utilities/safe_controller.dart';
 
@@ -9,47 +9,72 @@ import '../../../../../core/core.dart';
 part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
-  final RegisterUseCase? registerUseCase;
-  final SendOtpUseCase? sendOtpUseCase;
+  final RegisterUseCase registerUseCase;
 
   bool _isDisposed = false;
 
-  // Controllers for form fields
+  // وحدات التحكم في حقول النموذج
+  late final SafeTextEditingController nameController;
   late final SafeTextEditingController emailController;
+  late final SafeTextEditingController phoneController;
   late final SafeTextEditingController passwordController;
+  late final SafeTextEditingController addressController;
 
-  // Password visibility flag
+  // حالة رؤية كلمة المرور
   bool _isPasswordVisible = false;
   bool get isPasswordVisible => _isPasswordVisible;
 
-  // Check if cubit is still active
+  // التحقق من حالة الـ Cubit
   bool get isActive => !_isDisposed;
 
-  RegisterCubit({this.registerUseCase, this.sendOtpUseCase})
-    : super(RegisterInitial()) {
+  RegisterCubit({
+    required this.registerUseCase,
+  }) : super(RegisterInitial()) {
+    nameController = SafeTextEditingController();
     emailController = SafeTextEditingController();
+    phoneController = SafeTextEditingController();
     passwordController = SafeTextEditingController();
+    addressController = SafeTextEditingController();
   }
 
-  // Toggle password visibility
+  // تبديل حالة رؤية كلمة المرور
   void togglePasswordVisibility() {
     if (!isActive) return;
     _isPasswordVisible = !_isPasswordVisible;
     emit(RegisterFormUpdated());
   }
 
-  // Register user with email and password
-  Future<void> registerWithEmailAndPassword(BuildContext context) async {
+  // التحقق من صحة البريد الإلكتروني
+  bool _isValidEmail(String email) {
+    final emailRegExp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return emailRegExp.hasMatch(email);
+  }
+
+  // تسجيل مستخدم جديد
+  Future<void> register(BuildContext context) async {
     try {
       if (!isActive) return;
 
-      // Get form values
+      // الحصول على قيم النموذج
+      final name = nameController.text.trim();
       final email = emailController.text.trim();
+      final phone = phoneController.text.trim();
       final password = passwordController.text;
+      final address = addressController.text.trim();
 
-      // Validate inputs
+      // التحقق من المدخلات
+      if (name.isEmpty) {
+        emit(RegisterError(errorMessage: context.localeS.name_is_required));
+        return;
+      }
+
       if (email.isEmpty) {
         emit(RegisterError(errorMessage: context.localeS.email_is_required));
+        return;
+      }
+
+      if (phone.isEmpty) {
+        emit(RegisterError(errorMessage: context.localeS.phone_is_required));
         return;
       }
 
@@ -58,160 +83,88 @@ class RegisterCubit extends Cubit<RegisterState> {
         return;
       }
 
-      // Simple email validation
-      if (!email.contains('@') || !email.contains('.')) {
-        emit(
-          RegisterError(errorMessage: context.localeS.invalid_email_address),
-        );
+      if (address.isEmpty) {
+        emit(RegisterError(errorMessage: context.localeS.address_is_required));
         return;
       }
 
-      // Password validation
+      // التحقق من صحة البريد الإلكتروني
+      if (!_isValidEmail(email)) {
+        emit(RegisterError(errorMessage: context.localeS.invalid_email_address));
+        return;
+      }
+
+      // التحقق من صحة كلمة المرور
       if (password.length < 6) {
-        emit(
-          RegisterError(
-            errorMessage:
-                context.localeS.password_must_be_at_least_6_characters_long,
-          ),
-        );
+        emit(RegisterError(errorMessage: context.localeS.password_must_be_at_least_6_characters_long));
         return;
       }
 
-      // Show loading state
       emit(RegisterLoading());
 
-      // Use actual register UseCase if available
-      if (registerUseCase != null) {
-        final result = await registerUseCase!(
-          UserLoginEntity(email: email, password: password),
-        );
+      // إنشاء كيان التسجيل
+      final registerEntity = UserRegisterEntity(
+        fullName: name,
+        email: email,
+        phoneNumber: phone,
+        password: password,
+        address: address,
+      );
 
-        if (!isActive) return;
-
-        result.fold(
-          (failure) => emit(
-            RegisterError(
-              errorMessage:
-                  failure.errorMessage?.message ??
-                  context.localeS.something_went_wrong_please_try_again,
-            ),
-          ),
-          (_) async {
-            // Request OTP verification after successful registration
-            await requestVerificationOtp(email, context);
-          },
-        );
-      } else {
-        // Mock implementation for development
-        await Future.delayed(const Duration(seconds: 2));
-
-        if (!isActive) return;
-
-        // Request verification OTP
-        await requestVerificationOtp(email, context);
-      }
-    } catch (e) {
-      if (isActive) {
-        emit(
-          RegisterError(
-            errorMessage: context.localeS.something_went_wrong_please_try_again,
-          ),
-        );
-      }
-    }
-  }
-
-  // Register with social media
-  Future<void> registerWithSocialMedia(
-    String provider,
-    BuildContext context,
-  ) async {
-    try {
-      if (!isActive) return;
-
-      emit(RegisterLoading());
-
-      // Simulate API call for social login
-      await Future.delayed(const Duration(seconds: 2));
+      // استدعاء حالة الاستخدام للتسجيل
+      final result = await registerUseCase(registerEntity);
 
       if (!isActive) return;
 
-      // For social logins, we might still need email verification or directly proceed
-      // Here we're assuming we got the email from social provider
-      final socialEmail = 'social@example.com';
-
-      emit(
-        RegisterSuccess(
-          userID: 'social_user_123',
-          userEmail: socialEmail,
-          socialProvider: provider,
-        ),
+      result.fold(
+        (failure) => emit(RegisterError(
+          errorMessage: failure.errorMessage ?? context.localeS.something_went_wrong_please_try_again,
+        )),
+        (response) async {
+          // التحقق من استجابة التسجيل
+          if (response.status == 'success') {
+            // تحويل مباشر إلى صفحة النجاح بدون OTP
+            emit(RegisterSuccess(userEmail: email));
+          } else {
+            emit(RegisterError(errorMessage: response.message));
+          }
+        },
       );
     } catch (e) {
+      debugPrint('Register error: $e');
       if (isActive) {
-        emit(
-          RegisterError(
-            errorMessage: context.localeS.something_went_wrong_please_try_again,
-          ),
-        );
+        emit(RegisterError(
+          errorMessage: context.localeS.something_went_wrong_please_try_again,
+        ));
       }
     }
   }
 
-  Future<void> requestVerificationOtp(
+  // تسجيل باستخدام وسائل التواصل الاجتماعي
+  Future<void> registerWithSocialMedia(
+    String provider, 
     String email,
+    String name,
+    String token,
     BuildContext context,
   ) async {
-    try {
-      if (!isActive) return;
-
-      emit(RegisterLoading());
-
-      // Use actual sendOtp UseCase if available
-      if (sendOtpUseCase != null) {
-        final result = await sendOtpUseCase!(
-          SendOtpParams(email: email, purpose: OtpPurpose.accountVerification),
-        );
-
-        if (!isActive) return;
-
-        result.fold(
-          (failure) => emit(
-            RegisterError(
-              errorMessage:
-                  failure.errorMessage?.message ??
-                  context.localeS.something_went_wrong_please_try_again,
-            ),
-          ),
-          (_) => emit(RegisterOtpSent(email: email)),
-        );
-      } else {
-        // Mock implementation for development
-        await Future.delayed(const Duration(seconds: 1));
-
-        if (!isActive) return;
-
-        // Success state
-        emit(RegisterOtpSent(email: email));
-      }
-    } catch (e) {
-      if (isActive) {
-        emit(
-          RegisterError(
-            errorMessage: context.localeS.something_went_wrong_please_try_again,
-          ),
-        );
-      }
-    }
+    // هنا يمكنك إضافة منطق التسجيل عبر وسائل التواصل الاجتماعي
+    // يمكن استخدام نفس RegisterUseCase أو إنشاء UseCase خاص
+    debugPrint('Social sign-in with $provider: $email, $name, token: ${token.substring(0, 10)}...');
+    
+    // لتبسيط الأمور، نقوم بإرسال حالة النجاح مباشرة
+    emit(RegisterSuccess(userEmail: email));
   }
 
-  // Reset registration form
+  // إعادة تعيين نموذج التسجيل
   void resetForm() {
     if (!isActive) return;
 
-    // استخدام isDisposed مع SafeTextEditingController
+    if (!nameController.isDisposed) nameController.clear();
     if (!emailController.isDisposed) emailController.clear();
+    if (!phoneController.isDisposed) phoneController.clear();
     if (!passwordController.isDisposed) passwordController.clear();
+    if (!addressController.isDisposed) addressController.clear();
 
     _isPasswordVisible = false;
     emit(RegisterInitial());
@@ -223,14 +176,13 @@ class RegisterCubit extends Cubit<RegisterState> {
 
     // التخلص الآمن من وحدات التحكم
     try {
-      if (!emailController.isDisposed) {
-        emailController.dispose();
-      }
-      if (!passwordController.isDisposed) {
-        passwordController.dispose();
-      }
+      if (!nameController.isDisposed) nameController.dispose();
+      if (!emailController.isDisposed) emailController.dispose();
+      if (!phoneController.isDisposed) phoneController.dispose();
+      if (!passwordController.isDisposed) passwordController.dispose();
+      if (!addressController.isDisposed) addressController.dispose();
     } catch (e) {
-      print('Error disposing controllers: $e');
+      debugPrint('Error disposing controllers: $e');
     }
 
     return super.close();

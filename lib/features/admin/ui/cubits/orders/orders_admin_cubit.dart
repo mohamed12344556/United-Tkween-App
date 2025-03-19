@@ -53,6 +53,6 @@ class OrdersAdminCubit extends Cubit<OrdersAdminState> {
   }
 
   String? _mapFailureToMessage(ApiErrorModel? failure) {
-    return failure!.errorMessage?.message;
+    return failure!.errorMessage;
   }
 }
