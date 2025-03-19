@@ -36,6 +36,5 @@ class DioFactory {
 
   static void removeTokenFromHeader() {
     dio?.options.headers.remove('Authorization');
-    dio?.options.headers.remove('Cookie');
   }
 }

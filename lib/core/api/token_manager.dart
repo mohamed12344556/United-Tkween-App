@@ -6,12 +6,8 @@ import '../core.dart';
 
 class TokenManager {
   static const _storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(
-      encryptedSharedPreferences: true,
-    ),
-    iOptions: IOSOptions(
-      accessibility: KeychainAccessibility.first_unlock,
-    ),
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
   );
 
   static Future<void> saveTokens({
@@ -43,10 +39,7 @@ class TokenManager {
 
       if (token == null || refreshToken == null) return null;
 
-      return TokenPair(
-        accessToken: token,
-        refreshToken: refreshToken,
-      );
+      return TokenPair(accessToken: token, refreshToken: refreshToken);
     } catch (e) {
       return null;
     }
@@ -105,15 +98,11 @@ class TokenManager {
   }
 }
 
-
 class TokenPair {
   final String accessToken;
   final String refreshToken;
 
-  const TokenPair({
-    required this.accessToken,
-    required this.refreshToken,
-  });
+  const TokenPair({required this.accessToken, required this.refreshToken});
 }
 
 class StorageException implements Exception {
