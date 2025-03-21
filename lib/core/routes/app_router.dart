@@ -49,37 +49,40 @@ class AppRouter {
       case Routes.loginView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) {
-              final cubit = sl<LoginCubit>();
+          builder:
+              (_) => BlocProvider(
+                create: (context) {
+                  final cubit = sl<LoginCubit>();
 
-              if (arguments is Map &&
-                  arguments.containsKey('fresh_start')) {
-                cubit.resetState();
-              }
+                  if (arguments is Map &&
+                      arguments.containsKey('fresh_start')) {
+                    cubit.resetState();
+                  }
 
-              return cubit;
-            },
-            child: const LoginPage(),
-          ),
+                  return cubit;
+                },
+                child: const LoginPage(),
+              ),
         );
 
       case Routes.registerView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<RegisterCubit>(),
-            child: const RegisterPage(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<RegisterCubit>(),
+                child: const RegisterPage(),
+              ),
         );
 
       case Routes.learningOptionsView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<LearningOptionsCubit>(),
-            child: const LearningOptionsPage(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<LearningOptionsCubit>(),
+                child: const LearningOptionsPage(),
+              ),
         );
 
       case Routes.resetPasswordView:
@@ -89,14 +92,15 @@ class AppRouter {
         }
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) {
-              final cubit = sl<PasswordResetCubit>();
-              cubit.setEmail(email);
-              return cubit;
-            },
-            child: ResetPasswordPage(email: email),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) {
+                  final cubit = sl<PasswordResetCubit>();
+                  cubit.setEmail(email);
+                  return cubit;
+                },
+                child: ResetPasswordPage(email: email),
+              ),
         );
 
       // Settings Routes
@@ -109,46 +113,51 @@ class AppRouter {
       case Routes.profileView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<ProfileCubit>(),
-            child: const ProfileView(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<ProfileCubit>(),
+                child: const ProfileView(),
+              ),
         );
 
       case Routes.editProfileView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<EditProfileCubit>(),
-            child: const EditProfileView(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<EditProfileCubit>(),
+                child: const EditProfileView(),
+              ),
         );
 
       case Routes.ordersView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<OrdersCubit>(),
-            child: const OrdersView(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<OrdersCubit>(),
+                child: const OrdersView(),
+              ),
         );
 
       case Routes.libraryView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<LibraryCubit>(),
-            child: const LibraryView(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<LibraryCubit>(),
+                child: const LibraryView(),
+              ),
         );
 
       case Routes.supportView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<SupportCubit>(),
-            child: const SupportView(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<SupportCubit>(),
+                child: const SupportView(),
+              ),
         );
 
       case Routes.hostView:
@@ -174,10 +183,11 @@ class AppRouter {
       case Routes.adminOrdersView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<OrdersAdminCubit>(),
-            child: const OrdersAdminView(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<OrdersAdminCubit>(),
+                child: const OrdersAdminView(),
+              ),
         );
 
       case Routes.adminOrderDetailsView:
@@ -185,28 +195,31 @@ class AppRouter {
         final orderId = args['orderId'] as String;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<OrdersAdminCubit>(),
-            child: OrderDetailsAdminView(orderId: orderId),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<OrdersAdminCubit>(),
+                child: OrderDetailsAdminView(orderId: orderId),
+              ),
         );
 
       case Routes.adminProductsView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<ProductsAdminCubit>(),
-            child: const ProductsAdminView(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<ProductsAdminCubit>(),
+                child: const ProductsAdminView(),
+              ),
         );
 
       case Routes.adminAddProductView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<AddProductAdminCubit>(),
-            child: const AddProductAdminView(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<AddProductAdminCubit>(),
+                child: const AddProductAdminView(),
+              ),
         );
 
       case Routes.adminEditProductView:
@@ -214,10 +227,11 @@ class AppRouter {
           // الانتقال إلى صفحة إضافة منتج جديد
           return MaterialPageRoute(
             settings: settings,
-            builder: (_) => BlocProvider(
-              create: (context) => sl<AddProductAdminCubit>(),
-              child: const AddProductAdminView(),
-            ),
+            builder:
+                (_) => BlocProvider(
+                  create: (context) => sl<AddProductAdminCubit>(),
+                  child: const AddProductAdminView(),
+                ),
           );
         }
 
@@ -225,51 +239,56 @@ class AppRouter {
         final product = settings.arguments as ProductModel;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<EditProductAdminCubit>(),
-            child: EditProductAdminView(product: product),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<EditProductAdminCubit>(),
+                child: EditProductAdminView(product: product),
+              ),
         );
 
       case Routes.adminSupportView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<SupportAdminCubit>(),
-            child: const SupportAdminView(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<SupportAdminCubit>(),
+                child: const SupportAdminView(),
+              ),
         );
 
       case Routes.adminSupportChatView:
         final args = settings.arguments as Map<String, String>;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<SupportAdminCubit>(),
-            child: SupportChatAdminView(
-              customerId: args['customerId']!,
-              customerName: args['customerName']!,
-            ),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<SupportAdminCubit>(),
+                child: SupportChatAdminView(
+                  customerId: args['customerId']!,
+                  customerName: args['customerName']!,
+                ),
+              ),
         );
 
       case Routes.favoritesView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => BlocProvider(
-            create: (context) => sl<SupportAdminCubit>(),
-            child: FavoritesView(),
-          ),
+          builder:
+              (_) => BlocProvider(
+                create: (context) => sl<SupportAdminCubit>(),
+                child: FavoritesView(),
+              ),
         );
 
       default:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => Scaffold(
-            body: Center(
-              child: Text('No route defined for ${settings.name}'),
-            ),
-          ),
+          builder:
+              (_) => Scaffold(
+                body: Center(
+                  child: Text('No route defined for ${settings.name}'),
+                ),
+              ),
         );
     }
   }

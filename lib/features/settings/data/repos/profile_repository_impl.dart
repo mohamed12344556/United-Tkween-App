@@ -1,15 +1,13 @@
 import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:united_formation_app/features/settings/domain/entities/library_item_entity.dart';
+import 'package:united_formation_app/features/settings/domain/entities/user_order_entity.dart';
 import '../datasources/profile_local_datasource.dart';
 import '../datasources/profile_remote_datasource.dart';
 import '../models/profile_model.dart';
-import '../../domain/entities/library_item_entity.dart';
 import '../../domain/entities/profile_entity.dart';
-import '../../domain/entities/user_order_entity.dart';
 import '../../domain/repos/profile_repository.dart';
-
 import '../../../../core/core.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
@@ -37,7 +35,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
         return remoteResult.fold(
           (error) async {
-            // في حالة الخطأ، جلب البيانات من التخزين المحلي
+            // في حالة الخطأ، جلب البيانات من التخزين المحلي (Hive)
             final localResult = await localDataSource.getCachedProfile();
 
             return localResult.fold((cacheError) => Left(cacheError), (
@@ -51,13 +49,13 @@ class ProfileRepositoryImpl implements ProfileRepository {
             });
           },
           (profile) async {
-            // تخزين البيانات في التخزين المحلي
+            // تخزين البيانات في التخزين المحلي (Hive)
             await localDataSource.cacheProfile(profile);
             return Right(profile);
           },
         );
       } else {
-        // في حالة عدم وجود إنترنت، جلب البيانات من التخزين المحلي
+        // في حالة عدم وجود إنترنت، جلب البيانات من التخزين المحلي (Hive)
         final localResult = await localDataSource.getCachedProfile();
 
         return localResult.fold((error) => Left(error), (cachedProfile) {
@@ -91,13 +89,54 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
         return remoteResult.fold((error) => Left(error), (success) async {
           if (success) {
-            // تحديث البيانات في التخزين المحلي
+            // تحديث البيانات في التخزين المحلي (Hive)
             await localDataSource.cacheProfile(profileModel);
           }
           return Right(success);
         });
       } else {
+        // يمكن تخزين التغييرات محلياً والتزامن لاحقاً عند توفر الإنترنت
+        // حالياً نعود بخطأ عدم وجود اتصال
         return Left(ApiErrorModel(errorMessage: 'لا يوجد اتصال بالإنترنت'));
+      }
+    } catch (e) {
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
+    }
+  }
+
+  @override
+  Future<Either<ApiErrorModel, bool>> removeProfileImage() async {
+    try {
+      if (await _isConnected()) {
+        final remoteResult = await remoteDataSource.removeProfileImage();
+        return remoteResult.fold(
+          (error) => Left(error),
+          (success) => Right(success),
+        );
+      } else {
+        return Left(
+          ApiErrorModel(
+            errorMessage: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
+          ),
+        );
+      }
+    } catch (e) {
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
+    }
+  }
+
+  @override
+  Future<Either<ApiErrorModel, String>> uploadProfileImage(File file) async {
+    try {
+      if (await _isConnected()) {
+        final remoteResult = await remoteDataSource.uploadProfileImage(file);
+        return remoteResult;
+      } else {
+        return Left(
+          ApiErrorModel(
+            errorMessage: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
+          ),
+        );
       }
     } catch (e) {
       return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
@@ -323,37 +362,4 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
-
-  @override
-  Future<Either<ApiErrorModel, bool>> removeProfileImage() async {
-    try {
-      if (await _isConnected()) {
-        final remoteResult = await remoteDataSource.removeProfileImage();
-        return remoteResult.fold(
-          (error) => Left(error),
-          (success) => Right(success),
-        );
-      } else {
-        return Left(
-          ApiErrorModel(
-            errorMessage: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
-          ),
-        );
-      }
-    } catch (e) {
-      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
-    }
-  }
-
-  @override
-  Future<Either<ApiErrorModel, String>> uploadProfileImage(File file) {
-    // TODO: implement uploadProfileImage
-    throw UnimplementedError();
-  }
-}
-
-@override
-Future<Either<ApiErrorModel, String>> uploadProfileImage(File file) {
-  // TODO: implement uploadProfileImage
-  throw UnimplementedError();
 }

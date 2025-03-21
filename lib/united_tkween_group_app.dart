@@ -55,7 +55,7 @@ class UnitedFormationApp extends StatelessWidget {
               ],
               supportedLocales: S.delegate.supportedLocales,
               title: 'Flutter Demo',
-              initialRoute:getInitialRoute(),
+              initialRoute: getInitialRoute(),
               onGenerateRoute: appRouter.generateRoute,
             ),
           );

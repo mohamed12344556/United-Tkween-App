@@ -11,7 +11,7 @@ abstract class ProfileRemoteDataSource {
   Future<Either<ApiErrorModel, ProfileModel>> getProfile();
   Future<Either<ApiErrorModel, bool>> updateProfile(ProfileModel profile);
   Future<Either<ApiErrorModel, bool>> removeProfileImage();
-  Future<Either<ApiErrorModel, bool>> uploadProfileImage(File imagePath);
+  Future<Either<ApiErrorModel, String>> uploadProfileImage(File imagePath);
   Future<Either<ApiErrorModel, List<UserOrderModel>>> getUserOrders();
   Future<Either<ApiErrorModel, UserOrderModel>> getOrderDetails(String orderId);
   Future<Either<ApiErrorModel, List<LibraryItemModel>>> getLibraryItems();
@@ -28,13 +28,11 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Either<ApiErrorModel, ProfileModel>> getProfile() async {
     try {
-      // TODO: Implement actual API call
-      // final response = await apiService.getUserProfile();
+      // تنفيذ الحصول على بيانات المستخدم من واجهة برمجة التطبيقات
+      // هنا نستخدم البيانات الوهمية لأن واجهة برمجة التطبيقات لا توفر وظيفة جلب البروفايل مباشرة
       
-      // Mock successful response for now
       await Future.delayed(const Duration(seconds: 1));
       
-      // Use mock data
       final mockProfile = ProfileModel(
         id: 'user-123',
         fullName: 'أحمد محمد',
@@ -44,9 +42,10 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         address: 'شارع النصر، القاهرة',
         profileImageUrl: null,
       );
-      
+
       return Right(mockProfile);
     } catch (error) {
+      print("Error in getProfile: $error");
       return Left(ApiErrorHandler.handle(error));
     }
   }
@@ -54,14 +53,27 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Either<ApiErrorModel, bool>> updateProfile(ProfileModel profile) async {
     try {
-      // TODO: Implement actual API call
-      // final response = await apiService.updateUserProfile(profile);
+      // إعداد البيانات المطلوبة للتحديث
+      final Map<String, dynamic> profileData = {
+        'full_name': profile.fullName,
+        'email': profile.email,
+        'phone': profile.phoneNumber1,
+        'address': profile.address,
+      };
+
+      // استدعاء واجهة برمجة التطبيقات
+      final response = await apiService.updateProfile(profileData);
       
-      // Mock successful response for now
-      await Future.delayed(const Duration(seconds: 1));
-      
-      return const Right(true);
+      // تحليل الاستجابة
+      if (response != null && response['status'] == 'success') {
+        print("Profile updated successfully: ${response['message']}");
+        return const Right(true);
+      } else {
+        print("Failed to update profile: ${response?['message'] ?? 'Unknown error'}");
+        return Left(ApiErrorModel(errorMessage: response?['message'] ?? 'فشل تحديث الملف الشخصي'));
+      }
     } catch (error) {
+      print("Error in updateProfile: $error");
       return Left(ApiErrorHandler.handle(error));
     }
   }
@@ -69,45 +81,32 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Either<ApiErrorModel, List<UserOrderModel>>> getUserOrders() async {
     try {
-      // TODO: Implement actual API call
-      // final response = await apiService.getUserOrders();
+      // استدعاء واجهة برمجة التطبيقات للحصول على الطلبات
+      final response = await apiService.getOrders();
       
-      // Mock successful response for now
-      await Future.delayed(const Duration(seconds: 1));
-      
-      // Use mock data
-      final mockOrders = [
-        UserOrderModel(
-          id: 'order-1',
-          title: 'كتاب التنمية البشرية',
-          description: 'كتاب شامل عن التنمية البشرية والتطوير الذاتي',
-          orderDate: DateTime(2023, 10, 1),
-          statusString: 'delivered',
-          price: 50.0,
-          imageUrl: null,
-        ),
-        UserOrderModel(
-          id: 'order-2',
-          title: 'كتاب الأدب الحديث',
-          description: 'كتاب يستعرض أهم الأعمال الأدبية الحديثة والمعاصرة',
-          orderDate: DateTime(2023, 10, 5),
-          statusString: 'shipped',
-          price: 70.0,
-          imageUrl: null,
-        ),
-        UserOrderModel(
-          id: 'order-3',
-          title: 'كتاب علم النفس',
-          description: 'مدخل إلى علم النفس ونظرياته المختلفة',
-          orderDate: DateTime(2023, 10, 15),
-          statusString: 'processing',
-          price: 65.0,
-          imageUrl: null,
-        ),
-      ];
-      
-      return Right(mockOrders);
+      // تحليل الاستجابة
+      if (response != null && response['status'] == 'success') {
+        final List<dynamic> ordersData = response['orders'] ?? [];
+        
+        // تحويل البيانات إلى نماذج
+        final orders = ordersData.map((orderData) {
+          return UserOrderModel(
+            id: orderData['id'].toString(),
+            title: orderData['title'] ?? '',
+            description: orderData['description'],
+            orderDate: DateTime.tryParse(orderData['order_date'] ?? '') ?? DateTime.now(),
+            statusString: orderData['status'] ?? 'processing',
+            price: double.tryParse(orderData['price']?.toString() ?? '0') ?? 0.0,
+            imageUrl: orderData['image_url'],
+          );
+        }).toList();
+        
+        return Right(orders);
+      } else {
+        return Left(ApiErrorModel(errorMessage: response?['message'] ?? 'فشل جلب الطلبات'));
+      }
     } catch (error) {
+      print("Error in getUserOrders: $error");
       return Left(ApiErrorHandler.handle(error));
     }
   }
@@ -115,25 +114,30 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Either<ApiErrorModel, UserOrderModel>> getOrderDetails(String orderId) async {
     try {
-      // TODO: Implement actual API call
-      // final response = await apiService.getOrderDetails(orderId);
+      // لا توجد واجهة برمجة تطبيقات محددة للحصول على تفاصيل طلب معين
+      // يمكن استرجاع جميع الطلبات والبحث عن الطلب المحدد
       
-      // Mock successful response for now
-      await Future.delayed(const Duration(seconds: 1));
+      final ordersResult = await getUserOrders();
       
-      // Use mock data - here we just return a mock order
-      final mockOrder = UserOrderModel(
-        id: orderId,
-        title: 'كتاب التنمية البشرية',
-        description: 'كتاب شامل عن التنمية البشرية والتطوير الذاتي',
-        orderDate: DateTime(2023, 10, 1),
-        statusString: 'delivered',
-        price: 50.0,
-        imageUrl: null,
+      return ordersResult.fold(
+        (error) => Left(error),
+        (orders) {
+          final order = orders.firstWhere(
+            (o) => o.id == orderId,
+            orElse: () => UserOrderModel(
+              id: orderId,
+              title: 'غير معروف',
+              orderDate: DateTime.now(),
+              statusString: 'processing',
+              price: 0.0,
+            ),
+          );
+          
+          return Right(order);
+        },
       );
-      
-      return Right(mockOrder);
     } catch (error) {
+      print("Error in getOrderDetails: $error");
       return Left(ApiErrorHandler.handle(error));
     }
   }
@@ -141,51 +145,34 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Either<ApiErrorModel, List<LibraryItemModel>>> getLibraryItems() async {
     try {
-      // TODO: Implement actual API call
-      // final response = await apiService.getLibraryItems();
+      // استدعاء واجهة برمجة التطبيقات للحصول على عناصر المكتبة
+      final response = await apiService.fetchLibrary();
       
-      // Mock successful response for now
-      await Future.delayed(const Duration(seconds: 1));
-      
-      // Use mock data
-      final mockItems = [
-        LibraryItemModel(
-          id: 'lib-1',
-          title: 'كتاب التنمية البشرية',
-          description: 'كتاب شامل عن التنمية البشرية والتطوير الذاتي',
-          orderDate: DateTime(2023, 10, 1),
-          typeString: 'pdf',
-          price: 50.0,
-          thumbnailUrl: null,
-          fileUrl: 'https://example.com/files/book1.pdf',
-          isDelivered: true,
-        ),
-        LibraryItemModel(
-          id: 'lib-2',
-          title: 'كتاب الأدب الحديث',
-          description: 'كتاب يستعرض أهم الأعمال الأدبية الحديثة والمعاصرة',
-          orderDate: DateTime(2023, 10, 5),
-          typeString: 'word',
-          price: 70.0,
-          thumbnailUrl: null,
-          fileUrl: null,
-          isDelivered: false,
-        ),
-        LibraryItemModel(
-          id: 'lib-3',
-          title: 'كتاب علم النفس',
-          description: 'مدخل إلى علم النفس ونظرياته المختلفة',
-          orderDate: DateTime(2023, 10, 15),
-          typeString: 'pdf',
-          price: 65.0,
-          thumbnailUrl: null,
-          fileUrl: null,
-          isDelivered: false,
-        ),
-      ];
-      
-      return Right(mockItems);
+      // تحليل الاستجابة
+      if (response != null && response['status'] == 'success') {
+        final List<dynamic> itemsData = response['library_items'] ?? [];
+        
+        // تحويل البيانات إلى نماذج
+        final items = itemsData.map((itemData) {
+          return LibraryItemModel(
+            id: itemData['id'].toString(),
+            title: itemData['title'] ?? '',
+            description: itemData['description'],
+            orderDate: DateTime.tryParse(itemData['order_date'] ?? '') ?? DateTime.now(),
+            typeString: itemData['type'] ?? 'pdf',
+            price: double.tryParse(itemData['price']?.toString() ?? '0') ?? 0.0,
+            thumbnailUrl: itemData['thumbnail_url'],
+            fileUrl: itemData['file_url'],
+            isDelivered: itemData['is_delivered'] == true || itemData['is_delivered'] == 1,
+          );
+        }).toList();
+        
+        return Right(items);
+      } else {
+        return Left(ApiErrorModel(errorMessage: response?['message'] ?? 'فشل جلب عناصر المكتبة'));
+      }
     } catch (error) {
+      print("Error in getLibraryItems: $error");
       return Left(ApiErrorHandler.handle(error));
     }
   }
@@ -193,27 +180,31 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Either<ApiErrorModel, LibraryItemModel>> getLibraryItemDetails(String itemId) async {
     try {
-      // TODO: Implement actual API call
-      // final response = await apiService.getLibraryItemDetails(itemId);
+      // لا توجد واجهة برمجة تطبيقات محددة للحصول على تفاصيل عنصر مكتبة معين
+      // يمكن استرجاع جميع العناصر والبحث عن العنصر المحدد
       
-      // Mock successful response for now
-      await Future.delayed(const Duration(seconds: 1));
+      final itemsResult = await getLibraryItems();
       
-      // Use mock data - here we just return a mock item
-      final mockItem = LibraryItemModel(
-        id: itemId,
-        title: 'كتاب التنمية البشرية',
-        description: 'كتاب شامل عن التنمية البشرية والتطوير الذاتي',
-        orderDate: DateTime(2023, 10, 1),
-        typeString: 'pdf',
-        price: 50.0,
-        thumbnailUrl: null,
-        fileUrl: 'https://example.com/files/book1.pdf',
-        isDelivered: true,
+      return itemsResult.fold(
+        (error) => Left(error),
+        (items) {
+          final item = items.firstWhere(
+            (i) => i.id == itemId,
+            orElse: () => LibraryItemModel(
+              id: itemId,
+              title: 'غير معروف',
+              orderDate: DateTime.now(),
+              typeString: 'pdf',
+              price: 0.0,
+              isDelivered: false,
+            ),
+          );
+          
+          return Right(item);
+        },
       );
-      
-      return Right(mockItem);
     } catch (error) {
+      print("Error in getLibraryItemDetails: $error");
       return Left(ApiErrorHandler.handle(error));
     }
   }
@@ -221,15 +212,21 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Either<ApiErrorModel, String>> downloadLibraryItem(String itemId) async {
     try {
-      // TODO: Implement actual API call
-      // final response = await apiService.downloadLibraryItem(itemId);
+      // الحصول على تفاصيل عنصر المكتبة أولاً
+      final itemDetailsResult = await getLibraryItemDetails(itemId);
       
-      // Mock successful response for now
-      await Future.delayed(const Duration(seconds: 2));
-      
-      // Return a mock file URL
-      return const Right('https://example.com/downloads/book1.pdf');
+      return itemDetailsResult.fold(
+        (error) => Left(error),
+        (item) {
+          if (item.fileUrl != null && item.fileUrl!.isNotEmpty) {
+            return Right(item.fileUrl!);
+          } else {
+            return Left(ApiErrorModel(errorMessage: 'لا يوجد ملف متاح للتنزيل'));
+          }
+        },
+      );
     } catch (error) {
+      print("Error in downloadLibraryItem: $error");
       return Left(ApiErrorHandler.handle(error));
     }
   }
@@ -237,27 +234,42 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Either<ApiErrorModel, bool>> sendSupportMessage(String message) async {
     try {
-      // TODO: Implement actual API call
-      // final response = await apiService.sendSupportMessage(message);
+      // لا توجد واجهة برمجة تطبيقات محددة لإرسال رسائل الدعم
+      // هنا نستخدم محاكاة لنجاح العملية
       
-      // Mock successful response for now
       await Future.delayed(const Duration(seconds: 1));
-      
       return const Right(true);
     } catch (error) {
+      print("Error in sendSupportMessage: $error");
       return Left(ApiErrorHandler.handle(error));
     }
   }
-  
+
   @override
-  Future<Either<ApiErrorModel, bool>> removeProfileImage() {
-    // TODO: implement removeProfileImage
-    throw UnimplementedError();
+  Future<Either<ApiErrorModel, bool>> removeProfileImage() async {
+    try {
+      // لا توجد واجهة برمجة تطبيقات محددة لإزالة صورة الملف الشخصي
+      // هنا نستخدم محاكاة لنجاح العملية
+      
+      await Future.delayed(const Duration(milliseconds: 500));
+      return const Right(true);
+    } catch (error) {
+      print("Error in removeProfileImage: $error");
+      return Left(ApiErrorHandler.handle(error));
+    }
   }
-  
+
   @override
-  Future<Either<ApiErrorModel, bool>> uploadProfileImage(File imagePath) {
-    // TODO: implement uploadProfileImage
-    throw UnimplementedError();
+  Future<Either<ApiErrorModel, String>> uploadProfileImage(File imagePath) async {
+    try {
+      // لا توجد واجهة برمجة تطبيقات محددة لرفع صورة الملف الشخصي
+      // هنا نستخدم محاكاة لعملية الرفع
+      
+      await Future.delayed(const Duration(seconds: 1));
+      return const Right('https://example.com/profiles/default-avatar.jpg');
+    } catch (error) {
+      print("Error in uploadProfileImage: $error");
+      return Left(ApiErrorHandler.handle(error));
+    }
   }
 }

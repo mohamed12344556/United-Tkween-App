@@ -3,6 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:united_formation_app/features/settings/data/datasources/hive_models/library_hive_model.dart';
+import 'package:united_formation_app/features/settings/data/datasources/hive_models/order_hive_model.dart';
+import 'package:united_formation_app/features/settings/data/datasources/hive_models/profile_hive_model.dart';
 import 'core/routes/app_router.dart';
 import 'core/api/dio_services.dart';
 import 'features/auth/ui/pages/user_model.dart';
@@ -19,7 +22,27 @@ import 'core/core.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // تهيئة Hive
+  await Hive.initFlutter();
+
+  // تسجيل محولات Hive مع التحقق
+  if (!Hive.isAdapterRegistered(1)) {
+    Hive.registerAdapter(UserModelAdapter());
+  }
+
+  if (!Hive.isAdapterRegistered(10)) {
+    Hive.registerAdapter(ProfileHiveModelAdapter());
+  }
+
   await setupGetIt();
+  if (!Hive.isAdapterRegistered(11)) {
+    Hive.registerAdapter(OrderHiveModelAdapter());
+  }
+
+  if (!Hive.isAdapterRegistered(12)) {
+    Hive.registerAdapter(LibraryHiveModelAdapter());
+  }
   // Initialize BLoC system
   await initBloc();
   // Initialize Hydrated Bloc
@@ -29,8 +52,6 @@ Future<void> main() async {
     ),
   );
   await Prefs.init();
-  await Hive.initFlutter();
-  Hive.registerAdapter(UserModelAdapter());
   await Hive.openBox<UserModel>('userBox');
   // await AppState.initialize();
   // final bool hasValidSession = await TokenManager.hasValidTokens();

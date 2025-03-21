@@ -8,6 +8,7 @@ import '../../features/auth/data/models/otp_verification/otp_verification_model.
 import '../../features/auth/data/models/reset_password/reset_password_model.dart';
 
 import '../../features/auth/data/models/send_otp/send_otp_model.dart';
+import '../../features/settings/data/models/profile_model.dart';
 import '../core.dart';
 
 part 'api_service.g.dart';
@@ -20,7 +21,9 @@ abstract class ApiService {
   Future<LoginModelResponse> login(@Body() LoginRequestModel request);
 
   @POST(ApiConstants.register)
-  Future<RegisterModelResponse> register(@Body() RegisterModelRequestBody request);
+  Future<RegisterModelResponse> register(
+    @Body() RegisterModelRequestBody request,
+  );
 
   @POST(ApiConstants.resetPassword)
   Future<ResetPasswordModel> resetPassword(@Body() ResetPasswordModel request);
@@ -30,6 +33,25 @@ abstract class ApiService {
 
   @POST(ApiConstants.verifyResetPasswordOTP)
   Future<OtpVerificationModel> verifyOtp(@Body() OtpVerificationModel request);
+
+  // Tkween Store API endpoints
+  @POST(ApiConstants.updateProfile)
+  Future<dynamic> updateProfile(@Body() Map<String, dynamic> profileData);
+
+  @GET(ApiConstants.getOrders)
+  Future<dynamic> getOrders();
+
+  @GET(ApiConstants.getBooks)
+  Future<dynamic> getBooks();
+
+  @GET(ApiConstants.getCategories)
+  Future<dynamic> getCategories();
+
+  @POST(ApiConstants.createPurchase)
+  Future<dynamic> createPurchase(@Body() Map<String, dynamic> purchaseData);
+
+  @GET(ApiConstants.fetchLibrary)
+  Future<dynamic> fetchLibrary();
 }
 
 //! command to run the service file generator
