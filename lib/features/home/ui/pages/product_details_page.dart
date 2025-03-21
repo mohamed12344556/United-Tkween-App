@@ -97,19 +97,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             ),
                           ),
                         ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: AppColors.primary,
-                              size: 20,
-                            ),
-                            Text(
-                              " 4.9 (862)",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                     SizedBox(height: 20),

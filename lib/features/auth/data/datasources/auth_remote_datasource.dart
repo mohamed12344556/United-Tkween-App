@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:united_formation_app/features/auth/data/models/login/login_model_request_body.dart';
 import 'package:united_formation_app/features/auth/data/models/login/login_model_response.dart';
 import 'package:united_formation_app/features/auth/data/models/register/register_model_request_body.dart';
@@ -48,11 +49,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         'Login successful, saving token: ${response.token.substring(0, 10)}...',
       );
 
-      await TokenManager.saveTokens(
-        token: response.token,
-        refreshToken: response.token, // استخدام نفس التوكن كـ refresh token
-      );
+      // await TokenManager.saveTokens(
+      //   token: response.token,
+      //   refreshToken: response.token, // استخدام نفس التوكن كـ refresh token
+      // );
+      // await SharedPrefHelper.setData(StorageKeys.accessToken,response.token);
+      // await FlutterSecureStorage().write(key: StorageKeys.accessToken, value: response.token);
+      await TokenManager.saveTokens(token: StorageKeys.accessToken);
 
+      await SharedPrefHelper.setData(StorageKeys.isLoggedIn, true);
+      DioFactory.setTokenIntoHeader(response.token);
       return response;
     } catch (e) {
       debugPrint('Login error: $e');

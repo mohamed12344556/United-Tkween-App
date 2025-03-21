@@ -10,8 +10,8 @@ import 'dart:math' as math;
 import 'package:crypto/crypto.dart';
 import 'package:hive/hive.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:united_formation_app/features/auth/ui/pages/api_ser.dart';
-import 'package:united_formation_app/features/auth/ui/pages/falier.dart';
+import 'package:united_formation_app/core/api/dio_services.dart';
+import 'package:united_formation_app/core/api/dio_services_failures.dart';
 import 'package:united_formation_app/features/auth/ui/pages/server.dart';
 import 'package:united_formation_app/features/auth/ui/pages/social_auth_repo.dart';
 import 'package:united_formation_app/features/auth/ui/pages/user_model.dart';
@@ -68,7 +68,8 @@ class SocialAuthRepoImpl extends SocialAuthRepo {
       if (apiResponse.statusCode == 200 || apiResponse.statusCode == 201) {
         final userModel = UserModel.fromJson(apiResponse.data);
 
-        Prefs.setData(key: Constants.userToken, value: userModel.token);
+         Prefs.setData(key: Constants.userToken, value: userModel.token);
+
 
         await HiveService().saveUser(userModel);
 

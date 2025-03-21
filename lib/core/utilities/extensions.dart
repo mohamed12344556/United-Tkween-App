@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
+import '../api/dio_services.dart';
 import '../core.dart';
 
 extension BuildContextExtensions on BuildContext {
@@ -7,7 +8,9 @@ extension BuildContextExtensions on BuildContext {
   // // double get screenWidth => MediaQuery.of(this).size.width;
   // double get screenHeight => MediaQuery.of(this).size.height;
   double get paddingTop => MediaQuery.of(this).padding.top;
+
   double get paddingBottom => MediaQuery.of(this).padding.bottom;
+
   // double get paddingLeft => MediaQuery.of(this).padding.left;
   // double get paddingRight => MediaQuery.of(this).padding.right;
 
@@ -217,8 +220,8 @@ extension BuildContextExtensions on BuildContext {
                     ),
                     child: const Text('تسجيل الخروج'),
                     onPressed: () {
-                      Navigator.of(context).pop();
-                      // تنفيذ منطق تسجيل الخروج
+                      TokenManager.clearTokens;
+                      context.pushReplacementNamed(Routes.loginView);
                     },
                   ),
                 ),
@@ -231,7 +234,7 @@ extension BuildContextExtensions on BuildContext {
   }
 }
 
-extension StringExtension on String? {
+extension NullOrEmpty on String? {
   bool isNullOrEmpty() => this == null || this == "";
 }
 

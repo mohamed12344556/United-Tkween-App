@@ -17,7 +17,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     required String token,
     required String refreshToken,
   }) async {
-    await TokenManager.saveTokens(token: token, refreshToken: refreshToken);
+    await TokenManager.saveTokens(token: token);
   }
 
   @override

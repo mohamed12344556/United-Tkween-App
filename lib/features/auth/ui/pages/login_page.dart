@@ -107,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                         textColor: Colors.black,
                         isLoading: state is LoginLoading,
                         onPressed: () {
+                          FocusScope.of(context).unfocus();
                           if (mounted) {
                             cubit.login(
                               email: cubit.emailController.text.trim(),
