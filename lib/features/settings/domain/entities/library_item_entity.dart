@@ -6,7 +6,7 @@ class LibraryItemEntity extends Equatable {
   final String id;
   final String title;
   final String? description;
-  final String? author; // إضافة خاصية المؤلف
+  final String? author;
   final DateTime orderDate;
   final LibraryItemType type;
   final double price;
@@ -18,7 +18,7 @@ class LibraryItemEntity extends Equatable {
     required this.id,
     required this.title,
     this.description,
-    this.author, // إضافة خاصية المؤلف كمعلمة اختيارية
+    this.author,
     required this.orderDate,
     required this.type,
     required this.price,
