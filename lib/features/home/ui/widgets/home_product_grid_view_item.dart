@@ -109,9 +109,10 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                   const SizedBox(height: 8),
                   Column(
                     children: [
+                      if(widget.book.getFormattedPdfPrice != 0)
                       Row(
                         children: [
-                          Text('PDF',
+                          Text('PDF: ',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
@@ -130,10 +131,11 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                         ],
                       ),
                       const SizedBox(height: 4),
-                      Row(
+                      if(widget.book.getFormattedPrice != 0)
+                        Row(
                         children: [
-                          Text(
-                            '${widget.book.getFormattedPrice}\$',
+
+                          Text('Paper: ',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
@@ -141,7 +143,8 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Text('ورقي',
+                          Text(
+                            '${widget.book.getFormattedPrice}\$',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
