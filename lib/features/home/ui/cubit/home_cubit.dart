@@ -31,4 +31,16 @@ class HomeCubit extends Cubit<HomeState> {
       emit(HomeCategoriesSuccessState(categories: booksCategories));
     });
   }
+
+  void filterBooksByCategoryEn(String categoryNameEn) {
+    emit(HomeBooksLoadingState());
+
+    List<BookModel> filteredBooks = books.where((book) {
+      return book.category.nameEn == categoryNameEn;
+    }).toList();
+
+    emit(HomeBooksSuccessState(books: filteredBooks));
+  }
+
+
 }
