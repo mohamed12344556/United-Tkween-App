@@ -52,6 +52,9 @@ abstract class ApiService {
 
   @GET(ApiConstants.fetchLibrary)
   Future<dynamic> fetchLibrary();
+
+  @GET(ApiConstants.getProfile)
+  Future<dynamic> getProfile();
 }
 
 //! command to run the service file generator

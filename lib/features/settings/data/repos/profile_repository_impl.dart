@@ -29,39 +29,52 @@ class ProfileRepositoryImpl implements ProfileRepository {
   @override
   Future<Either<ApiErrorModel, ProfileEntity>> getProfile() async {
     try {
-      // محاولة جلب البيانات من الخادم أولاً
+      // محاولة جلب البيانات من الخادم أولاً إذا كان متصلاً بالإنترنت
       if (await _isConnected()) {
+        print("Connected to internet, fetching profile from API");
         final remoteResult = await remoteDataSource.getProfile();
 
         return remoteResult.fold(
           (error) async {
+            print("Error from API: ${error.errorMessage}");
             // في حالة الخطأ، جلب البيانات من التخزين المحلي (Hive)
             final localResult = await localDataSource.getCachedProfile();
 
-            return localResult.fold((cacheError) => Left(cacheError), (
-              cachedProfile,
-            ) {
+            return localResult.fold((cacheError) {
+              print("Error from cache: ${cacheError.errorMessage}");
+              return Left(cacheError);
+            }, (cachedProfile) {
               if (cachedProfile != null) {
+                print("Returning cached profile: ${cachedProfile.fullName}");
                 return Right(cachedProfile);
               } else {
+                print("No cached profile found, returning original error");
                 return Left(error);
               }
             });
           },
           (profile) async {
+            print("Successfully got profile from API: ${profile.fullName}");
             // تخزين البيانات في التخزين المحلي (Hive)
             await localDataSource.cacheProfile(profile);
+            print("Profile cached successfully");
             return Right(profile);
           },
         );
       } else {
+        print("No internet connection, trying to get profile from cache");
         // في حالة عدم وجود إنترنت، جلب البيانات من التخزين المحلي (Hive)
         final localResult = await localDataSource.getCachedProfile();
 
-        return localResult.fold((error) => Left(error), (cachedProfile) {
+        return localResult.fold((error) {
+          print("Error getting profile from cache: ${error.errorMessage}");
+          return Left(error);
+        }, (cachedProfile) {
           if (cachedProfile != null) {
+            print("Returning cached profile: ${cachedProfile.fullName}");
             return Right(cachedProfile);
           } else {
+            print("No cached profile found");
             return Left(
               ApiErrorModel(
                 errorMessage: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
@@ -71,6 +84,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
         });
       }
     } catch (e) {
+      print("Unexpected error in getProfile: $e");
       return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
@@ -81,25 +95,33 @@ class ProfileRepositoryImpl implements ProfileRepository {
   ) async {
     try {
       if (await _isConnected()) {
+        print("Connected to internet, updating profile on API");
         // تحويل الكيان إلى نموذج البيانات
         final profileModel = ProfileModel.fromEntity(profile);
 
         // تحديث البيانات على الخادم
         final remoteResult = await remoteDataSource.updateProfile(profileModel);
 
-        return remoteResult.fold((error) => Left(error), (success) async {
+        return remoteResult.fold((error) {
+          print("Error updating profile: ${error.errorMessage}");
+          return Left(error);
+        }, (success) async {
           if (success) {
+            print("Profile updated on API, updating cache");
             // تحديث البيانات في التخزين المحلي (Hive)
             await localDataSource.cacheProfile(profileModel);
+            print("Cache updated successfully");
           }
           return Right(success);
         });
       } else {
+        print("No internet connection, can't update profile");
         // يمكن تخزين التغييرات محلياً والتزامن لاحقاً عند توفر الإنترنت
         // حالياً نعود بخطأ عدم وجود اتصال
         return Left(ApiErrorModel(errorMessage: 'لا يوجد اتصال بالإنترنت'));
       }
     } catch (e) {
+      print("Unexpected error in updateProfile: $e");
       return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }

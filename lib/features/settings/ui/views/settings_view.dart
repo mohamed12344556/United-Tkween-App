@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/constants.dart';
+import 'package:united_formation_app/features/settings/ui/cubits/profile/profile_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/build_user_info_header.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/social_media_icons.dart';
 import '../widgets/profile_menu_item.dart';
@@ -34,42 +36,46 @@ class _SettingsViewState extends State<SettingsView>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.darkSurface,
-      appBar: AppBar(
+    return BlocProvider(
+      create: (context) => sl<ProfileCubit>(),
+      child: Scaffold(
         backgroundColor: AppColors.darkSurface,
-        elevation: 0,
-        centerTitle: true,
-        scrolledUnderElevation: 0,
-        title: const Text(
-          'مجموعة تكوين المتحدة',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.darkSecondary,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.notifications_none,
-                color: AppColors.primary,
-                size: 20,
-              ),
-            ),
-            onPressed: () {
-            },
+        appBar: AppBar(
+          backgroundColor: AppColors.darkSurface,
+          elevation: 0,
+          centerTitle: true,
+          scrolledUnderElevation: 0,
+          title: const Text(
+            'مجموعة تكوين المتحدة',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(width: 8),
-        ],
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          actions: [
+            IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.darkSecondary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.notifications_none,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
+              ),
+              onPressed: () {
+                // إجراء الإشعارات
+              },
+            ),
+            const SizedBox(width: 8),
+          ],
+          leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          ),
         ),
+        body: SafeArea(child: _buildMenuItems(context)),
       ),
-      body: SafeArea(child: Container(child: _buildMenuItems(context))),
     );
   }
 

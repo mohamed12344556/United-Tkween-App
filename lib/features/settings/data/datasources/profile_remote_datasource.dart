@@ -28,24 +28,31 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Either<ApiErrorModel, ProfileModel>> getProfile() async {
     try {
-      // تنفيذ الحصول على بيانات المستخدم من واجهة برمجة التطبيقات
-      // هنا نستخدم البيانات الوهمية لأن واجهة برمجة التطبيقات لا توفر وظيفة جلب البروفايل مباشرة
+      // استدعاء endpoint الخاصة بالحصول على معلومات المستخدم
+      final response = await apiService.getProfile();
       
-      await Future.delayed(const Duration(seconds: 1));
-      
-      final mockProfile = ProfileModel(
-        id: 'user-123',
-        fullName: 'أحمد محمد',
-        email: 'ahmed@example.com',
-        phoneNumber1: '01234567890',
-        phoneNumber2: '09876543210',
-        address: 'شارع النصر، القاهرة',
-        profileImageUrl: null,
-      );
-
-      return Right(mockProfile);
+      // التأكد من صحة البيانات المستلمة
+      if (response != null && response['status'] == 'success') {
+        final userData = response['user'] ?? {};
+        
+        final profile = ProfileModel(
+          id: userData['id']?.toString() ?? 'user-123',
+          fullName: userData['full_name'] ?? userData['fullName'] ?? '',
+          email: userData['email'] ?? '',
+          phoneNumber1: userData['phone'] ?? userData['phoneNumber1'] ?? '',
+          phoneNumber2: userData['phone2'] ?? userData['phoneNumber2'] ?? '',
+          address: userData['address'] ?? '',
+          profileImageUrl: userData['profile_image'] ?? userData['profileImageUrl'],
+        );
+        
+        print("Profile loaded from API: ${profile.fullName}");
+        return Right(profile);
+      } else {
+        print("Error loading profile from API: ${response?['message'] ?? 'Unknown error'}");
+        return Left(ApiErrorModel(errorMessage: response?['message'] ?? 'فشل تحميل معلومات المستخدم'));
+      }
     } catch (error) {
-      print("Error in getProfile: $error");
+      print("Exception in getProfile: $error");
       return Left(ApiErrorHandler.handle(error));
     }
   }
@@ -60,6 +67,10 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         'phone': profile.phoneNumber1,
         'address': profile.address,
       };
+
+      if (profile.phoneNumber2 != null && profile.phoneNumber2!.isNotEmpty) {
+        profileData['phone2'] = profile.phoneNumber2;
+      }
 
       // استدعاء واجهة برمجة التطبيقات
       final response = await apiService.updateProfile(profileData);

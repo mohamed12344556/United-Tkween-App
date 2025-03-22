@@ -515,7 +515,6 @@ class _EditProfileViewState extends State<EditProfileView> {
       context.read<EditProfileCubit>().updateProfile(
         fullName: _fullNameController.text,
         phoneNumber1: _phoneNumber1Controller.text,
-        phoneNumber2: _phoneNumber2Controller.text,
         address: _addressController.text,
       );
     }
