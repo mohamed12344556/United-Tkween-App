@@ -10,6 +10,7 @@ import 'package:united_formation_app/features/auth/domain/entities/user_login_en
 import 'package:united_formation_app/features/auth/domain/entities/user_register_entity.dart';
 import 'package:united_formation_app/features/auth/domain/entities/user_reset_password_entity.dart';
 
+import '../../../../core/api/dio_services.dart';
 import '../../../../core/core.dart';
 
 abstract class AuthRemoteDataSource {
@@ -55,10 +56,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // );
       // await SharedPrefHelper.setData(StorageKeys.accessToken,response.token);
       // await FlutterSecureStorage().write(key: StorageKeys.accessToken, value: response.token);
-      await TokenManager.saveTokens(token: StorageKeys.accessToken);
 
-      await SharedPrefHelper.setData(StorageKeys.isLoggedIn, true);
-      DioFactory.setTokenIntoHeader(response.token);
+
+
+      await TokenManager.saveTokens(token: response.token);
+      await Prefs.setData(key:StorageKeys.isLoggedIn,value:  true);
       return response;
     } catch (e) {
       debugPrint('Login error: $e');

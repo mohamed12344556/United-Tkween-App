@@ -19,9 +19,10 @@ class TokenManager {
         throw const StorageException('Invalid tokens received');
       }
 
-      await Future.wait(<Future<dynamic>>[
-        _storage.write(key: StorageKeys.accessToken, value: token),
-      ]);
+      // await Future.wait(<Future<dynamic>>[
+      //   _storage.write(key: StorageKeys.accessToken, value: token),
+      // ]);
+      await Prefs.setData(key:StorageKeys.accessToken,value:  token);
 
       AppState.isLoggedIn = true;
       DioFactory.setTokenIntoHeader(token);

@@ -5,17 +5,22 @@ import 'package:united_formation_app/core/helper/format_double_number.dart';
 import 'package:united_formation_app/core/utilities/extensions.dart';
 import 'package:united_formation_app/features/admin/data/models/product_model.dart';
 import '../../../../core/routes/routes.dart';
-import '../../data/product_model.dart';
+import '../../data/book_model.dart';
 import 'product_offer_and_price.dart';
 import 'products_grid_view_banner.dart';
 
 class HomeProductsGridViewItem extends StatelessWidget {
-  final ProductModel product;
+  final BookModel book;
 
-  const HomeProductsGridViewItem({super.key, required this.product});
+  const HomeProductsGridViewItem({super.key, required this.book});
 
   @override
   Widget build(BuildContext context) {
+    print("===========================");
+    print(book.title);
+    print(book.getLocalizedCategory(context));
+    print(book.imageUrl);
+    print("===========================");
     return GestureDetector(
       onTap: () {
         // if (Constants.isAdmin) {
@@ -23,7 +28,7 @@ class HomeProductsGridViewItem extends StatelessWidget {
         // } else {
         //   context.pushNamed(Routes.productDetailsView, arguments: product);
         // }
-        context.pushNamed(Routes.productDetailsView, arguments: product);
+        context.pushNamed(Routes.productDetailsView, arguments: book);
 
       },
       child: Container(
@@ -40,8 +45,8 @@ class HomeProductsGridViewItem extends StatelessWidget {
                 alignment: Alignment.topRight,
                 children: [
                   Hero(
-                    tag: product.id,
-                    child: ProductsGridViewBanner(product: product),
+                    tag: book.id,
+                    child: ProductsGridViewBanner(book: book),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -65,7 +70,7 @@ class HomeProductsGridViewItem extends StatelessWidget {
                   children: [
                     const SizedBox(height: 4),
                     Text(
-                      product.name,
+                      book.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -79,7 +84,7 @@ class HomeProductsGridViewItem extends StatelessWidget {
                       children: [
                         Text(
                           // '${product.price}\$',
-                          product.category,
+                         book.getLocalizedCategory(context),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -88,17 +93,68 @@ class HomeProductsGridViewItem extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
-                        Spacer(),
-                        Text(
-                          '${formatNumber(product.price)}\$',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: Colors.white,
-                          ),
+
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'PDF',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+
+                            Text(
+                              '${book.getFormattedPdfPrice}\$',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              '${book.getFormattedPrice}\$',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+
+                            Text(
+                              'ورقي',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+
+                          ],
+                        ),
+
                       ],
                     ),
                     // const SizedBox(height: 12),

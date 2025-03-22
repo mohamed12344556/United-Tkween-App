@@ -24,6 +24,17 @@ extension BuildContextExtensions on BuildContext {
   //! Localization
   S get localeS => S.of(this);
 
+  //! Get Languages
+   bool get isArabic {
+      final locale = Localizations.localeOf(this);
+      return locale.languageCode.toLowerCase() == 'ar';
+    }
+
+  bool get isEnglish {
+    final locale = Localizations.localeOf(this);
+    return locale.languageCode.toLowerCase() == 'en';
+  }
+
   //! Navigation
   void navigateTo(String routeName) =>
       Navigator.pushReplacementNamed(this, routeName);
@@ -241,3 +252,15 @@ extension NullOrEmpty on String? {
 extension ListExtension<T> on List<T>? {
   bool isNullOrEmpty() => this == null || this!.isEmpty;
 }
+
+extension UrlFormatter on String {
+  String get asFullImageUrl {
+    const String baseUrl = 'https://tkweenstore.com/';
+    String cleanedPath = replaceFirst(RegExp(r'^(\.\./)+'), '');
+    return '$baseUrl$cleanedPath';
+  }
+}
+
+
+
+

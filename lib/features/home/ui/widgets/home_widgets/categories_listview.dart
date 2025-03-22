@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/core/core.dart';
+import 'package:united_formation_app/features/home/data/categories_model.dart';
 
 
 class CategoriesListView extends StatefulWidget {
-  final List<ProductCategoryOrBrandModel> categoryItems;
+  final List<CategoryModel> categoryItems;
 
   const CategoriesListView({super.key, required this.categoryItems});
 
@@ -45,7 +46,7 @@ class _CategoriesListViewState extends State<CategoriesListView> {
 
 class CategoriesListviewItem extends StatelessWidget {
   final Function()? onTap;
-  final ProductCategoryOrBrandModel categoryItem;
+  final CategoryModel categoryItem;
   final bool isSelected;
 
   const CategoriesListviewItem({
@@ -64,32 +65,11 @@ class CategoriesListviewItem extends StatelessWidget {
         child: Chip(
           padding: EdgeInsets.symmetric(vertical: 12 ,horizontal:12),
           backgroundColor: isSelected ? AppColors.primary :AppColors.inputBackgroundDark,
-          label: Text(categoryItem.name, style: TextStyle(
+          label: Text(categoryItem.getLocalizedCategory(context), style: TextStyle(
             color: isSelected ? Colors.black : Colors.white,
           ),),
         ),
       ),
     );
-  }
-}
-class ProductCategoryOrBrandModel {
-  final String id;
-
-  final String name;
-
-  const ProductCategoryOrBrandModel({required this.id, required this.name});
-
-  factory ProductCategoryOrBrandModel.fromJson(Map<String, dynamic> json) {
-    return ProductCategoryOrBrandModel(
-      id: json['id'],
-      name: json['name'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-    };
   }
 }

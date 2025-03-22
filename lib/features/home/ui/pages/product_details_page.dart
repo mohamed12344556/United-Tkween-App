@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/core/helper/format_double_number.dart';
 import '../../../admin/data/models/product_model.dart';
-import '../../data/product_model.dart';
+import '../../data/book_model.dart';
 
 class ProductDetailsPage extends StatefulWidget {
-  final ProductModel product;
+  final BookModel book;
 
-  const ProductDetailsPage({super.key, required this.product});
+  const ProductDetailsPage({super.key, required this.book});
 
   @override
   State<ProductDetailsPage> createState() => _ProductDetailsPageState();
@@ -33,7 +33,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    double totalPrice = widget.product.price * quantity;
+    // double totalPrice = widget.book.price * quantity;
+  double totalPrice = 200;
     return Scaffold(
       backgroundColor: Colors.grey[900],
       // appBar: AppBar(
@@ -53,14 +54,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       body: Stack(
         children: [
           Hero(
-            tag: widget.product.id,
+            tag: widget.book.id,
             child: Container(
               height: MediaQuery.of(context).size.height * .5,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                    widget.product.imageUrl ??
+                    widget.book.imageUrl.asFullImageUrl ??
                         'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png',
                   ),
                 ),
@@ -89,7 +90,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       children: [
                         Expanded(
                           child: Text(
-                            widget.product.name,
+                            widget.book.getLocalizedCategory(context),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,
@@ -100,10 +101,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       ],
                     ),
                     SizedBox(height: 20),
-                    Text(
-                      widget.product.description!,
-                      style: TextStyle(color: Colors.white70),
-                    ),
+                    // Text(
+                    //   widget.book.description!,
+                    //   style: TextStyle(color: Colors.white70),
+                    // ),
                     SizedBox(height: 16),
 
                     Text(
@@ -190,7 +191,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     SizedBox(height: 25),
 
                     Text(
-                      "Price: ${formatNumber(widget.product.price)}\$",
+                      // "Price: ${formatNumber(widget.book.price)}\$",
+                      // "Price: ${widget.book.price}",
+                      "Price:${widget.book.getFormattedPrice}\$",
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     SizedBox(height: 16),

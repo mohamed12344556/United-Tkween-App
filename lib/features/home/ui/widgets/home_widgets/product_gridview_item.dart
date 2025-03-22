@@ -3,7 +3,7 @@
 // import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 // import 'package:flutter/material.dart';
 // import 'package:footwear_store_client/core/utils/styles.dart';
-// import '../../../data/models/product_model.dart';
+// import '../../../data/models/book_model.dart';
 // import '../../screens/product_details_screen.dart';
 //
 // class ProductGridViewItem extends StatelessWidget {

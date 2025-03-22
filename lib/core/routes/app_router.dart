@@ -11,6 +11,7 @@ import 'package:united_formation_app/features/admin/ui/views/order_details_admin
 import 'package:united_formation_app/features/admin/ui/views/products_admin_view.dart';
 import 'package:united_formation_app/features/admin/ui/views/support_chat_admin_view.dart';
 import 'package:united_formation_app/features/favorites/presentation/views/favorites_view.dart';
+import 'package:united_formation_app/features/home/data/book_model.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/library/library_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/orders/orders_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/views/library_view.dart';
@@ -167,10 +168,10 @@ class AppRouter {
         );
 
       case Routes.productDetailsView:
-        ProductModel product = arguments as ProductModel;
+        BookModel bookModel = arguments as BookModel;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => ProductDetailsPage(product: product),
+          builder: (_) => ProductDetailsPage(book: bookModel),
         );
 
       case Routes.cartView:
