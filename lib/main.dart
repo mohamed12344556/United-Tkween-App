@@ -9,6 +9,7 @@ import 'package:united_formation_app/features/settings/data/datasources/hive_mod
 import 'core/routes/app_router.dart';
 import 'core/api/dio_services.dart';
 import 'features/auth/ui/pages/user_model.dart';
+import 'features/home/data/book_model.dart';
 import 'united_tkween_group_app.dart';
 
 import 'core/core.dart';
@@ -52,7 +53,18 @@ Future<void> main() async {
     ),
   );
   await Prefs.init();
+  // ✅ Register Hive Adapters BEFORE opening any box
+  if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(BookModelAdapter());
+  }
+
+  if (!Hive.isAdapterRegistered(2)) {
+    Hive.registerAdapter(CategoryAdapter());
+  }
+
+  // ✅ Now it's safe to open the boxes
   await Hive.openBox<UserModel>('userBox');
+  await Hive.openBox<BookModel>('favorites');
   // await AppState.initialize();
   // final bool hasValidSession = await TokenManager.hasValidTokens();
   // log('Main - AppState.isLoggedIn: ${AppState.isLoggedIn}');

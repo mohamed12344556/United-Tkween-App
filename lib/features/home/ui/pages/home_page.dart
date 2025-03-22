@@ -229,8 +229,24 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+TextEditingController searchController = TextEditingController();
+List<BookModel> filteredBooks = [];
+List<BookModel> allBooks = [];
 
 class _HomePageState extends State<HomePage> {
+  void filterBooks(String query) {
+    List<BookModel> tempBooks = [];
+    if (query.isNotEmpty) {
+      tempBooks = allBooks.where((book) =>
+      book.title.toLowerCase().contains(query.toLowerCase()) ||
+          book.getLocalizedCategory(context).toLowerCase().contains(query.toLowerCase())
+      ).toList();
+    }
+
+    setState(() {
+      filteredBooks = tempBooks;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -257,6 +273,10 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextFormField(
+                    controller: searchController,
+                    onChanged: (query) {
+                      filterBooks(query);
+                    },
                     decoration: InputDecoration(
                       hintText: 'Search',
                       prefixIcon: Icon(Icons.search),
@@ -277,14 +297,11 @@ class _HomePageState extends State<HomePage> {
 
                   BlocBuilder<HomeCubit, HomeState>(
                     builder: (context, state) {
-                      if(state is HomeBooksSuccessState && state.books.isEmpty ){
-                        return const Center(child: Text("No Books Found"));
-                      }
-                      else if(BlocProvider.of<HomeCubit>(context).books.isNotEmpty)
+                       if(BlocProvider.of<HomeCubit>(context).booksCategories.isNotEmpty)
                       {
                         return CategoriesListView(categoryItems:BlocProvider.of<HomeCubit>(context).booksCategories);
                       }
-                      else if(state is HomeBooksFailureState)
+                      else if(state is HomeCategoriesFailureState)
                       {
                         return Center(child: Column(
                           children: [
@@ -292,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(height: 10),
                             ElevatedButton(
                                 onPressed: ()async{
-                                  BlocProvider.of<HomeCubit>(context).getHomeBooks();
+                                  BlocProvider.of<HomeCubit>(context).getBooksCategories();
                                 }, style: ButtonStyle(
                               backgroundColor: WidgetStateProperty.all(AppColors.primary),
                             ), child: Text("Retry")),
@@ -319,10 +336,15 @@ class _HomePageState extends State<HomePage> {
                      if(state is HomeBooksSuccessState && state.books.isEmpty ){
                        return const Center(child: Text("No Books Found"));
                      }
-                     else if(BlocProvider.of<HomeCubit>(context).books.isNotEmpty)
-                       {
-                         return HomeProductsGridView(books:BlocProvider.of<HomeCubit>(context).books);
-                       }
+                       else if (state is HomeBooksSuccessState) {
+                      allBooks = state.books;
+                      return HomeProductsGridView(books: filteredBooks.isEmpty && searchController.text.isEmpty ? allBooks : filteredBooks);
+                      }
+
+                      else if (state is HomeBooksSuccessState) {
+                       return HomeProductsGridView(books: state.books);
+                     }
+
                      else if(state is HomeBooksFailureState)
                        {
                           return Center(child: Column(

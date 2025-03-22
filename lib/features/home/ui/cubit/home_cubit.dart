@@ -19,6 +19,10 @@ class HomeCubit extends Cubit<HomeState> {
     final response = await homeRepo.getHomeBooks();
     response.fold((l) => emit(HomeBooksFailureState(l.toString())), (r) {
       books = r;
+      // Debug prints
+      for (var book in books) {
+        print('Book: ${book.title}, Category EN: ${book.category.nameEn}');
+      }
       emit(HomeBooksSuccessState(books: r));
     });
   }
@@ -35,12 +39,31 @@ class HomeCubit extends Cubit<HomeState> {
   void filterBooksByCategoryEn(String categoryNameEn) {
     emit(HomeBooksLoadingState());
 
-    List<BookModel> filteredBooks = books.where((book) {
-      return book.category.nameEn == categoryNameEn;
-    }).toList();
+    print('=== FILTER START ===');
+    print('Category to filter by: "$categoryNameEn"');
 
-    emit(HomeBooksSuccessState(books: filteredBooks));
+    if (categoryNameEn == 'All') {
+      print('Showing ALL books');
+      emit(HomeBooksSuccessState(books: books));
+    } else {
+      List<BookModel> filteredBooks = books.where((book) {
+        print('Checking book: ${book.title}');
+        print('Book category: "${book.category.nameEn}"');
+        return book.category.nameEn.trim().toLowerCase() == categoryNameEn.trim().toLowerCase();
+      }).toList();
+
+      print('Filtered books count: ${filteredBooks.length}');
+      for (var b in filteredBooks) {
+        print('Filtered book: ${b.title}');
+      }
+
+      emit(HomeBooksSuccessState(books: filteredBooks));
+    }
+
+    print('=== FILTER END ===');
   }
+
+
 
 
 }

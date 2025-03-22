@@ -1,8 +1,6 @@
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/core/helper/format_double_number.dart';
-import '../../../admin/data/models/product_model.dart';
 import '../../data/book_model.dart';
 
 class ProductDetailsPage extends StatefulWidget {
@@ -28,29 +26,23 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   ];
   List<String> bookTypes = [
     "PDF",
-    "ورقي",
+    "paper",
   ];
+
+  double getSelectedPrice() {
+    if (selectedType == "PDF") {
+      return widget.book.getFormattedPdfPrice;
+    } else {
+      return widget.book.getFormattedPrice;
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    // double totalPrice = widget.book.price * quantity;
-  double totalPrice = 200;
+    double totalPrice = getSelectedPrice() * quantity;
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      // appBar: AppBar(
-      //   backgroundColor: Colors.black,
-      //   elevation: 0,
-      //   leading: IconButton(
-      //     icon: Icon(Icons.arrow_back, color: Colors.white),
-      //     onPressed: () => Navigator.pop(context),
-      //   ),
-      //   actions: [
-      //     IconButton(
-      //       icon: Icon(Icons.favorite_border, color: Colors.white),
-      //       onPressed: () {},
-      //     ),
-      //   ],
-      // ),
       body: Stack(
         children: [
           Hero(
@@ -112,42 +104,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                     SizedBox(height: 16),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children:
-                          bookCategories.map((category) {
-                            bool isSelected = category == selectedCategory;
-                            return GestureDetector(
-                              onTap: () {
-                                // setState(() {
-                                //   selectedCategory = category;
-                                // });
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color:
-                                      isSelected
-                                          ? AppColors.primary
-                                          : Colors.grey[800],
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  category,
-                                  style: TextStyle(
-                                    color:
-                                        isSelected
-                                            ? Colors.black
-                                            : Colors.white,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color:
+                        AppColors.primary,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        widget.book.getLocalizedCategory(context),
+                        style: TextStyle(
+                          color:
+                        Colors.black
+                             
+                        ),
+                      ),
                     ),
 
                     SizedBox(height: 25),
@@ -189,11 +163,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       }).toList(),
                     ),
                     SizedBox(height: 25),
-
                     Text(
-                      // "Price: ${formatNumber(widget.book.price)}\$",
-                      // "Price: ${widget.book.price}",
-                      "Price:${widget.book.getFormattedPrice}\$",
+                      "Price:${getSelectedPrice()}\$",
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     SizedBox(height: 16),
@@ -249,30 +220,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
 
                     SizedBox(height: 30),
-                    Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey[800],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Icon(
-                              Icons.favorite_border,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: AppButton(
-                            text: "Add to cart",
-                            onPressed: () {},
-                            height: 55,
-                          ),
-                        ),
-                      ],
+                    AppButton(
+                      text: "Add to cart",
+                      onPressed: () {},
+                      height: 55,
                     ),
                   ],
                 ),

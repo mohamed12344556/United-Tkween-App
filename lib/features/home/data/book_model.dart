@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:united_formation_app/core/core.dart';
+import 'package:hive/hive.dart';
+import 'package:flutter/material.dart';
+
+part 'book_model.g.dart';
 
 class BooksResponse {
   final String status;
@@ -27,14 +31,27 @@ class BooksResponse {
   }
 }
 
-
-class BookModel {
+@HiveType(typeId: 0)
+class BookModel extends HiveObject {
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final String title;
+
+  @HiveField(2)
   final String imageUrl;
+
+  @HiveField(3)
   final String price;
+
+  @HiveField(4)
   final String pdfPrice;
+
+  @HiveField(5)
   final String bookType;
+
+  @HiveField(6)
   final Category category;
 
   BookModel({
@@ -58,7 +75,6 @@ class BookModel {
   double get getFormattedPdfPrice {
     return double.tryParse(pdfPrice) ?? 0.0;
   }
-
 
   factory BookModel.fromJson(Map<String, dynamic> json) {
     return BookModel(
@@ -84,8 +100,12 @@ class BookModel {
     };
   }
 }
-class Category {
+@HiveType(typeId: 2)
+class Category extends HiveObject {
+  @HiveField(0)
   final String nameAr;
+
+  @HiveField(1)
   final String nameEn;
 
   Category({
