@@ -332,6 +332,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 20),
                   BlocBuilder<HomeCubit, HomeState>(
+                    buildWhen: (previous, current) {
+                      return current is HomeBooksSuccessState ||
+                          current is HomeBooksFailureState ||
+                          (current is HomeBooksSuccessState && current.books.isEmpty);
+                    },
                     builder: (context, state) {
                      if(state is HomeBooksSuccessState && state.books.isEmpty ){
                        return const Center(child: Text("No Books Found"));
