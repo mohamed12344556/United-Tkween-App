@@ -27,6 +27,7 @@ class _FavoritesViewState extends State<FavoritesView> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: SizedBox(),
         title: const Text('الكتب المفضلة'),
         scrolledUnderElevation: 0,
       ),
