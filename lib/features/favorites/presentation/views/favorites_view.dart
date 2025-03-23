@@ -96,14 +96,17 @@ class _FavoritesViewState extends State<FavoritesView> {
                           Row(
                             children: [
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  if(products[index].getFormattedPdfPrice != 0)
                                   Text(
                                     "PDf Price :  ${products[index].getFormattedPdfPrice} EGP",
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 10),
-                                  Text(
+                                  if(products[index].getFormattedPrice != 0)
+                                    Text(
                                     "Paper Price :  ${products[index].getFormattedPrice} EGP",
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
