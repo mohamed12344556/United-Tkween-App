@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/constants.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/profile/profile_cubit.dart';
-import 'package:united_formation_app/features/settings/ui/widgets/build_user_info_header.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/social_media_icons.dart';
 import '../widgets/profile_menu_item.dart';
 import '../../../../core/core.dart';
@@ -69,10 +68,7 @@ class _SettingsViewState extends State<SettingsView>
             ),
             const SizedBox(width: 8),
           ],
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          ),
+          leading: SizedBox.shrink(),
         ),
         body: SafeArea(child: _buildMenuItems(context)),
       ),
@@ -83,31 +79,31 @@ class _SettingsViewState extends State<SettingsView>
     return SingleChildScrollView(
       child: Column(
         children: [
-          BuildUserInfoHeader(context: context),
-          if(Constants.isAdmin)
-          Column(
-            children: [
-              Divider(color: AppColors.primary),
-              _buildAnimatedMenuItem(
-                index: 3,
-                child: ProfileMenuItem(
-                  title: "اداره النظام",
-                  icon: Icons.settings,
-                  onTap: () {
-                    context.navigateToNamed(Routes.adminOrdersView);
-                  },
+          // BuildUserInfoHeader(context: context),
+          if (Constants.isAdmin)
+            Column(
+              children: [
+                Divider(color: AppColors.primary),
+                _buildAnimatedMenuItem(
+                  index: 3,
+                  child: ProfileMenuItem(
+                    title: "اداره النظام",
+                    icon: Icons.settings,
+                    onTap: () {
+                      context.navigateToNamed(Routes.adminOrdersView);
+                    },
+                  ),
                 ),
-              ),
-              Divider(color: AppColors.primary),
-            ],
-          ),
+                Divider(color: AppColors.primary),
+              ],
+            ),
           ListView(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             children: [
               _buildSectionTitle('الحساب'),
-          
+
               _buildAnimatedMenuItem(
                 index: 0,
                 child: ProfileMenuItem(
@@ -128,7 +124,7 @@ class _SettingsViewState extends State<SettingsView>
                   },
                 ),
               ),
-          
+
               _buildAnimatedMenuItem(
                 index: 2,
                 child: ProfileMenuItem(
@@ -140,10 +136,10 @@ class _SettingsViewState extends State<SettingsView>
                 ),
               ),
               Divider(color: AppColors.primary),
-          
+
               const SizedBox(height: 16),
               _buildSectionTitle('الدعم'),
-          
+
               _buildAnimatedMenuItem(
                 index: 3,
                 child: ProfileMenuItem(
@@ -154,21 +150,21 @@ class _SettingsViewState extends State<SettingsView>
                   },
                 ),
               ),
-          
+
               _buildAnimatedMenuItem(
                 index: 4,
                 child: ProfileMenuItem(
                   title: 'المتجر الرئيسي',
                   icon: Icons.store,
                   onTap: () {
-                    // التنقل إلى المتجر الرئيسي
+                    context.navigateToNamed(Routes.hostView);
                   },
                 ),
               ),
-          
+
               const SizedBox(height: 8),
               Divider(color: AppColors.primary),
-          
+
               // Logout Button
               _buildAnimatedMenuItem(
                 index: 5,
@@ -184,7 +180,7 @@ class _SettingsViewState extends State<SettingsView>
               ),
             ],
           ),
-      
+
           // Social Media Icons
           SocialMediaIcons(),
         ],

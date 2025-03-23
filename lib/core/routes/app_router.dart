@@ -122,11 +122,19 @@ class AppRouter {
         );
 
       case Routes.editProfileView:
+        final profileCubit = arguments is ProfileCubit ? arguments : null;
+
         return MaterialPageRoute(
           settings: settings,
           builder:
-              (_) => BlocProvider(
-                create: (context) => sl<EditProfileCubit>(),
+              (_) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (_) => sl<EditProfileCubit>()),
+                  if (profileCubit != null)
+                    BlocProvider.value(value: profileCubit)
+                  else
+                    BlocProvider(create: (_) => sl<ProfileCubit>()),
+                ],
                 child: const EditProfileView(),
               ),
         );

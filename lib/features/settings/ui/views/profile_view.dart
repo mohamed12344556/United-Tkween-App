@@ -25,15 +25,6 @@ class _ProfileViewState extends State<ProfileView> {
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // تحميل البيانات في كل مرة يتم فيها زيارة الصفحة
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ProfileCubit>().loadProfile();
-    });
-  }
-
   // تحديث البيانات عند السحب للأسفل
   Future<void> _refreshProfile() async {
     await context.read<ProfileCubit>().loadProfile();
@@ -119,9 +110,15 @@ class _ProfileViewState extends State<ProfileView> {
             child: Icon(Icons.edit, color: AppColors.primary, size: 20.r),
           ),
           onPressed: () {
-            context.navigateToNamed(Routes.editProfileView);
+            Navigator.pushNamed(context, Routes.editProfileView).then((_) {
+              final cubit = context.read<ProfileCubit>();
+              if (!cubit.isClosed) {
+                cubit.loadProfile();
+              }
+            });
           },
         ),
+
         SizedBox(width: 8.w),
       ],
       leading: IconButton(
@@ -201,7 +198,14 @@ class _ProfileViewState extends State<ProfileView> {
                   width: double.infinity,
                   child: EditProfileButtonWidget(
                     onPressed: () {
-                      context.navigateToNamed(Routes.editProfileView);
+                      Navigator.pushNamed(context, Routes.editProfileView).then(
+                        (_) {
+                          final cubit = context.read<ProfileCubit>();
+                          if (!cubit.isClosed) {
+                            cubit.loadProfile();
+                          }
+                        },
+                      );
                     },
                   ),
                 ),

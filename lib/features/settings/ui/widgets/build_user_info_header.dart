@@ -95,10 +95,7 @@ import '../../ui/cubits/profile/profile_cubit.dart';
 import '../../ui/cubits/profile/profile_state.dart';
 
 class BuildUserInfoHeader extends StatefulWidget {
-  const BuildUserInfoHeader({
-    super.key,
-    required this.context,
-  });
+  const BuildUserInfoHeader({super.key, required this.context});
 
   final BuildContext context;
 
@@ -139,7 +136,7 @@ class _BuildUserInfoHeaderState extends State<BuildUserInfoHeader> {
           final profile = state.profile!;
           // استخراج الأحرف الأولى من الاسم
           final initials = _getInitials(profile.fullName);
-          
+
           return _buildProfileHeader(profile.fullName, profile.email, initials);
         }
 
@@ -152,7 +149,7 @@ class _BuildUserInfoHeaderState extends State<BuildUserInfoHeader> {
   // استخراج الأحرف الأولى من الاسم
   String _getInitials(String fullName) {
     if (fullName.isEmpty) return 'NA';
-    
+
     List<String> names = fullName.trim().split(' ');
     if (names.length == 1) {
       return names[0].isNotEmpty ? names[0][0].toUpperCase() : 'N';
@@ -349,7 +346,16 @@ class _BuildUserInfoHeaderState extends State<BuildUserInfoHeader> {
             ),
           ),
           TextButton.icon(
-            onPressed: () =>context.pushNamed(Routes.editProfileView),
+            // onPressed: () =>context.pushNamed(Routes.editProfileView),
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.editProfileView).then((_) {
+                // لما يرجع من صفحة التعديل
+                final cubit = context.read<ProfileCubit>();
+                if (!cubit.isClosed) {
+                  cubit.loadProfile();
+                }
+              });
+            },
             icon: Icon(Icons.edit, size: 16, color: AppColors.secondary),
             label: const Text(
               "تعديل",
@@ -430,7 +436,8 @@ class _BuildUserInfoHeaderState extends State<BuildUserInfoHeader> {
             ),
           ),
           TextButton.icon(
-            onPressed: () => widget.context.navigateToNamed(Routes.editProfileView),
+            onPressed:
+                () => widget.context.navigateToNamed(Routes.editProfileView),
             icon: Icon(Icons.edit, size: 16, color: AppColors.secondary),
             label: const Text(
               "تعديل",

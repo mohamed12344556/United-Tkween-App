@@ -100,6 +100,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   // تعيين حالة التحديث
   void setProfileUpdated() {
+    
     if (isClosed) return;
 
     emit(state.copyWith(isProfileUpdated: true));

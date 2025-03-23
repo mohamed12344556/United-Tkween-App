@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:united_formation_app/features/home/domain/home_repo.dart';
@@ -9,61 +10,97 @@ part 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeRepo homeRepo;
 
-  HomeCubit({required this.homeRepo}) : super(HomeInitial());
-
+  // قائمة تخزين جميع الكتب للاستخدام في الفلترة
+  List<BookModel> allBooks = [];
+  // قائمة الكتب المعروضة (قد تكون مفلترة)
   List<BookModel> books = [];
   List<CategoryModel> booksCategories = [];
 
+  HomeCubit({required this.homeRepo}) : super(HomeInitial());
+
   void getHomeBooks() async {
     emit(HomeBooksLoadingState());
-    final response = await homeRepo.getHomeBooks();
-    response.fold((l) => emit(HomeBooksFailureState(l.toString())), (r) {
-      books = r;
-      // Debug prints
-      for (var book in books) {
-        print('Book: ${book.title}, Category EN: ${book.category.nameEn}');
-      }
-      emit(HomeBooksSuccessState(books: r));
-    });
+    
+    try {
+      final response = await homeRepo.getHomeBooks();
+      response.fold(
+        (failure) {
+          log("فشل تحميل الكتب: ${failure.errorMessage}");
+          emit(HomeBooksFailureState(failure.toString()));
+          // تحميل الفئات حتى في حال فشل تحميل الكتب
+          getBooksCategories();
+        }, 
+        (booksList) {
+          // تخزين جميع الكتب للفلترة لاحقًا
+          allBooks = booksList;
+          books = booksList;
+          
+          // سجل معلومات التصحيح
+          for (var book in books) {
+            log('Book: ${book.title}, Category EN: ${book.category.nameEn}');
+          }
+          
+          emit(HomeBooksSuccessState(books: books));
+          
+          // تحميل الفئات بعد نجاح تحميل الكتب
+          getBooksCategories();
+        }
+      );
+    } catch (e) {
+      log("استثناء غير متوقع في تحميل الكتب: $e");
+      emit(HomeBooksFailureState(e.toString()));
+      // محاولة تحميل الفئات حتى في حال حدوث استثناء
+      getBooksCategories();
+    }
   }
 
   void getBooksCategories() async {
     emit(HomeCategoriesLoadingState());
-    final response = await homeRepo.getBooksCategories();
-    response.fold((l) => emit(HomeCategoriesFailureState(l.toString())), (r) {
-      booksCategories = r;
-      emit(HomeCategoriesSuccessState(categories: booksCategories));
-    });
+    
+    try {
+      final response = await homeRepo.getBooksCategories();
+      response.fold(
+        (failure) {
+          log("فشل تحميل الفئات: ${failure.errorMessage}");
+          emit(HomeCategoriesFailureState(failure.toString()));
+        }, 
+        (categoriesList) {
+          booksCategories = categoriesList;
+          emit(HomeCategoriesSuccessState(categories: booksCategories));
+        }
+      );
+    } catch (e) {
+      log("استثناء غير متوقع في تحميل الفئات: $e");
+      emit(HomeCategoriesFailureState(e.toString()));
+    }
   }
 
   void filterBooksByCategoryEn(String categoryNameEn) {
     emit(HomeBooksLoadingState());
 
-    print('=== FILTER START ===');
-    print('Category to filter by: "$categoryNameEn"');
+    log('=== بدء التصفية ===');
+    log('الفئة المراد التصفية بها: "$categoryNameEn"');
 
     if (categoryNameEn == 'All') {
-      print('Showing ALL books');
+      log('عرض جميع الكتب');
+      books = allBooks;
       emit(HomeBooksSuccessState(books: books));
     } else {
-      List<BookModel> filteredBooks = books.where((book) {
-        print('Checking book: ${book.title}');
-        print('Book category: "${book.category.nameEn}"');
+      List<BookModel> filteredBooks = allBooks.where((book) {
+        log('فحص الكتاب: ${book.title}');
+        log('فئة الكتاب: "${book.category.nameEn}"');
         return book.category.nameEn.trim().toLowerCase() == categoryNameEn.trim().toLowerCase();
       }).toList();
 
-      print('Filtered books count: ${filteredBooks.length}');
+      log('عدد الكتب بعد التصفية: ${filteredBooks.length}');
       for (var b in filteredBooks) {
-        print('Filtered book: ${b.title}');
+        log('كتاب مصفى: ${b.title}');
       }
 
+      books = filteredBooks;
       emit(HomeBooksSuccessState(books: filteredBooks));
     }
 
-    print('=== FILTER END ===');
+    log('=== انتهاء التصفية ===');
   }
-
-
-
-
 }
