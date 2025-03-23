@@ -1,6 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/core/helper/format_double_number.dart';
+import '../../../cart/data/cart_model.dart';
 import '../../data/book_model.dart';
 
 class ProductDetailsPage extends StatefulWidget {
@@ -13,9 +16,17 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
+  late String selectedType;
+
+  @override
+  void initState() {
+    super.initState();
+
+    selectedType = (widget.book.getFormattedPdfPrice == 0) ? "paper" : "PDF";
+  }
+
   int quantity = 1;
   String selectedCategory = "روايات";
-  String selectedType = "ورقي";
 
   List<String> bookCategories = [
     "روايات",
@@ -24,22 +35,21 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     "الكتب الدينية",
     "الكتب التقنية",
   ];
-  List<String> bookTypes = [
-    "PDF",
-    "paper",
-  ];
+  List<String> bookTypes = ["PDF", "paper"];
 
   double getSelectedPrice() {
     if (selectedType == "PDF") {
+      print(widget.book.getFormattedPdfPrice);
       return widget.book.getFormattedPdfPrice;
     } else {
       return widget.book.getFormattedPrice;
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+    print(widget.book.getFormattedPdfPrice);
+
     double totalPrice = getSelectedPrice() * quantity;
     return Scaffold(
       backgroundColor: Colors.grey[900],
@@ -110,17 +120,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color:
-                        AppColors.primary,
+                        color: AppColors.primary,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
                         widget.book.getLocalizedCategory(context),
-                        style: TextStyle(
-                          color:
-                        Colors.black
-                             
-                        ),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
 
@@ -129,38 +134,38 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       spacing: 8,
                       runSpacing: 8,
                       children:
-                      bookTypes.map((type) {
-                        bool isSelected = type == selectedType;
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedType = type;
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color:
-                              isSelected
-                                  ? AppColors.primary
-                                  : Colors.grey[800],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              type,
-                              style: TextStyle(
-                                color:
-                                isSelected
-                                    ? Colors.black
-                                    : Colors.white,
+                          bookTypes.map((type) {
+                            bool isSelected = type == selectedType;
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedType = type;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color:
+                                      isSelected
+                                          ? AppColors.primary
+                                          : Colors.grey[800],
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  type,
+                                  style: TextStyle(
+                                    color:
+                                        isSelected
+                                            ? Colors.black
+                                            : Colors.white,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                            );
+                          }).toList(),
                     ),
                     SizedBox(height: 25),
                     Text(
@@ -173,7 +178,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       children: [
                         Text(
                           "Total: ${formatNumber(totalPrice)}\$",
-                          style: TextStyle(color: AppColors.primary, fontSize: 20),
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontSize: 20,
+                          ),
                         ),
                         Spacer(),
                         Row(
@@ -222,7 +230,50 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     SizedBox(height: 30),
                     AppButton(
                       text: "Add to cart",
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (getSelectedPrice() == 0) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "عذرًا، لا يوجد سعر متاح لهذا النوع من الكتاب. يرجى اختيار نوع مختلف.",
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        } else {
+                          final cartBox = Hive.box<CartItemModel>('CartBox');
+
+                          final cartItems = cartBox.values.toList();
+
+                          final existingItem = cartItems.firstWhereOrNull(
+                            (item) =>
+                                item.bookId == widget.book.id &&
+                                item.type == selectedType,
+                          );
+
+                          if (existingItem != null) {
+                            existingItem.quantity += quantity;
+                            await existingItem.save();
+                          } else {
+                            final newItem = CartItemModel(
+                              bookId: widget.book.id,
+                              bookName: widget.book.title,
+                              imageUrl: widget.book.imageUrl,
+                              type: selectedType,
+                              quantity: quantity,
+                              unitPrice: getSelectedPrice(),
+                            );
+                            await cartBox.add(newItem);
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('تمت الإضافة إلى السلة!'),
+                              backgroundColor: AppColors.primary,
+                            ),
+                          );
+                        }
+                      },
                       height: 55,
                     ),
                   ],
@@ -233,7 +284,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           Padding(
             padding: const EdgeInsets.only(top: 50, left: 10),
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 Navigator.pop(context);
               },
               child: Container(
@@ -246,7 +297,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 ),
                 child: Icon(
                   Icons.arrow_back,
-                  color:AppColors.primary,
+                  color: AppColors.primary,
                   size: 20,
                 ),
               ),
