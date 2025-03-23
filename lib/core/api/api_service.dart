@@ -20,7 +20,7 @@ abstract class ApiService {
   @POST(ApiConstants.login)
   Future<LoginModelResponse> login(@Body() LoginRequestModel request);
 
-  @POST(ApiConstants.register)
+  @GET(ApiConstants.register)
   Future<RegisterModelResponse> register(
     @Body() RegisterModelRequestBody request,
   );

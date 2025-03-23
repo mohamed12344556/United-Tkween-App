@@ -44,7 +44,7 @@ class _LearningOptionsPageState extends State<LearningOptionsPage> {
         } else if (state is LearningOptionsSuccess) {
           Navigator.of(
             context,
-          ).pushNamedAndRemoveUntil(Routes.hostView, (route) => false);
+          ).pushNamedAndRemoveUntil(Routes.loginView, (route) => false);
         }
       },
       builder: (context, state) {
@@ -134,7 +134,7 @@ class _LearningOptionsPageState extends State<LearningOptionsPage> {
       textColor: isDark ? AppColors.secondary : AppColors.background,
       isLoading: state is LearningOptionsLoading,
       onPressed: () {
-        cubit.saveOptions( context);
+        cubit.saveOptions(context);
       },
       borderRadius: BorderRadius.circular(context.screenWidth * 0.05),
       height: context.screenHeight * 0.065,
