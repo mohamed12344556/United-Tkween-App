@@ -8,6 +8,7 @@ environment:
   sdk: ^3.7.0
 
 dependencies:
+  collection: ^1.17.0
   cupertino_icons: ^1.0.8
   curved_navigation_bar: ^1.0.6
   dartz: ^0.10.1
@@ -46,7 +47,6 @@ dependencies:
   shared_preferences: ^2.5.2
   sign_in_with_apple: ^6.1.4
   url_launcher: ^6.3.1
-  collection: ^1.17.0
 
 dev_dependencies:
   build_runner: ^2.4.15
@@ -70,10 +70,10 @@ flutter:
     - assets/icons/
     - assets/svgs/
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: MyIcons
+      fonts:
+        - asset: assets/fonts/MyIcons.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

@@ -8,12 +8,12 @@ class ProfileSocialIcon extends StatefulWidget {
   final Color? backgroundColor;
 
   const ProfileSocialIcon({
-    Key? key,
+    super.key,
     required this.icon,
     required this.onTap,
     this.color,
     this.backgroundColor,
-  }) : super(key: key);
+  });
 
   @override
   State<ProfileSocialIcon> createState() => _ProfileSocialIconState();
