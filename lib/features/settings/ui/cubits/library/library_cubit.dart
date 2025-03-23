@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:united_formation_app/features/settings/domain/entities/library_item_entity.dart';
 
 import '../../../domain/usecases/get_library_items_usecase.dart';
 import 'library_state.dart';
@@ -26,11 +27,30 @@ class LibraryCubit extends Cubit<LibraryState> {
       (error) => emit(
         state.copyWith(
           status: LibraryStatus.error,
-          errorMessage: error.errorMessage?.message ?? 'خطأ في تحميل المكتبة',
+          errorMessage: error.errorMessage ?? 'خطأ في تحميل المكتبة',
         ),
       ),
-      (items) =>
-          emit(state.copyWith(status: LibraryStatus.success, items: items)),
+      (items) {
+        // إذا كان هناك بحث مسبق، طبق البحث على العناصر الجديدة
+        if (state.searchQuery.isNotEmpty) {
+          final filteredItems = _filterItems(items, state.searchQuery);
+          emit(
+            state.copyWith(
+              status: LibraryStatus.success,
+              items: items,
+              filteredItems: filteredItems,
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              status: LibraryStatus.success,
+              items: items,
+              filteredItems: items,
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -45,6 +65,35 @@ class LibraryCubit extends Cubit<LibraryState> {
 
   void clearSelectedItem() {
     emit(state.copyWith(selectedItem: null));
+  }
+
+  // تصفية العناصر بناءً على نص البحث
+  List<LibraryItemEntity> _filterItems(
+    List<LibraryItemEntity> items,
+    String query,
+  ) {
+    return items.where((item) {
+      return item.title.toLowerCase().contains(query.toLowerCase()) ||
+          (item.author?.toLowerCase().contains(query.toLowerCase()) ?? false) ||
+          (item.description?.toLowerCase().contains(query.toLowerCase()) ??
+              false);
+    }).toList();
+  }
+
+  // وظيفة البحث في المكتبة
+  void searchLibraryItems(String query) {
+    if (query.isEmpty) {
+      emit(state.copyWith(filteredItems: state.items, searchQuery: ''));
+      return;
+    }
+
+    final filteredItems = _filterItems(state.items, query);
+    emit(state.copyWith(filteredItems: filteredItems, searchQuery: query));
+  }
+
+  // مسح البحث
+  void clearSearch() {
+    emit(state.copyWith(filteredItems: state.items, searchQuery: ''));
   }
 
   // تنفيذ عملية تحميل ملف من المكتبة

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:united_formation_app/core/widgets/app_card.dart';
+import 'package:flutter/services.dart';
 import '../../../../core/core.dart';
-import 'info_item_widget.dart';
 
 class ContactInfoCardWidget extends StatelessWidget {
   final String email;
@@ -9,88 +8,128 @@ class ContactInfoCardWidget extends StatelessWidget {
   final String? phoneNumber2;
 
   const ContactInfoCardWidget({
-    Key? key,
+    super.key,
     required this.email,
-    required this.phoneNumber1,
+    this.phoneNumber1,
     this.phoneNumber2,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
-      margin: EdgeInsets.symmetric(
-        // هوامش متجاوبة حسب حجم وتوجه الشاشة
-        horizontal: context.isTablet 
-            ? (context.isLandscape ? 8.w : 16.w) 
-            : 16.w,
-        vertical: 8.h,
-      ),
+    return Card(
       color: AppColors.darkSurface,
-      elevation: 0,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+      margin: EdgeInsets.symmetric(vertical: 8.h),
+      child: Padding(
+        padding: EdgeInsets.all(16.r),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'معلومات الاتصال',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Divider(color: Colors.grey[700], height: 24.h),
+
+            // عنصر البريد الإلكتروني
+            _buildContactItem(
+              icon: Icons.email,
+              title: 'البريد الإلكتروني',
+              value: email,
+              context: context,
+            ),
+
+            // عنصر رقم الهاتف 1
+            if (phoneNumber1 != null && phoneNumber1!.isNotEmpty)
+              _buildContactItem(
+                icon: Icons.phone,
+                title: 'رقم الهاتف 1',
+                value: phoneNumber1!,
+                context: context,
+                canCopy: true,
+                canCall: true,
+              ),
+
+            // عنصر رقم الهاتف 2
+            if (phoneNumber2 != null && phoneNumber2!.isNotEmpty)
+              _buildContactItem(
+                icon: Icons.phone_android,
+                title: 'رقم الهاتف 2',
+                value: phoneNumber2!,
+                context: context,
+                canCopy: true,
+                canCall: true,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContactItem({
+    required IconData icon,
+    required String title,
+    required String value,
+    required BuildContext context,
+    bool canCopy = true,
+    bool canCall = false,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.h),
+      child: Row(
         children: [
-          // عنوان البطاقة
-          Padding(
-            padding: EdgeInsets.only(bottom: 16.h),
-            child: Row(
+          Container(
+            width: 40.r,
+            height: 40.r,
+            decoration: BoxDecoration(
+              color: AppColors.darkBackground,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Icon(icon, color: AppColors.primary, size: 20.r),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: 8.paddingAll,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 51),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Icon(
-                    Icons.contact_mail,
-                    color: AppColors.primary,
-                    size: context.isTablet ? 22.r : 18.r,
-                  ),
-                ),
-                SizedBox(width: 12.w),
                 Text(
-                  'معلومات الاتصال',
-                  style: TextStyle(
-                    fontSize: context.isTablet ? 18.sp : 16.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  title,
+                  style: TextStyle(color: Colors.grey[500], fontSize: 14.sp),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  value,
+                  style: TextStyle(color: Colors.white, fontSize: 16.sp),
                 ),
               ],
             ),
           ),
-
-          InfoItemWidget(
-            icon: Icons.email,
-            title: 'البريد الإلكتروني',
-            value: email,
-            iconSize: context.isTablet ? 20.r : 16.r,
-            titleSize: context.isTablet ? 14.sp : 12.sp,
-            valueSize: context.isTablet ? 16.sp : 14.sp,
-          ),
-
-          Divider(color: Colors.grey[800], height: 24.h),
-
-          InfoItemWidget(
-            icon: Icons.phone,
-            title: 'رقم الهاتف الأساسي',
-            value: phoneNumber1 ?? 'غير محدد',
-            iconSize: context.isTablet ? 20.r : 16.r,
-            titleSize: context.isTablet ? 14.sp : 12.sp,
-            valueSize: context.isTablet ? 16.sp : 14.sp,
-          ),
-
-          if (phoneNumber2 != null && phoneNumber2!.isNotEmpty) ...[
-            Divider(color: Colors.grey[800], height: 24.h),
-            InfoItemWidget(
-              icon: Icons.phone_android,
-              title: 'رقم الهاتف الإضافي',
-              value: phoneNumber2!,
-              iconSize: context.isTablet ? 20.r : 16.r,
-              titleSize: context.isTablet ? 14.sp : 12.sp,
-              valueSize: context.isTablet ? 16.sp : 14.sp,
+          if (canCopy)
+            IconButton(
+              icon: Icon(Icons.copy, color: AppColors.primary, size: 18.r),
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: value)).then((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('تم نسخ $title'),
+                      backgroundColor: AppColors.success,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      margin: EdgeInsets.all(16.r),
+                      duration: const Duration(seconds: 1),
+                    ),
+                  );
+                });
+              },
+              splashRadius: 20.r,
             ),
-          ],
         ],
       ),
     );

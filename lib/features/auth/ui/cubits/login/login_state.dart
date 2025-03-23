@@ -10,10 +10,9 @@ class LoginLoading extends LoginState {}
 class LoginFormUpdated extends LoginState {}
 
 class LoginSuccess extends LoginState {
-  final String userID;
-  final String userToken;
+ final LoginModelResponse loginModelResponse;
 
-  LoginSuccess({required this.userID, required this.userToken});
+  LoginSuccess({required this.loginModelResponse});
 }
 
 class LoginError extends LoginState {

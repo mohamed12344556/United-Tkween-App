@@ -27,6 +27,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Account created successfully!",
     ),
     "address": MessageLookupByLibrary.simpleMessage("Address"),
+    "address_is_required": MessageLookupByLibrary.simpleMessage(
+      "Address is required",
+    ),
     "already_have_an_account": MessageLookupByLibrary.simpleMessage(
       "Already have an account?",
     ),
@@ -147,6 +150,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "music": MessageLookupByLibrary.simpleMessage("Music"),
     "my_library": MessageLookupByLibrary.simpleMessage("My Library"),
     "my_orders": MessageLookupByLibrary.simpleMessage("My Orders"),
+    "name_is_required": MessageLookupByLibrary.simpleMessage(
+      "Name is required",
+    ),
     "new_password": MessageLookupByLibrary.simpleMessage("New Password"),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
     "no": MessageLookupByLibrary.simpleMessage("No"),
@@ -182,6 +188,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Passwords do not match",
     ),
     "pdf": MessageLookupByLibrary.simpleMessage("PDF"),
+    "phone": MessageLookupByLibrary.simpleMessage("Phone"),
+    "phone_is_required": MessageLookupByLibrary.simpleMessage(
+      "Phone is required",
+    ),
     "phone_number_1": MessageLookupByLibrary.simpleMessage("Phone Number 1"),
     "phone_number_2": MessageLookupByLibrary.simpleMessage(
       "Phone Number 2 (Optional)",

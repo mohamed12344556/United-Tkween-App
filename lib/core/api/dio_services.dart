@@ -1,14 +1,16 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../cache/shared_pref_helper.dart';
+import '../utilities/storage_keys.dart';
 
 
-class ApiService {
+
+class DioService {
   final Dio _dio;
 
-  ApiService()
+  DioService()
     : _dio = Dio(
         BaseOptions(
           baseUrl: ApiConstants.apiBaseUrl,
@@ -16,14 +18,54 @@ class ApiService {
           receiveTimeout: const Duration(seconds: 120),
           headers: {"Content-Type": "application/json"},
         ),
-      );
+      ){
+    _initializeInterceptors();
+  }
+
+  void _initializeInterceptors() {
+    _dio.interceptors.addAll([
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          String? userToken = getToken();
+          String language = getCurrentLanguage();
+
+          options.headers.addAll({
+            "Authorization": "Bearer $userToken",
+            "Accept": "application/json",
+            "locale": language,
+          });
+
+          log("✅ Headers Added from Interceptor: ${options.headers}");
+
+          return handler.next(options); // continue
+        },
+        onError: (error, handler) {
+          log("❌ Dio Error: $error");
+          return handler.next(error);
+        },
+        onResponse: (response, handler) {
+          log("✅ Dio Response: ${response.statusCode}");
+          return handler.next(response);
+        },
+      ),
+      LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+      ),
+    ]);
+  }
+
 
   String getCurrentLanguage() {
     return Prefs.getData(key: 'language') ?? 'en';
   }
 
   String? getToken() {
-    return Prefs.getData(key: Constants.userToken);
+    return  Prefs.getData(key:StorageKeys.accessToken);
   }
 
   Future<Response> getRequest(
@@ -31,19 +73,11 @@ class ApiService {
     Map<String, dynamic>? queryParams,
     Map<String, String>? headers,
   }) async {
-    String? userToken = getToken();
-    String language = getCurrentLanguage();
-    log("👌User Token $userToken");
     return _dio.get(
       endpoint,
       queryParameters: queryParams,
       options: Options(
-        headers: {
-          "Authorization": "Bearer $userToken",
-          "Accept": "application/json",
-          "locale": language,
-          ...?headers,
-        },
+        headers:headers,
       ),
     );
   }
@@ -54,20 +88,12 @@ class ApiService {
     Map<String, dynamic>? queryParams,
     Map<String, String>? headers,
   }) async {
-    String? userToken = getToken();
-    String language = getCurrentLanguage();
-    log("👌User language $language");
     return _dio.post(
       endpoint,
       data: data,
       queryParameters: queryParams,
       options: Options(
-        headers: {
-          "Authorization": "Bearer $userToken",
-          "Accept": "application/json",
-          "locale": language,
-          ...?headers,
-        },
+        headers:headers,
         followRedirects: false,
         validateStatus: (status) {
           return status! < 500;
@@ -81,19 +107,12 @@ class ApiService {
     FormData formData, {
     Map<String, String>? headers,
   }) async {
-    String? userToken = getToken();
-    String language = getCurrentLanguage();
     return _dio.post(
       endpoint,
       data: formData,
       options: Options(
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          "Accept": "application/json",
-          "Authorization": "Bearer $userToken",
-          "locale": language,
-          ...?headers,
-        },
+        headers:headers,
+
         followRedirects: false,
         validateStatus: (status) {
           return status! < 500;
@@ -108,19 +127,13 @@ class ApiService {
     Map<String, dynamic>? queryParams,
     Map<String, String>? headers,
   }) async {
-    String? userToken = getToken();
-    String language = getCurrentLanguage();
     return _dio.put(
       endpoint,
       data: data,
       queryParameters: queryParams,
       options: Options(
-        headers: {
-          "Accept": "application/json",
-          "Authorization": "Bearer $userToken",
-          "locale": language,
-          ...?headers,
-        },
+        headers:headers,
+
       ),
     );
   }
@@ -131,44 +144,24 @@ class ApiService {
     Map<String, dynamic>? queryParams,
     Map<String, String>? headers,
   }) async {
-    String? userToken = getToken();
-    String language = getCurrentLanguage();
     return _dio.put(
       endpoint,
       data: data,
       queryParameters: queryParams,
       options: Options(
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          "Accept": "application/json",
-          "Authorization": "Bearer $userToken",
-          "locale": language,
-          ...?headers,
-        },
+        headers:headers,
+
       ),
     );
   }
 }
 
 class ApiConstants {
-  static const String apiBaseUrl = "https://achievers.codenesslab.com/api/";
+  static const String apiBaseUrl = "https://tkweenstore.com/api/";
 
-  static const String login = "auth/login";
-  static const String register = "auth/register";
-  static const String categoriesList = "/categories";
-  static const String updateProfile = "/updateProfile";
+  static const String homeBooks = "get_books.php";
+  static const String booksCategories = "get_categories.php";
 
-  static const String sendEmailOTP = "/send-email-otp";
-  static const String verifyOTP = "/verify-otp";
-  static const String updatePassword = "/resetPassword";
-  static const String socialLogin = "/auth/social/auth";
-
-  static const String userProfile = "/user";
-  static const String homeCategoriesChallenges = "/categorieChallenges";
-  static const String homeRecommendedChallenges = "/recommendedChallenges";
-  static const String homeAllCategoriesAndChallenges =
-      "/getAllCategoryChallenges";
-  static const String homeCreateChallenge = "/challenges";
 }
 
 

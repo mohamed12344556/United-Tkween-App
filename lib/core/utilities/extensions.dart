@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
+import '../api/dio_services.dart';
 import '../core.dart';
 
 extension BuildContextExtensions on BuildContext {
@@ -7,7 +8,9 @@ extension BuildContextExtensions on BuildContext {
   // // double get screenWidth => MediaQuery.of(this).size.width;
   // double get screenHeight => MediaQuery.of(this).size.height;
   double get paddingTop => MediaQuery.of(this).padding.top;
+
   double get paddingBottom => MediaQuery.of(this).padding.bottom;
+
   // double get paddingLeft => MediaQuery.of(this).padding.left;
   // double get paddingRight => MediaQuery.of(this).padding.right;
 
@@ -20,6 +23,17 @@ extension BuildContextExtensions on BuildContext {
 
   //! Localization
   S get localeS => S.of(this);
+
+  //! Get Languages
+   bool get isArabic {
+      final locale = Localizations.localeOf(this);
+      return locale.languageCode.toLowerCase() == 'ar';
+    }
+
+  bool get isEnglish {
+    final locale = Localizations.localeOf(this);
+    return locale.languageCode.toLowerCase() == 'en';
+  }
 
   //! Navigation
   void navigateTo(String routeName) =>
@@ -217,8 +231,8 @@ extension BuildContextExtensions on BuildContext {
                     ),
                     child: const Text('تسجيل الخروج'),
                     onPressed: () {
-                      Navigator.of(context).pop();
-                      // تنفيذ منطق تسجيل الخروج
+                      TokenManager.clearTokens;
+                      context.pushReplacementNamed(Routes.loginView);
                     },
                   ),
                 ),
@@ -231,10 +245,22 @@ extension BuildContextExtensions on BuildContext {
   }
 }
 
-extension StringExtension on String? {
+extension NullOrEmpty on String? {
   bool isNullOrEmpty() => this == null || this == "";
 }
 
 extension ListExtension<T> on List<T>? {
   bool isNullOrEmpty() => this == null || this!.isEmpty;
 }
+
+extension UrlFormatter on String {
+  String get asFullImageUrl {
+    const String baseUrl = 'https://tkweenstore.com/';
+    String cleanedPath = replaceFirst(RegExp(r'^(\.\./)+'), '');
+    return '$baseUrl$cleanedPath';
+  }
+}
+
+
+
+

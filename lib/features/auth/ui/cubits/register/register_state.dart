@@ -3,36 +3,27 @@ part of 'register_cubit.dart';
 @immutable
 abstract class RegisterState {}
 
-// Initial state
+// الحالة الأولية
 class RegisterInitial extends RegisterState {}
 
-// Loading state during registration process
+// حالة التحميل أثناء عملية التسجيل
 class RegisterLoading extends RegisterState {}
 
-// State for form updates (like password visibility toggling)
+// حالة تحديثات النموذج (مثل تبديل رؤية كلمة المرور)
 class RegisterFormUpdated extends RegisterState {}
 
-// Success state after successful registration
+// حالة النجاح بعد التسجيل الناجح
 class RegisterSuccess extends RegisterState {
-  final String userID;
   final String userEmail;
-  final String? socialProvider; // Optional for social logins
+  final String? socialProvider; // اختياري للتسجيل بوسائل التواصل الاجتماعي
 
   RegisterSuccess({
-    required this.userID,
     required this.userEmail,
     this.socialProvider,
   });
 }
 
-// حالة إرسال OTP
-class RegisterOtpSent extends RegisterState {
-  final String email;
-  
-  RegisterOtpSent({required this.email});
-}
-
-// Error state
+// حالة الخطأ
 class RegisterError extends RegisterState {
   final String errorMessage;
 

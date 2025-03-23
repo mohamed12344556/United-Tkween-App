@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../core.dart';
+import 'dio_services.dart';
 
 class TokenManager {
   static const _storage = FlutterSecureStorage(
@@ -12,18 +13,16 @@ class TokenManager {
 
   static Future<void> saveTokens({
     required String token,
-    required String refreshToken,
   }) async {
     try {
-      if (token.isEmpty || refreshToken.isEmpty) {
+      if (token.isEmpty ) {
         throw const StorageException('Invalid tokens received');
       }
 
-      await Future.wait(<Future<dynamic>>[
-        _storage.write(key: StorageKeys.accessToken, value: token),
-        _storage.write(key: StorageKeys.refreshToken, value: refreshToken),
-        SharedPrefHelper.setData(StorageKeys.isLoggedIn, true),
-      ]);
+      // await Future.wait(<Future<dynamic>>[
+      //   _storage.write(key: StorageKeys.accessToken, value: token),
+      // ]);
+      await Prefs.setData(key:StorageKeys.accessToken,value:  token);
 
       AppState.isLoggedIn = true;
       DioFactory.setTokenIntoHeader(token);
@@ -34,23 +33,27 @@ class TokenManager {
 
   static Future<TokenPair?> getTokens() async {
     try {
-      final token = await _storage.read(key: StorageKeys.accessToken);
+      final token = await _storage.read(key: StorageKeys.isLoggedIn);
       final refreshToken = await _storage.read(key: StorageKeys.refreshToken);
 
       if (token == null || refreshToken == null) return null;
 
-      return TokenPair(accessToken: token, refreshToken: refreshToken);
+      return TokenPair(accessToken: token);
     } catch (e) {
       return null;
     }
   }
 
-  static Future<void> clearTokens() async {
+
+  static Future<void> removeSecureData(String key) async {
+    await _storage.delete(key: key);
+  }
+
+    static Future<void> clearTokens() async {
     try {
       await Future.wait(<Future<dynamic>>[
         _storage.delete(key: StorageKeys.accessToken),
-        _storage.delete(key: StorageKeys.refreshToken),
-        SharedPrefHelper.setData(StorageKeys.isLoggedIn, false),
+        Prefs.setData(key:StorageKeys.isLoggedIn,value:  "false"),
       ]);
       AppState.isLoggedIn = false;
       DioFactory.removeTokenFromHeader();
@@ -100,9 +103,8 @@ class TokenManager {
 
 class TokenPair {
   final String accessToken;
-  final String refreshToken;
 
-  const TokenPair({required this.accessToken, required this.refreshToken});
+  const TokenPair({required this.accessToken});
 }
 
 class StorageException implements Exception {

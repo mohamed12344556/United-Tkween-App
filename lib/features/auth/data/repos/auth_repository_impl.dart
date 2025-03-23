@@ -3,7 +3,10 @@ import 'package:united_formation_app/core/utilities/enums/otp_purpose.dart'
     as remote;
 import 'package:united_formation_app/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:united_formation_app/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:united_formation_app/features/auth/data/models/login/login_model_response.dart';
+import 'package:united_formation_app/features/auth/data/models/register/register_model_response.dart';
 import 'package:united_formation_app/features/auth/domain/entities/user_login_entity.dart';
+import 'package:united_formation_app/features/auth/domain/entities/user_register_entity.dart';
 import 'package:united_formation_app/features/auth/domain/entities/user_reset_password_entity.dart';
 import 'package:united_formation_app/features/auth/domain/repos/auth_repository.dart';
 
@@ -19,29 +22,33 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
-  Future<Either<ApiErrorModel, Unit>> login({
+  Future<Either<ApiErrorModel, LoginModelResponse>> login({
     required UserLoginEntity userLoginEntity,
   }) async {
     try {
-      await remoteDataSource.login(userLoginEntity: userLoginEntity);
-      return const Right(unit);
+      final result = await remoteDataSource.login(
+        userLoginEntity: userLoginEntity,
+      );
+      return Right(result);
     } catch (error) {
       return Left(
-        ApiErrorModel(errorMessage: ErrorData(message: error.toString())),
+        ApiErrorModel(status: "error", errorMessage: error.toString()),
       );
     }
   }
 
   @override
-  Future<Either<ApiErrorModel, Unit>> register({
-    required UserLoginEntity userLoginEntity,
+  Future<Either<ApiErrorModel, RegisterModelResponse>> register({
+    required UserRegisterEntity userRegisterEntity,
   }) async {
     try {
-      await remoteDataSource.register(userLoginEntity: userLoginEntity);
-      return const Right(unit);
+      final result = await remoteDataSource.register(
+        userRegisterEntity: userRegisterEntity,
+      );
+      return Right(result);
     } catch (error) {
       return Left(
-        ApiErrorModel(errorMessage: ErrorData(message: error.toString())),
+        ApiErrorModel(status: "error", errorMessage: error.toString()),
       );
     }
   }
@@ -57,7 +64,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(unit);
     } catch (error) {
       return Left(
-        ApiErrorModel(errorMessage: ErrorData(message: error.toString())),
+        ApiErrorModel(status: "error", errorMessage: error.toString()),
       );
     }
   }
@@ -72,7 +79,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(unit);
     } catch (error) {
       return Left(
-        ApiErrorModel(errorMessage: ErrorData(message: error.toString())),
+        ApiErrorModel(status: "error", errorMessage: error.toString()),
       );
     }
   }
@@ -87,7 +94,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(unit);
     } catch (error) {
       return Left(
-        ApiErrorModel(errorMessage: ErrorData(message: error.toString())),
+        ApiErrorModel(status: "error", errorMessage: error.toString()),
       );
     }
   }
@@ -99,7 +106,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return Right(result);
     } catch (error) {
       return Left(
-        ApiErrorModel(errorMessage: ErrorData(message: error.toString())),
+        ApiErrorModel(status: "error", errorMessage: error.toString()),
       );
     }
   }
@@ -111,7 +118,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(unit);
     } catch (error) {
       return Left(
-        ApiErrorModel(errorMessage: ErrorData(message: error.toString())),
+        ApiErrorModel(status: "error", errorMessage: error.toString()),
       );
     }
   }

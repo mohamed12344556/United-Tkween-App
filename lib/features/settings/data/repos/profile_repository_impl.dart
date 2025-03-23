@@ -1,15 +1,13 @@
 import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:united_formation_app/features/settings/domain/entities/library_item_entity.dart';
+import 'package:united_formation_app/features/settings/domain/entities/user_order_entity.dart';
 import '../datasources/profile_local_datasource.dart';
 import '../datasources/profile_remote_datasource.dart';
 import '../models/profile_model.dart';
-import '../../domain/entities/library_item_entity.dart';
 import '../../domain/entities/profile_entity.dart';
-import '../../domain/entities/user_order_entity.dart';
 import '../../domain/repos/profile_repository.dart';
-
 import '../../../../core/core.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
@@ -31,58 +29,63 @@ class ProfileRepositoryImpl implements ProfileRepository {
   @override
   Future<Either<ApiErrorModel, ProfileEntity>> getProfile() async {
     try {
-      // محاولة جلب البيانات من الخادم أولاً
+      // محاولة جلب البيانات من الخادم أولاً إذا كان متصلاً بالإنترنت
       if (await _isConnected()) {
+        print("Connected to internet, fetching profile from API");
         final remoteResult = await remoteDataSource.getProfile();
 
         return remoteResult.fold(
           (error) async {
-            // في حالة الخطأ، جلب البيانات من التخزين المحلي
+            print("Error from API: ${error.errorMessage}");
+            // في حالة الخطأ، جلب البيانات من التخزين المحلي (Hive)
             final localResult = await localDataSource.getCachedProfile();
 
-            return localResult.fold((cacheError) => Left(cacheError), (
-              cachedProfile,
-            ) {
+            return localResult.fold((cacheError) {
+              print("Error from cache: ${cacheError.errorMessage}");
+              return Left(cacheError);
+            }, (cachedProfile) {
               if (cachedProfile != null) {
+                print("Returning cached profile: ${cachedProfile.fullName}");
                 return Right(cachedProfile);
               } else {
+                print("No cached profile found, returning original error");
                 return Left(error);
               }
             });
           },
           (profile) async {
-            // تخزين البيانات في التخزين المحلي
+            print("Successfully got profile from API: ${profile.fullName}");
+            // تخزين البيانات في التخزين المحلي (Hive)
             await localDataSource.cacheProfile(profile);
+            print("Profile cached successfully");
             return Right(profile);
           },
         );
       } else {
-        // في حالة عدم وجود إنترنت، جلب البيانات من التخزين المحلي
+        print("No internet connection, trying to get profile from cache");
+        // في حالة عدم وجود إنترنت، جلب البيانات من التخزين المحلي (Hive)
         final localResult = await localDataSource.getCachedProfile();
 
-        return localResult.fold((error) => Left(error), (cachedProfile) {
+        return localResult.fold((error) {
+          print("Error getting profile from cache: ${error.errorMessage}");
+          return Left(error);
+        }, (cachedProfile) {
           if (cachedProfile != null) {
+            print("Returning cached profile: ${cachedProfile.fullName}");
             return Right(cachedProfile);
           } else {
+            print("No cached profile found");
             return Left(
               ApiErrorModel(
-                errorMessage: ErrorData(
-                  message: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
-                  code: 0,
-                ),
-                status: false,
+                errorMessage: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
               ),
             );
           }
         });
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      print("Unexpected error in getProfile: $e");
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -92,37 +95,73 @@ class ProfileRepositoryImpl implements ProfileRepository {
   ) async {
     try {
       if (await _isConnected()) {
+        print("Connected to internet, updating profile on API");
         // تحويل الكيان إلى نموذج البيانات
         final profileModel = ProfileModel.fromEntity(profile);
 
         // تحديث البيانات على الخادم
         final remoteResult = await remoteDataSource.updateProfile(profileModel);
 
-        return remoteResult.fold((error) => Left(error), (success) async {
+        return remoteResult.fold((error) {
+          print("Error updating profile: ${error.errorMessage}");
+          return Left(error);
+        }, (success) async {
           if (success) {
-            // تحديث البيانات في التخزين المحلي
+            print("Profile updated on API, updating cache");
+            // تحديث البيانات في التخزين المحلي (Hive)
             await localDataSource.cacheProfile(profileModel);
+            print("Cache updated successfully");
           }
           return Right(success);
         });
       } else {
+        print("No internet connection, can't update profile");
+        // يمكن تخزين التغييرات محلياً والتزامن لاحقاً عند توفر الإنترنت
+        // حالياً نعود بخطأ عدم وجود اتصال
+        return Left(ApiErrorModel(errorMessage: 'لا يوجد اتصال بالإنترنت'));
+      }
+    } catch (e) {
+      print("Unexpected error in updateProfile: $e");
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
+    }
+  }
+
+  @override
+  Future<Either<ApiErrorModel, bool>> removeProfileImage() async {
+    try {
+      if (await _isConnected()) {
+        final remoteResult = await remoteDataSource.removeProfileImage();
+        return remoteResult.fold(
+          (error) => Left(error),
+          (success) => Right(success),
+        );
+      } else {
         return Left(
           ApiErrorModel(
-            errorMessage: ErrorData(
-              message: 'لا يوجد اتصال بالإنترنت',
-              code: 0,
-            ),
-            status: false,
+            errorMessage: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
           ),
         );
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
+    }
+  }
+
+  @override
+  Future<Either<ApiErrorModel, String>> uploadProfileImage(File file) async {
+    try {
+      if (await _isConnected()) {
+        final remoteResult = await remoteDataSource.uploadProfileImage(file);
+        return remoteResult;
+      } else {
+        return Left(
+          ApiErrorModel(
+            errorMessage: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
+          ),
+        );
+      }
+    } catch (e) {
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -164,23 +203,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
           } else {
             return Left(
               ApiErrorModel(
-                errorMessage: ErrorData(
-                  message: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
-                  code: 0,
-                ),
-                status: false,
+                errorMessage: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
               ),
             );
           }
         });
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -211,22 +241,13 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
           return Left(
             ApiErrorModel(
-              errorMessage: ErrorData(
-                message: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
-                code: 0,
-              ),
-              status: false,
+              errorMessage: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
             ),
           );
         });
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -269,23 +290,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
           } else {
             return Left(
               ApiErrorModel(
-                errorMessage: ErrorData(
-                  message: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
-                  code: 0,
-                ),
-                status: false,
+                errorMessage: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
               ),
             );
           }
         });
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -317,22 +329,13 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
           return Left(
             ApiErrorModel(
-              errorMessage: ErrorData(
-                message: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
-                code: 0,
-              ),
-              status: false,
+              errorMessage: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات مخزنة',
             ),
           );
         });
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -351,21 +354,12 @@ class ProfileRepositoryImpl implements ProfileRepository {
       } else {
         return Left(
           ApiErrorModel(
-            errorMessage: ErrorData(
-              message: 'لا يوجد اتصال بالإنترنت، يجب الاتصال للتحميل',
-              code: 0,
-            ),
-            status: false,
+            errorMessage: 'لا يوجد اتصال بالإنترنت، يجب الاتصال للتحميل',
           ),
         );
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
 
@@ -382,65 +376,12 @@ class ProfileRepositoryImpl implements ProfileRepository {
       } else {
         return Left(
           ApiErrorModel(
-            errorMessage: ErrorData(
-              message: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
-              code: 0,
-            ),
-            status: false,
+            errorMessage: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
           ),
         );
       }
     } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
+      return Left(ApiErrorModel(errorMessage: 'حدث خطأ غير متوقع: $e'));
     }
   }
-
-  @override
-  Future<Either<ApiErrorModel, bool>> removeProfileImage() async {
-    try {
-      if (await _isConnected()) {
-        final remoteResult = await remoteDataSource.removeProfileImage();
-        return remoteResult.fold(
-          (error) => Left(error),
-          (success) => Right(success),
-        );
-      } else {
-        return Left(
-          ApiErrorModel(
-            errorMessage: ErrorData(
-              message: 'لا يوجد اتصال بالإنترنت، يرجى المحاولة لاحقاً',
-              code: 0,
-            ),
-            status: false,
-          ),
-        );
-      }
-    } catch (e) {
-      return Left(
-        ApiErrorModel(
-          errorMessage: ErrorData(message: 'حدث خطأ غير متوقع: $e', code: 500),
-          status: false,
-        ),
-      );
-    }
-  }
-  
-  @override
-  Future<Either<ApiErrorModel, String>> uploadProfileImage(File file) {
-    // TODO: implement uploadProfileImage
-    throw UnimplementedError();
-  }
-
-  }
-
-  @override
-  Future<Either<ApiErrorModel, String>> uploadProfileImage(File file) {
-    // TODO: implement uploadProfileImage
-    throw UnimplementedError();
-  }
-
+}

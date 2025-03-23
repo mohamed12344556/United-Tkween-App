@@ -9,9 +9,9 @@ import '../../../../generated/l10n.dart';
 
 class ResetPasswordPage extends StatelessWidget {
   final String email;
-  final String otp;
+  // final String otp;
 
-  const ResetPasswordPage({super.key, required this.email, required this.otp});
+  const ResetPasswordPage({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +145,7 @@ class ResetPasswordPage extends StatelessWidget {
     // تنفيذ عملية إعادة التعيين
     cubit.resetPassword(
       email: email,
-      otp: otp,
+      // otp: otp,
       password: password,
       confirmPassword: confirmPassword,
       context: context,

@@ -75,6 +75,16 @@ class S {
     return Intl.message('Address', name: 'address', desc: '', args: []);
   }
 
+  /// `Address is required`
+  String get address_is_required {
+    return Intl.message(
+      'Address is required',
+      name: 'address_is_required',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Already have an account?`
   String get already_have_an_account {
     return Intl.message(
@@ -574,6 +584,16 @@ class S {
     return Intl.message('My Orders', name: 'my_orders', desc: '', args: []);
   }
 
+  /// `Name is required`
+  String get name_is_required {
+    return Intl.message(
+      'Name is required',
+      name: 'name_is_required',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `New Password`
   String get new_password {
     return Intl.message(
@@ -717,6 +737,21 @@ class S {
   /// `PDF`
   String get pdf {
     return Intl.message('PDF', name: 'pdf', desc: '', args: []);
+  }
+
+  /// `Phone`
+  String get phone {
+    return Intl.message('Phone', name: 'phone', desc: '', args: []);
+  }
+
+  /// `Phone is required`
+  String get phone_is_required {
+    return Intl.message(
+      'Phone is required',
+      name: 'phone_is_required',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Phone Number 1`

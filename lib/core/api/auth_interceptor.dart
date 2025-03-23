@@ -4,22 +4,13 @@ import 'package:flutter/material.dart';
 import '../core.dart';
 
 class AuthInterceptor extends Interceptor {
-  final bool shouldRefresh;
-
-  AuthInterceptor({this.shouldRefresh = true});
-
   @override
-
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    final tokens = await TokenManager.getTokens();
+    final token = await TokenManager.getTokens();
 
-    if (tokens != null) {
-      options.headers['Authorization'] = 'Bearer ${tokens.accessToken}';
-
-      if (_isRefreshEndpoint(options.path)) {
-        options.headers['Cookie'] = 'RefreshToken=${tokens.refreshToken}';
-      }
+    if (token != null) {
+      options.headers['Authorization'] = 'Bearer ${token.accessToken}';
     }
 
     return handler.next(options);
@@ -28,49 +19,37 @@ class AuthInterceptor extends Interceptor {
   @override
   Future<void> onError(
       DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401 && shouldRefresh) {
-      try {
-        final result = await _handleTokenRefresh(err.requestOptions);
-        return handler.resolve(result);
-      } catch (e) {
-        await _handleAuthError();
-        return handler.reject(err);
-      }
+    if (_isTokenError(err)) {
+      await _handleAuthError();
+      return handler.reject(err);
     }
     return handler.next(err);
   }
 
-  Future<Response<dynamic>> _handleTokenRefresh(
-      RequestOptions originalRequest) async {
-    final tokens = await TokenManager.getTokens();
-    if (tokens == null) {
-      throw const AuthException('No tokens available for refresh');
+  bool _isTokenError(DioException err) {
+    // تحقق من رمز الحالة 401 (غير مصرح)
+    if (err.response?.statusCode == 401) return true;
+    
+    // تحقق من رسالة الخطأ إذا كانت تحتوي على كلمات متعلقة بالتوكن
+    if (err.response?.data is Map) {
+      String message = (err.response?.data['message'] ?? '').toString().toLowerCase();
+      if (message.contains('token') || 
+          message.contains('توكن') || 
+          message.contains('غير مصرح') ||
+          message.contains('الهيدرز')) {
+        return true;
+      }
     }
-
-    final dio = Dio(BaseOptions(
-      baseUrl: ApiConstants.baseUrl,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': 'RefreshToken=${tokens.refreshToken}',
-      },
-    ));
-
-    final response = await dio.post(ApiConstants.refreshToken);
-
-    if (response.statusCode == 200 && response.data['isSuccess'] == true) {
-      final newToken = response.data['data']['token'];
-      final newRefreshToken = response.data['data']['refreshToken'];
-
-      await TokenManager.saveTokens(
-        token: newToken,
-        refreshToken: newRefreshToken,
-      );
-
-      originalRequest.headers['Authorization'] = 'Bearer $newToken';
-      return dio.fetch(originalRequest);
+    
+    // تحقق من نص الخطأ العام
+    String errorMessage = err.message?.toLowerCase() ?? '';
+    if (errorMessage.contains('unauthorized') || 
+        errorMessage.contains('token') || 
+        errorMessage.contains('auth')) {
+      return true;
     }
-
-    throw const AuthException('Token refresh failed');
+    
+    return false;
   }
 
   Future<void> _handleAuthError() async {
@@ -84,28 +63,10 @@ class AuthInterceptor extends Interceptor {
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.loginView,
         (route) => false,
+        arguments: {'fresh_start': true}
       );
     }
   }
-
-  bool _isRefreshEndpoint(String path) {
-    return path.contains('RefreshToken') || path.contains('RevokeToken');
-  }
-}
-
-class AuthException implements Exception {
-  final String message;
-  const AuthException(this.message);
-
-  @override
-  String toString() => 'AuthException: $message';
-}
-
-class TokenPair {
-  final String token;
-  final String refreshToken;
-
-  TokenPair(this.token, this.refreshToken);
 }
 
 class NavigationService {

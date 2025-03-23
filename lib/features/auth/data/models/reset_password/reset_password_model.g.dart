@@ -9,7 +9,6 @@ part of 'reset_password_model.dart';
 ResetPasswordModel _$ResetPasswordModelFromJson(Map<String, dynamic> json) =>
     ResetPasswordModel(
       email: json['email'] as String,
-      resetToken: json['resetToken'] as String,
       password: json['password'] as String,
       passwordConfirmation: json['passwordConfirmation'] as String,
     );
@@ -17,7 +16,6 @@ ResetPasswordModel _$ResetPasswordModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ResetPasswordModelToJson(ResetPasswordModel instance) =>
     <String, dynamic>{
       'email': instance.email,
-      'resetToken': instance.resetToken,
       'password': instance.password,
       'passwordConfirmation': instance.passwordConfirmation,
     };

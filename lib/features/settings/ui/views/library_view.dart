@@ -141,7 +141,9 @@ class _LibraryViewState extends State<LibraryView>
               size: context.isTablet ? 24.r : 20.r, // حجم أيقونة متجاوب
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            _showSearchDialog(context);
+          },
         ),
         SizedBox(width: 8.w), // مسافة متجاوبة
       ],
@@ -186,7 +188,24 @@ class _LibraryViewState extends State<LibraryView>
             width: context.isTablet ? 240.w : 200.w, // عرض متجاوب
             height: context.isTablet ? 54.h : 48.h, // ارتفاع متجاوب
             child: ElevatedButton.icon(
-              onPressed: () => context.read<LibraryCubit>().loadLibraryItems(),
+              // onPressed: () => context.read<LibraryCubit>().loadLibraryItems(),
+              onPressed: () {
+                // تحقق إذا كانت الرسالة تحتوي على كلمة توكن أو token
+                if (state.errorMessage?.toLowerCase().contains('توكن') ==
+                        true ||
+                    state.errorMessage?.toLowerCase().contains('token') ==
+                        true) {
+                  // إذا كان خطأ متعلق بالتوكن، انتقل إلى صفحة تسجيل الدخول
+                  context.pushNamedAndRemoveUntil(
+                    Routes.loginView,
+                    predicate: (route) => false,
+                    arguments: {'fresh_start': true},
+                  );
+                } else {
+                  // وإلا حاول إعادة تحميل البيانات
+                  context.read<LibraryCubit>().loadLibraryItems();
+                }
+              },
               icon: Icon(
                 Icons.refresh,
                 size: context.isTablet ? 20.r : 16.r, // حجم متجاوب للأيقونة
@@ -220,7 +239,9 @@ class _LibraryViewState extends State<LibraryView>
       title: 'مكتبتك فارغة حالياً',
       message: 'قم بشراء الكتب والمحتوى التعليمي لعرضها هنا',
       buttonText: 'تصفح المتجر',
-      onButtonPressed: () {},
+      onButtonPressed: () {
+        context.pushNamed(Routes.hostView);
+      },
       iconColor: AppColors.primary,
       iconSize: context.isTablet ? 70.r : 50.r, // حجم متجاوب للأيقونة
       titleSize: context.isTablet ? 24.sp : 20.sp, // حجم خط متجاوب للعنوان
@@ -229,28 +250,187 @@ class _LibraryViewState extends State<LibraryView>
     );
   }
 
+  // Widget _buildLibraryGridWidget(LibraryState state, {required int columns}) {
+  //   return GridView.builder(
+  //     key: const PageStorageKey('library_items'),
+  //     padding: EdgeInsets.all(context.isTablet ? 20.r : 16.r), // تباعد متجاوب
+  //     physics: const BouncingScrollPhysics(
+  //       parent: AlwaysScrollableScrollPhysics(),
+  //     ),
+  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //       crossAxisCount: columns,
+  //       crossAxisSpacing: context.isTablet ? 16.w : 12.w, // تباعد متجاوب أفقي
+  //       mainAxisSpacing: context.isTablet ? 16.h : 12.h, // تباعد متجاوب رأسي
+  //       childAspectRatio: 0.6, // يمكن تعديله حسب الجهاز إذا لزم الأمر
+  //     ),
+  //     itemCount: state.items.length,
+  //     itemBuilder: (context, index) {
+  //       final item = state.items[index];
+  //       return LibraryItemCard(
+  //         item: item,
+  //         state: state,
+  //         onTap: () {},
+  //         onDownload: () => context.read<LibraryCubit>().downloadItem(item.id),
+  //         isResponsive: true, // إضافة خاصية للتجاوبية يتم استخدامها في المكون
+  //       );
+  //     },
+  //   );
+  // }
+
   Widget _buildLibraryGridWidget(LibraryState state, {required int columns}) {
+    // استخدم العناصر المصفاة بدلاً من جميع العناصر
+    final itemsToShow = state.isSearching ? state.filteredItems : state.items;
+
+    // عرض رسالة إذا لم تكن هناك نتائج بحث
+    if (state.isSearching && !state.hasFilteredItems) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search_off, size: 60.r, color: Colors.grey[400]),
+            SizedBox(height: 16.h),
+            Text(
+              'لا توجد نتائج تطابق بحثك: "${state.searchQuery}"',
+              style: TextStyle(color: Colors.white, fontSize: 16.sp),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 24.h),
+            TextButton.icon(
+              onPressed: () => context.read<LibraryCubit>().clearSearch(),
+              icon: Icon(Icons.clear, size: 18.r),
+              label: Text('مسح البحث', style: TextStyle(fontSize: 16.sp)),
+              style: TextButton.styleFrom(foregroundColor: AppColors.primary),
+            ),
+          ],
+        ),
+      );
+    }
+
     return GridView.builder(
       key: const PageStorageKey('library_items'),
-      padding: EdgeInsets.all(context.isTablet ? 20.r : 16.r), // تباعد متجاوب
+      padding: EdgeInsets.all(context.isTablet ? 20.r : 16.r),
       physics: const BouncingScrollPhysics(
         parent: AlwaysScrollableScrollPhysics(),
       ),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: columns,
-        crossAxisSpacing: context.isTablet ? 16.w : 12.w, // تباعد متجاوب أفقي
-        mainAxisSpacing: context.isTablet ? 16.h : 12.h, // تباعد متجاوب رأسي
-        childAspectRatio: 0.6, // يمكن تعديله حسب الجهاز إذا لزم الأمر
+        crossAxisSpacing: context.isTablet ? 16.w : 12.w,
+        mainAxisSpacing: context.isTablet ? 16.h : 12.h,
+        childAspectRatio: 0.6,
       ),
-      itemCount: state.items.length,
+      itemCount: itemsToShow.length,
       itemBuilder: (context, index) {
-        final item = state.items[index];
+        final item = itemsToShow[index];
         return LibraryItemCard(
           item: item,
           state: state,
           onTap: () {},
           onDownload: () => context.read<LibraryCubit>().downloadItem(item.id),
-          isResponsive: true, // إضافة خاصية للتجاوبية يتم استخدامها في المكون
+          isResponsive: true,
+        );
+      },
+    );
+  }
+
+  void _showSearchDialog(BuildContext context) {
+    final TextEditingController searchController = TextEditingController();
+    final LibraryCubit cubit = context.read<LibraryCubit>();
+
+    // استخدم القيمة الحالية للبحث إن وجدت
+    searchController.text = cubit.state.searchQuery;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          backgroundColor: AppColors.darkSurface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          title: Text(
+            'البحث في المكتبة',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: searchController,
+                style: TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'ابحث عن كتاب أو مؤلف...',
+                  hintStyle: TextStyle(color: Colors.grey[400]),
+                  prefixIcon: Icon(Icons.search, color: AppColors.primary),
+                  fillColor: AppColors.darkSecondary,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 12.h,
+                    horizontal: 16.w,
+                  ),
+                ),
+                textInputAction: TextInputAction.search,
+                onSubmitted: (value) {
+                  cubit.searchLibraryItems(value);
+                  Navigator.pop(dialogContext);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white70,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(dialogContext);
+                    },
+                    child: Text('إلغاء'),
+                  ),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                    ),
+                    onPressed: () {
+                      cubit.searchLibraryItems(searchController.text);
+                      Navigator.pop(dialogContext);
+                    },
+                    child: Text('بحث'),
+                  ),
+                ),
+              ],
+            ),
+            if (cubit.state.searchQuery.isNotEmpty)
+              TextButton(
+                onPressed: () {
+                  cubit.clearSearch();
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'مسح البحث',
+                  style: TextStyle(color: Colors.red[300]),
+                ),
+              ),
+          ],
         );
       },
     );

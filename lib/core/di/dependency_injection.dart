@@ -1,12 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:united_formation_app/core/api/dio_services.dart';
 import 'package:united_formation_app/features/admin/data/repos/admin_repository_impl.dart';
 import 'package:united_formation_app/features/admin/domain/repos/admin_repository.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/add_product/add_product_admin_cubit.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/edit_product/edit_product_admin_cubit.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/products/products_admin_cubit.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/support/support_admin_cubit.dart';
+import 'package:united_formation_app/features/home/domain/home_repo.dart';
+import 'package:united_formation_app/features/home/domain/home_repo_impl.dart';
+import 'package:united_formation_app/features/home/ui/cubit/home_cubit.dart';
 import 'package:united_formation_app/features/settings/domain/usecases/remove_profile_image_usecase.dart';
 import 'package:united_formation_app/features/settings/domain/usecases/upload_profile_image_usecase.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/edit_profile/edit_profile_cubit.dart';
@@ -21,7 +25,6 @@ import '../../features/auth/domain/repos/auth_repository.dart';
 import '../../features/auth/domain/usecases/auth_usecases.dart';
 import '../../features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
 import '../../features/auth/ui/cubits/login/login_cubit.dart';
-import '../../features/auth/ui/cubits/otp/otp_cubit.dart';
 import '../../features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
 import '../../features/auth/ui/cubits/register/register_cubit.dart';
 import '../../features/settings/data/datasources/profile_local_datasource.dart';
@@ -52,7 +55,7 @@ Future<void> setupGetIt() async {
   //? Data Sources
   //! Authentication
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceMock(),
+    () => AuthRemoteDataSourceImpl(dio: dio, service: sl()),
   );
   sl.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(),
@@ -114,20 +117,18 @@ Future<void> setupGetIt() async {
   //? Cubits
   //! Authentication
   sl.registerFactory(() => LoginCubit(loginUseCase: sl()));
-  sl.registerFactory(
-    () => RegisterCubit(registerUseCase: sl(), sendOtpUseCase: sl()),
-  );
-  sl.registerFactory<OtpCubit>(
-    () => OtpCubit(
-      email: '', // Will be provided when creating instance
-      verifyOtpUseCase: sl(),
-      sendOtpUseCase: sl(),
-    ),
-  );
+  sl.registerFactory(() => RegisterCubit(registerUseCase: sl()));
+  // sl.registerFactory<OtpCubit>(
+  //   () => OtpCubit(
+  //     email: '', // Will be provided when creating instance
+  //     verifyOtpUseCase: sl(),
+  //     sendOtpUseCase: sl(),
+  //   ),
+  // );
   sl.registerFactory(
     () => PasswordResetCubit(
-      sendOtpUseCase: sl(),
-      verifyOtpUseCase: sl(),
+      // sendOtpUseCase: sl(),
+      // verifyOtpUseCase: sl(),
       resetPasswordUseCase: sl(),
     ),
   );
@@ -161,6 +162,15 @@ Future<void> setupGetIt() async {
   sl.registerFactory(() => AddProductAdminCubit(repository: sl()));
 
   sl.registerFactory(() => EditProductAdminCubit(repository: sl()));
+
+
+  ///Home Cubit
+
+  sl.registerLazySingleton<DioService>( () =>DioService());
+  sl.registerLazySingleton<HomeRepo>(() => HomeRepoImpl(dioService:sl()),);
+  sl.registerLazySingleton<HomeCubit>(
+        () => HomeCubit(homeRepo: sl()),
+  );
 }
 
 ///! 1. `registerSingleton`

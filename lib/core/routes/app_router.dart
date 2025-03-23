@@ -11,6 +11,7 @@ import 'package:united_formation_app/features/admin/ui/views/order_details_admin
 import 'package:united_formation_app/features/admin/ui/views/products_admin_view.dart';
 import 'package:united_formation_app/features/admin/ui/views/support_chat_admin_view.dart';
 import 'package:united_formation_app/features/favorites/presentation/views/favorites_view.dart';
+import 'package:united_formation_app/features/home/data/book_model.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/library/library_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/orders/orders_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/views/library_view.dart';
@@ -21,17 +22,13 @@ import '../../features/admin/ui/views/orders_admin_view.dart';
 import '../../features/admin/ui/views/support_admin_view.dart';
 import '../../features/home/ui/pages/product_details_page.dart';
 import 'routes.dart';
-import '../utilities/enums/otp_purpose.dart';
 import '../../features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
 import '../../features/auth/ui/cubits/login/login_cubit.dart';
-import '../../features/auth/ui/cubits/otp/otp_cubit.dart';
 import '../../features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
 import '../../features/auth/ui/cubits/register/register_cubit.dart';
 import '../../features/auth/ui/pages/learning_options_page.dart';
 import '../../features/auth/ui/pages/login_page.dart';
-import '../../features/auth/ui/pages/otp_verification_page.dart';
 import '../../features/auth/ui/pages/register_page.dart';
-import '../../features/auth/ui/pages/request_otp_page.dart';
 import '../../features/auth/ui/pages/reset_password_page.dart';
 import '../../features/settings/ui/cubits/edit_profile/edit_profile_cubit.dart';
 import '../../features/settings/ui/cubits/profile/profile_cubit.dart';
@@ -89,74 +86,11 @@ class AppRouter {
               ),
         );
 
-      case Routes.requestOtpView:
-        return MaterialPageRoute(
-          settings: settings,
-          builder:
-              (_) => BlocProvider(
-                create: (context) {
-                  final cubit = sl<PasswordResetCubit>();
-                  return cubit;
-                },
-                child: const RequestOtpPage(),
-              ),
-        );
-
-      case Routes.verifyOtpView:
-        String email;
-        bool isFromRegister = false;
-        if (arguments is String) {
-          email = arguments;
-          isFromRegister = true;
-        } else if (arguments is Map) {
-          email = arguments['email'] as String;
-          isFromRegister = false;
-        } else {
-          email = "example@email.com";
-          isFromRegister = true;
-        }
-
-        if (isFromRegister) {
-          return MaterialPageRoute(
-            settings: settings,
-            builder:
-                (_) => BlocProvider(
-                  create:
-                      (context) => OtpCubit(
-                        email: email,
-                        verifyOtpUseCase: sl(),
-                        sendOtpUseCase: sl(),
-                        purpose: OtpPurpose.accountVerification,
-                      ),
-                  child: OtpVerificationPage(email: email),
-                ),
-          );
-        } else {
-          return MaterialPageRoute(
-            settings: settings,
-            builder:
-                (_) => BlocProvider(
-                  create: (context) {
-                    final cubit = sl<PasswordResetCubit>();
-                    cubit.setEmail(email);
-                    return cubit;
-                  },
-                  child: OtpVerificationPage(email: email),
-                ),
-          );
-        }
-
       case Routes.resetPasswordView:
-        Map<String, String> parsedArgs = {};
+        String email = "";
         if (arguments is Map) {
-          parsedArgs = Map<String, String>.from(
-            arguments.map(
-              (key, value) => MapEntry(key.toString(), value.toString()),
-            ),
-          );
+          email = (arguments['email'] ?? "") as String;
         }
-        String email = parsedArgs['email'] ?? "example@email.com";
-        String otp = parsedArgs['otp'] ?? "0000";
         return MaterialPageRoute(
           settings: settings,
           builder:
@@ -164,10 +98,9 @@ class AppRouter {
                 create: (context) {
                   final cubit = sl<PasswordResetCubit>();
                   cubit.setEmail(email);
-                  cubit.setVerifiedOtp(otp);
                   return cubit;
                 },
-                child: ResetPasswordPage(email: email, otp: otp),
+                child: ResetPasswordPage(email: email),
               ),
         );
 
@@ -189,11 +122,19 @@ class AppRouter {
         );
 
       case Routes.editProfileView:
+        final profileCubit = arguments is ProfileCubit ? arguments : null;
+
         return MaterialPageRoute(
           settings: settings,
           builder:
-              (_) => BlocProvider(
-                create: (context) => sl<EditProfileCubit>(),
+              (_) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (_) => sl<EditProfileCubit>()),
+                  if (profileCubit != null)
+                    BlocProvider.value(value: profileCubit)
+                  else
+                    BlocProvider(create: (_) => sl<ProfileCubit>()),
+                ],
                 child: const EditProfileView(),
               ),
         );
@@ -227,13 +168,6 @@ class AppRouter {
                 child: const SupportView(),
               ),
         );
-      case Routes.homeView:
-      // case Routes.adminEditProductView:
-      //   ProductModel product = arguments as ProductModel;
-      //   return MaterialPageRoute(
-      //     settings: settings,
-      //     builder: (_) => AdminEditProductPage(product: product),
-      //   );
 
       case Routes.hostView:
         return MaterialPageRoute(
@@ -242,11 +176,10 @@ class AppRouter {
         );
 
       case Routes.productDetailsView:
-        ProductModel product = arguments as ProductModel;
-
+        BookModel bookModel = arguments as BookModel;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => ProductDetailsPage(product: product),
+          builder: (_) => ProductDetailsPage(book: bookModel),
         );
 
       case Routes.cartView:
@@ -321,6 +254,7 @@ class AppRouter {
                 child: EditProductAdminView(product: product),
               ),
         );
+
       case Routes.adminSupportView:
         return MaterialPageRoute(
           settings: settings,
@@ -344,15 +278,17 @@ class AppRouter {
                 ),
               ),
         );
+
       case Routes.favoritesView:
         return MaterialPageRoute(
           settings: settings,
           builder:
               (_) => BlocProvider(
-            create: (context) => sl<SupportAdminCubit>(),
-            child:  FavoritesView(),
-          ),
+                create: (context) => sl<SupportAdminCubit>(),
+                child: FavoritesView(),
+              ),
         );
+
       default:
         return MaterialPageRoute(
           settings: settings,

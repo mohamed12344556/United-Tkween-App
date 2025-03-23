@@ -1,61 +1,69 @@
 import 'package:dartz/dartz.dart';
+import 'package:united_formation_app/features/auth/data/models/login/login_model_response.dart';
+import 'package:united_formation_app/features/auth/data/models/register/register_model_response.dart';
+import 'package:united_formation_app/features/auth/domain/entities/user_register_entity.dart';
 import '../entities/user_login_entity.dart';
 import '../entities/user_reset_password_entity.dart';
 import '../repos/auth_repository.dart';
 
 import '../../../../core/core.dart';
 
-
-// Login UseCase
-class LoginUseCase implements UseCase<ApiErrorModel, Unit, UserLoginEntity> {
+//? Login UseCase
+class LoginUseCase
+    implements UseCase<ApiErrorModel, LoginModelResponse, UserLoginEntity> {
   final AuthRepository authRepository;
 
   LoginUseCase({required this.authRepository});
 
   @override
-  Future<Either<ApiErrorModel, Unit>> call(UserLoginEntity params) async {
+  Future<Either<ApiErrorModel, LoginModelResponse>> call(
+    UserLoginEntity params,
+  ) async {
     try {
       return await authRepository.login(userLoginEntity: params);
-    } on Exception catch (e) {
-      return Future.value(Left(
-        ApiErrorModel(errorMessage: ErrorData(message: e.toString())),
-      ));
+    } catch (e) {
+      return Left(ApiErrorModel(status: 'error', errorMessage: e.toString()));
     }
   }
 }
 
-// Register UseCase
-class RegisterUseCase implements UseCase<ApiErrorModel, Unit, UserLoginEntity> {
+//? Register UseCase
+class RegisterUseCase
+    implements
+        UseCase<ApiErrorModel, RegisterModelResponse, UserRegisterEntity> {
   final AuthRepository authRepository;
 
   RegisterUseCase({required this.authRepository});
 
   @override
-  Future<Either<ApiErrorModel, Unit>> call(UserLoginEntity params) async {
+  Future<Either<ApiErrorModel, RegisterModelResponse>> call(
+    UserRegisterEntity params,
+  ) async {
     try {
-      return await authRepository.register(userLoginEntity: params);
-    } on Exception catch (e) {
-      return Future.value(Left(
-        ApiErrorModel(errorMessage: ErrorData(message: e.toString())),
-      ));
+      return await authRepository.register(userRegisterEntity: params);
+    } catch (e) {
+      return Left(ApiErrorModel(status: 'error', errorMessage: e.toString()));
     }
   }
 }
 
 // Reset Password UseCase
-class ResetPasswordUseCase implements UseCase<ApiErrorModel, Unit, UserResetPasswordEntity> {
+class ResetPasswordUseCase
+    implements UseCase<ApiErrorModel, Unit, UserResetPasswordEntity> {
   final AuthRepository authRepository;
 
   ResetPasswordUseCase({required this.authRepository});
 
   @override
-  Future<Either<ApiErrorModel, Unit>> call(UserResetPasswordEntity params) async {
+  Future<Either<ApiErrorModel, Unit>> call(
+    UserResetPasswordEntity params,
+  ) async {
     try {
-      return await authRepository.resetPassword(userResetPasswordEntity: params);
-    } on Exception catch (e) {
-      return Future.value(Left(
-        ApiErrorModel(errorMessage: ErrorData(message: e.toString())),
-      ));
+      return await authRepository.resetPassword(
+        userResetPasswordEntity: params,
+      );
+    } catch (e) {
+      return Left(ApiErrorModel(status: 'error', errorMessage: e.toString()));
     }
   }
 }
@@ -76,11 +84,12 @@ class SendOtpUseCase implements UseCase<ApiErrorModel, Unit, SendOtpParams> {
   @override
   Future<Either<ApiErrorModel, Unit>> call(SendOtpParams params) async {
     try {
-      return await authRepository.sendOtp(email: params.email, purpose: params.purpose);
-    } on Exception catch (e) {
-      return Future.value(Left(
-        ApiErrorModel(errorMessage: ErrorData(message: e.toString())),
-      ));
+      return await authRepository.sendOtp(
+        email: params.email,
+        purpose: params.purpose,
+      );
+    } catch (e) {
+      return Left(ApiErrorModel(status: 'error', errorMessage: e.toString()));
     }
   }
 }
@@ -93,7 +102,8 @@ class VerifyOtpParams {
   VerifyOtpParams({required this.otp, required this.email});
 }
 
-class VerifyOtpUseCase implements UseCase<ApiErrorModel, Unit, VerifyOtpParams> {
+class VerifyOtpUseCase
+    implements UseCase<ApiErrorModel, Unit, VerifyOtpParams> {
   final AuthRepository authRepository;
 
   VerifyOtpUseCase({required this.authRepository});
@@ -101,11 +111,12 @@ class VerifyOtpUseCase implements UseCase<ApiErrorModel, Unit, VerifyOtpParams> 
   @override
   Future<Either<ApiErrorModel, Unit>> call(VerifyOtpParams params) async {
     try {
-      return await authRepository.verifyOtp(otp: params.otp, email: params.email);
-    } on Exception catch (e) {
-      return Future.value(Left(
-        ApiErrorModel(errorMessage: ErrorData(message: e.toString())),
-      ));
+      return await authRepository.verifyOtp(
+        otp: params.otp,
+        email: params.email,
+      );
+    } catch (e) {
+      return Left(ApiErrorModel(status: 'error', errorMessage: e.toString()));
     }
   }
 }
@@ -120,10 +131,8 @@ class IsLoggedInUseCase implements NoParamUseCase<ApiErrorModel, bool> {
   Future<Either<ApiErrorModel, bool>> call() async {
     try {
       return await authRepository.isLoggedIn();
-    } on Exception catch (e) {
-      return Future.value(Left(
-        ApiErrorModel(errorMessage: ErrorData(message: e.toString())),
-      ));
+    } catch (e) {
+      return Left(ApiErrorModel(status: 'error', errorMessage: e.toString()));
     }
   }
 }
@@ -138,10 +147,8 @@ class LogoutUseCase implements NoParamUseCase<ApiErrorModel, Unit> {
   Future<Either<ApiErrorModel, Unit>> call() async {
     try {
       return await authRepository.logout();
-    } on Exception catch (e) {
-      return Future.value(Left(
-        ApiErrorModel(errorMessage: ErrorData(message: e.toString())),
-      ));
+    } catch (e) {
+      return Left(ApiErrorModel(status: 'error', errorMessage: e.toString()));
     }
   }
 }

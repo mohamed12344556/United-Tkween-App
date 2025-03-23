@@ -42,15 +42,9 @@ class _LoginPageState extends State<LoginPage> {
             context.showSuccessSnackBar(context.localeS.login_successful);
             Future.microtask(() {
               if (mounted) {
-                // Navigator.of(context).pushNamedAndRemoveUntil(
-                //   Routes.settingsView,
-                //   (route) => false,
-                // );
-
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.loginView,
-                      (route) => false,
-                );
+                Navigator.of(
+                  context,
+                ).pushNamedAndRemoveUntil(Routes.hostView, (route) => false);
               }
             });
           }
@@ -78,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // رأس صفحة المصادقة
                       AuthHeader(
                         title: context.localeS.welcome_back,
                         subtitle:
@@ -85,12 +80,16 @@ class _LoginPageState extends State<LoginPage> {
                                 .localeS
                                 .we_happy_to_see_you_here_again_enter_your_email_address_and_password,
                       ),
+
+                      // حقل البريد الإلكتروني
                       AppTextField(
                         controller: cubit.emailController,
                         hintText: context.localeS.email,
                         keyboardType: TextInputType.emailAddress,
                       ),
                       SizedBox(height: verticalSpacing),
+
+                      // حقل كلمة المرور
                       AppTextField(
                         controller: cubit.passwordController,
                         hintText: context.localeS.password,
@@ -100,29 +99,37 @@ class _LoginPageState extends State<LoginPage> {
                             cubit.togglePasswordVisibility,
                       ),
                       SizedBox(height: verticalSpacing * 2),
+
+                      // زر تسجيل الدخول
                       AppButton(
                         text: context.localeS.log_in,
                         backgroundColor: AppColors.primary,
                         textColor: Colors.black,
                         isLoading: state is LoginLoading,
                         onPressed: () {
+                          FocusScope.of(context).unfocus();
                           if (mounted) {
-                            // cubit.login(
-                            //   email: cubit.emailController.text.trim(),
-                            //   password: cubit.passwordController.text,
-                            //   context: context,
-                            // );
-                            context.pushNamed(Routes.hostView);
+                            cubit.login(
+                              email: cubit.emailController.text.trim(),
+                              password: cubit.passwordController.text,
+                              context: context,
+                            );
                           }
                         },
                       ),
+
+                      // رابط نسيت كلمة المرور
                       Center(
                         child: TextButton(
                           onPressed: () {
                             if (mounted) {
-                              Navigator.of(
-                                context,
-                              ).pushNamed(Routes.requestOtpView);
+                              // تم تغيير المسار من Routes.requestOtpView إلى Routes.resetPasswordView
+                              Navigator.of(context).pushNamed(
+                                Routes.resetPasswordView,
+                                arguments: {
+                                  'email': cubit.emailController.text.trim(),
+                                },
+                              );
                             }
                           },
                           child: Text(
@@ -139,8 +146,12 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(height: verticalSpacing * 0.5),
+
+                      // فاصل "أو"
                       CustomDivider(text: context.localeS.or),
                       SizedBox(height: verticalSpacing),
+
+                      // زر إنشاء حساب جديد
                       AppButton(
                         text: context.localeS.create_account,
                         backgroundColor:
