@@ -205,13 +205,8 @@ class _EditProfileViewState extends State<EditProfileView> {
             // إضافة هذا السطر لإعلام ProfileCubit بالتحديث
             context.read<ProfileCubit>().setProfileUpdated();
 
-            Future.delayed(const Duration(seconds: 1), () {
-              if (context.mounted) {
-                Navigator.of(context).pop();
-              }
-            });
+            Navigator.of(context).pop(true);
           }
-
           if (state.isError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

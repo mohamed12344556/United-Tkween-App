@@ -21,13 +21,37 @@ class _ProfileViewState extends State<ProfileView> {
     super.initState();
     // تحميل البيانات مباشرة عند فتح الصفحة
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ProfileCubit>().loadProfile();
+      _loadProfileData();
     });
+  }
+
+  // تحميل البيانات بشكل منفصل
+  void _loadProfileData() {
+    final cubit = context.read<ProfileCubit>();
+    if (!cubit.isClosed) {
+      cubit.loadProfile();
+    }
   }
 
   // تحديث البيانات عند السحب للأسفل
   Future<void> _refreshProfile() async {
     await context.read<ProfileCubit>().loadProfile();
+  }
+
+  // انتقال إلى صفحة التعديل مع استقبال النتيجة عند العودة
+  void _navigateToEditProfile() async {
+    // استخدام await للانتظار حتى العودة من الصفحة
+    final result = await Navigator.pushNamed(context, Routes.editProfileView);
+    // إذا كانت النتيجة true، قم بتحديث البيانات
+    if (result == true) {
+      // تأخير قصير لضمان تحميل البيانات بعد العودة مباشرة
+      Future.delayed(const Duration(milliseconds: 300), () {
+        context.showSuccessSnackBar(
+          'تم تحديث الملف الشخصي بنجاح بالرجاء الانتظار',
+        );
+        context.read<ProfileCubit>().loadProfile();
+      });
+    }
   }
 
   @override
@@ -58,8 +82,8 @@ class _ProfileViewState extends State<ProfileView> {
               );
               context.read<ProfileCubit>().resetProfileUpdated();
 
-              // إضافة هذا السطر لإعادة تحميل البيانات
-              context.read<ProfileCubit>().loadProfile();
+              // إعادة تحميل البيانات بعد التحديث
+              _loadProfileData();
             }
           },
           builder: (context, state) {
@@ -109,16 +133,8 @@ class _ProfileViewState extends State<ProfileView> {
             ),
             child: Icon(Icons.edit, color: AppColors.primary, size: 20.r),
           ),
-          onPressed: () {
-            Navigator.pushNamed(context, Routes.editProfileView).then((_) {
-              final cubit = context.read<ProfileCubit>();
-              if (!cubit.isClosed) {
-                cubit.loadProfile();
-              }
-            });
-          },
+          onPressed: _navigateToEditProfile,
         ),
-
         SizedBox(width: 8.w),
       ],
       leading: IconButton(
@@ -197,16 +213,7 @@ class _ProfileViewState extends State<ProfileView> {
                 SizedBox(
                   width: double.infinity,
                   child: EditProfileButtonWidget(
-                    onPressed: () {
-                      Navigator.pushNamed(context, Routes.editProfileView).then(
-                        (_) {
-                          final cubit = context.read<ProfileCubit>();
-                          if (!cubit.isClosed) {
-                            cubit.loadProfile();
-                          }
-                        },
-                      );
-                    },
+                    onPressed: _navigateToEditProfile,
                   ),
                 ),
 
@@ -227,7 +234,7 @@ class _ProfileViewState extends State<ProfileView> {
     }
 
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
         children: [
           ProfileHeaderWidget(
@@ -250,9 +257,7 @@ class _ProfileViewState extends State<ProfileView> {
                 SizedBox(
                   width: double.infinity,
                   child: EditProfileButtonWidget(
-                    onPressed: () {
-                      context.navigateToNamed(Routes.editProfileView);
-                    },
+                    onPressed: _navigateToEditProfile,
                   ),
                 ),
 
@@ -295,11 +300,7 @@ class _ProfileViewState extends State<ProfileView> {
 
                     AddressCardWidget(address: profile.address),
 
-                    EditProfileButtonWidget(
-                      onPressed: () {
-                        context.navigateToNamed(Routes.editProfileView);
-                      },
-                    ),
+                    EditProfileButtonWidget(onPressed: _navigateToEditProfile),
                   ],
                 ),
               ),
