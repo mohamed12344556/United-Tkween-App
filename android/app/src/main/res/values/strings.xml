@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">United Tkween Group</string>
+    <string name="facebook_app_id">2039511746475921</string>
+    <string name="facebook_client_token">37dfc9867a3ef87cf98f81b9520ec4e5</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+
+
+</resources>

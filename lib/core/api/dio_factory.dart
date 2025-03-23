@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import 'api_constants.dart';
+import 'auth_interceptor.dart';
 
 class DioFactory {
   static Dio? dio;
@@ -14,7 +15,7 @@ class DioFactory {
         'Accept': 'application/json',
       };
 
-      // dio!.interceptors.add(AuthInterceptor());
+      dio!.interceptors.add(AuthInterceptor());
 
       dio!.interceptors.add(
         LogInterceptor(
@@ -36,6 +37,5 @@ class DioFactory {
 
   static void removeTokenFromHeader() {
     dio?.options.headers.remove('Authorization');
-    dio?.options.headers.remove('Cookie');
   }
 }

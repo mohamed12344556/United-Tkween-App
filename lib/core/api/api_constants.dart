@@ -1,18 +1,22 @@
 class ApiConstants {
-  static const String baseUrl = 'http://eol.runasp.net';
-  
-  // API Endpoints
-  static const String login = '/api/Account/Login';
-  static const String signup = '/api/Account/SignUp';
-  static const String refreshToken = '/api/Account/RefreshToken';
-  static const String forgotPassword = '/api/Account/ForgotPassword';
-  static const String resetPassword = '/api/Account/ResetPassword';
-  static const String verifyResetPasswordOTP = '/api/Account/VerifyResetPasswordOTP';
-  static const String revokeToken = '/api/Account/RevokeToken';
-  static const String verifyEmail = '/api/Account/VerifyEmail';
-  static const String resendVerificationCode = '/api/Account/ResendVerificationCode';
+  static const String baseUrl = 'https://tkweenstore.com/api/';
 
-  // User Profile Endpoints
-  static const String getUserProfile = '/api/Profile/GetUserProfile';
-  static const String editUserProfile = '/api/Profile/EditUserProfile';
+  // API Endpoints
+  static const String login = 'login.php';
+  static const String register = 'register.php';
+  static const String getOrders = 'get_orders.php';
+  static const String getBooks = 'get_books.php';
+  static const String getCategories = 'get_categories.php';
+  static const String createPurchase = 'create_purchase.php';
+  static const String getProfile = 'getProfile.php';
+  static const String updateProfile = 'update_profile.php';
+  static const String fetchLibrary = 'fetch_library.php';
+  
+  // لا توجد واجهة لتحديث كلمة المرور أو استعادتها في API تكوين الحالي
+  // لذلك سنحتفظ بها للتوافق مع الكود الحالي
+  static const String forgotPassword = 'forgot_password.php';
+  static const String resetPassword = 'reset_password.php';
+  static const String verifyResetPasswordOTP = 'verify_reset_password_otp.php';
+  static const String verifyEmail = 'verify_email.php';
+  static const String resendVerificationCode = 'resend_verification_code.php';
 }

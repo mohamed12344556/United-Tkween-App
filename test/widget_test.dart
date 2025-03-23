@@ -9,13 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:united_formation_app/core/routes/app_router.dart';
 
-import 'package:united_formation_app/united_formation_app.dart';
+import 'package:united_formation_app/united_tkween_group_app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(
-      UnitedFormationApp(appRouter: AppRouter(), hasValidSession: false),
+      UnitedFormationApp(
+        appRouter: AppRouter(),
+        // hasValidSession: false,
+      ),
     );
 
     // Verify that our counter starts at 0.
