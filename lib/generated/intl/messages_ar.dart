@@ -41,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "back_to_login": MessageLookupByLibrary.simpleMessage(
       "العودة إلى تسجيل الدخول",
     ),
+    "browse_as_guest": MessageLookupByLibrary.simpleMessage("تصفح كضيف"),
     "business_and_management": MessageLookupByLibrary.simpleMessage(
       "إدارة الأعمال",
     ),

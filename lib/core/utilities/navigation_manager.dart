@@ -79,7 +79,7 @@ class NavigationManager {
         // PasswordResetCubit غير متوفر
       }
     } catch (e) {
-      print('Error disposing auth cubits: $e');
+      debugPrint('Error disposing auth cubits: $e');
     }
   }
 }

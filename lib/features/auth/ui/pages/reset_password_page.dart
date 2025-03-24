@@ -50,7 +50,7 @@ class ResetPasswordPage extends StatelessWidget {
           backgroundColor: Colors.transparent,
           iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),

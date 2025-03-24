@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
-import '../api/dio_services.dart';
 import '../core.dart';
+import '../../features/auth/data/services/guest_mode_manager.dart';
 
 extension BuildContextExtensions on BuildContext {
   //! Get screen dimensions
@@ -182,7 +182,13 @@ extension BuildContextExtensions on BuildContext {
     ScaffoldMessenger.of(this).showSnackBar(SnackBar(content: Text(message)));
   }
 
+  // دالة معدلة لعرض تأكيد تسجيل الخروج مع دعم وضع الضيف
   Future<void> showLogoutConfirmation() async {
+    // التحقق مما إذا كان المستخدم في وضع الضيف
+    final isGuest = await GuestModeManager.isGuestMode();
+
+    if (!mounted) return;
+
     return showDialog<void>(
       context: this,
       barrierDismissible: false,
@@ -192,15 +198,17 @@ extension BuildContextExtensions on BuildContext {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: const Text(
-            'تسجيل الخروج',
+          title: Text(
+            isGuest ? 'تسجيل الدخول' : 'تسجيل الخروج',
             textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          content: const Text(
-            'هل أنت متأكد من تسجيل الخروج؟',
+          content: Text(
+            isGuest 
+                ? 'هل تريد الانتقال إلى صفحة تسجيل الدخول؟'
+                : 'هل أنت متأكد من تسجيل الخروج؟',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white70),
+            style: const TextStyle(color: Colors.white70),
           ),
           actions: <Widget>[
             Row(
@@ -222,17 +230,29 @@ extension BuildContextExtensions on BuildContext {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.error,
+                      backgroundColor: isGuest ? AppColors.primary : AppColors.error,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text('تسجيل الخروج'),
-                    onPressed: () {
-                      TokenManager.clearTokens;
-                      context.pushReplacementNamed(Routes.loginView);
+                    child: Text(isGuest ? 'تسجيل الدخول' : 'تسجيل الخروج'),
+                    onPressed: () async {
+                      if (isGuest) {
+                        // إعادة تعيين وضع الضيف والانتقال إلى صفحة تسجيل الدخول
+                        await GuestModeManager.resetGuestMode();
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          Routes.loginView, 
+                          (route) => false,
+                          arguments: {'fresh_start': true},
+                        );
+                      } else {
+                        // تسجيل الخروج العادي
+                        await TokenManager.clearTokens();
+                        await GuestModeManager.resetGuestMode(); // إعادة تعيين وضع الضيف أيضًا
+                        Navigator.of(context).pushReplacementNamed(Routes.loginView);
+                      }
                     },
                   ),
                 ),
@@ -260,7 +280,3 @@ extension UrlFormatter on String {
     return '$baseUrl$cleanedPath';
   }
 }
-
-
-
-

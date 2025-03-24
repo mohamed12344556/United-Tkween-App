@@ -125,6 +125,16 @@ class S {
     );
   }
 
+  /// `Browse as Guest`
+  String get browse_as_guest {
+    return Intl.message(
+      'Browse as Guest',
+      name: 'browse_as_guest',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Business & Management`
   String get business_and_management {
     return Intl.message(

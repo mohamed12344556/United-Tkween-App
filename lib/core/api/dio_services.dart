@@ -1,11 +1,8 @@
-import 'dart:developer';
+import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../cache/shared_pref_helper.dart';
 import '../utilities/storage_keys.dart';
-
-
 
 class DioService {
   final Dio _dio;
@@ -14,11 +11,11 @@ class DioService {
     : _dio = Dio(
         BaseOptions(
           baseUrl: ApiConstants.apiBaseUrl,
-          connectTimeout: const Duration(seconds: 120),
-          receiveTimeout: const Duration(seconds: 120),
+          // connectTimeout: const Duration(seconds: 120),
+          // receiveTimeout: const Duration(seconds: 120),
           headers: {"Content-Type": "application/json"},
         ),
-      ){
+      ) {
     _initializeInterceptors();
   }
 
@@ -35,16 +32,16 @@ class DioService {
             "locale": language,
           });
 
-          log("✅ Headers Added from Interceptor: ${options.headers}");
+          debugPrint("✅ Headers Added from Interceptor: ${options.headers}");
 
           return handler.next(options); // continue
         },
         onError: (error, handler) {
-          log("❌ Dio Error: $error");
+          debugPrint("❌ Dio Error: $error");
           return handler.next(error);
         },
         onResponse: (response, handler) {
-          log("✅ Dio Response: ${response.statusCode}");
+          debugPrint("✅ Dio Response: ${response.statusCode}");
           return handler.next(response);
         },
       ),
@@ -59,13 +56,13 @@ class DioService {
     ]);
   }
 
-
   String getCurrentLanguage() {
     return Prefs.getData(key: 'language') ?? 'en';
   }
 
   String? getToken() {
-    return  Prefs.getData(key:StorageKeys.accessToken);
+    debugPrint('Token: ${Prefs.getData(key: StorageKeys.accessToken)}');
+    return Prefs.getData(key: StorageKeys.accessToken);
   }
 
   Future<Response> getRequest(
@@ -76,9 +73,7 @@ class DioService {
     return _dio.get(
       endpoint,
       queryParameters: queryParams,
-      options: Options(
-        headers:headers,
-      ),
+      options: Options(headers: headers),
     );
   }
 
@@ -93,7 +88,7 @@ class DioService {
       data: data,
       queryParameters: queryParams,
       options: Options(
-        headers:headers,
+        headers: headers,
         followRedirects: false,
         validateStatus: (status) {
           return status! < 500;
@@ -111,7 +106,7 @@ class DioService {
       endpoint,
       data: formData,
       options: Options(
-        headers:headers,
+        headers: headers,
 
         followRedirects: false,
         validateStatus: (status) {
@@ -131,10 +126,7 @@ class DioService {
       endpoint,
       data: data,
       queryParameters: queryParams,
-      options: Options(
-        headers:headers,
-
-      ),
+      options: Options(headers: headers),
     );
   }
 
@@ -148,10 +140,7 @@ class DioService {
       endpoint,
       data: data,
       queryParameters: queryParams,
-      options: Options(
-        headers:headers,
-
-      ),
+      options: Options(headers: headers),
     );
   }
 }
@@ -161,10 +150,7 @@ class ApiConstants {
 
   static const String homeBooks = "get_books.php";
   static const String booksCategories = "get_categories.php";
-
 }
-
-
 
 class Prefs {
   static late SharedPreferences prefs;
@@ -185,7 +171,7 @@ class Prefs {
       return await prefs.setInt(key, value);
     } else if (value is double) {
       return await prefs.setDouble(key, value);
-    }else if(value is List<String>){
+    } else if (value is List<String>) {
       return await prefs.setStringList(key, value);
     }
     return false;
@@ -213,7 +199,6 @@ class Constants {
   static const String isAlreadyLogin = 'isAlreadyLogin';
   static const String userToken = 'userToken';
   static const String isRemembered = 'isRemembered';
-  static const String defaultChallengeImage = 'https://media.istockphoto.com/id/1266413326/vector/vector-challenge-sign-pop-art-comic-speech-bubble-with-expression-text-competition-bright.jpg?s=612x612&w=0&k=20&c=eYOQaCn7WvMAEo5ZxVHVVQ-pcNT8HZ-yPeTjueuXi28=';
-
+  static const String defaultChallengeImage =
+      'https://media.istockphoto.com/id/1266413326/vector/vector-challenge-sign-pop-art-comic-speech-bubble-with-expression-text-competition-bright.jpg?s=612x612&w=0&k=20&c=eYOQaCn7WvMAEo5ZxVHVVQ-pcNT8HZ-yPeTjueuXi28=';
 }
-

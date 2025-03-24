@@ -39,6 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "audio": MessageLookupByLibrary.simpleMessage("Audio"),
     "back_to_login": MessageLookupByLibrary.simpleMessage("Back to Login"),
+    "browse_as_guest": MessageLookupByLibrary.simpleMessage("Browse as Guest"),
     "business_and_management": MessageLookupByLibrary.simpleMessage(
       "Business & Management",
     ),

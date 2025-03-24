@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/core/helper/format_double_number.dart';
+import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
+import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
 import '../../../cart/data/cart_model.dart';
 import '../../data/book_model.dart';
 
@@ -17,12 +19,23 @@ class ProductDetailsPage extends StatefulWidget {
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   late String selectedType;
+  bool _isGuest = false;
 
   @override
   void initState() {
     super.initState();
-
     selectedType = (widget.book.getFormattedPdfPrice == 0) ? "paper" : "PDF";
+    _checkGuestStatus();
+  }
+
+  // التحقق من حالة الضيف
+  Future<void> _checkGuestStatus() async {
+    final isGuest = await GuestModeManager.isGuestMode();
+    if (mounted) {
+      setState(() {
+        _isGuest = isGuest;
+      });
+    }
   }
 
   int quantity = 1;
@@ -39,18 +52,108 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
   double getSelectedPrice() {
     if (selectedType == "PDF") {
-      print(widget.book.getFormattedPdfPrice);
+      debugPrint(widget.book.getFormattedPdfPrice.toString());
       return widget.book.getFormattedPdfPrice;
     } else {
       return widget.book.getFormattedPrice;
     }
   }
 
+  // إضافة المنتج إلى السلة مع التحقق من وضع الضيف
+  Future<void> _addToCart() async {
+    // التحقق مما إذا كان المستخدم في وضع الضيف
+    if (_isGuest) {
+      if (mounted) {
+        // عرض مربع حوار القيود إذا كان في وضع الضيف
+        await context.checkGuestRestriction(featureName: "إضافة للسلة");
+      }
+      return;
+    }
+
+    // الكود الأصلي لإضافة المنتج إلى السلة للمستخدمين المسجلين
+    if (getSelectedPrice() == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "عذرًا، لا يوجد سعر متاح لهذا النوع من الكتاب. يرجى اختيار نوع مختلف.",
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else {
+      final cartBox = Hive.box<CartItemModel>('CartBox');
+
+      final cartItems = cartBox.values.toList();
+
+      final existingItem = cartItems.firstWhereOrNull(
+        (item) => item.bookId == widget.book.id && item.type == selectedType,
+      );
+
+      if (existingItem != null) {
+        existingItem.quantity += quantity;
+        await existingItem.save();
+      } else {
+        final newItem = CartItemModel(
+          bookId: widget.book.id,
+          bookName: widget.book.title,
+          imageUrl: widget.book.imageUrl,
+          type: selectedType,
+          quantity: quantity,
+          unitPrice: getSelectedPrice(),
+        );
+        await cartBox.add(newItem);
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('تمت الإضافة إلى السلة!'),
+          backgroundColor: AppColors.primary,
+        ),
+      );
+    }
+  }
+
+  // إضافة المنتج إلى المفضلة مع التحقق من وضع الضيف
+  Future<void> _addToFavorites() async {
+    // التحقق مما إذا كان المستخدم في وضع الضيف
+    if (_isGuest) {
+      if (mounted) {
+        // عرض مربع حوار القيود إذا كان في وضع الضيف
+        await context.checkGuestRestriction(featureName: "إضافة للمفضلة");
+      }
+      return;
+    }
+
+    // إضافة للمفضلة
+    final favoritesBox = Hive.box<BookModel>('favorites');
+
+    // التحقق إذا كان الكتاب موجود بالفعل في المفضلة
+    if (favoritesBox.containsKey(widget.book.id)) {
+      favoritesBox.delete(widget.book.id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('تمت إزالة الكتاب من المفضلة'),
+          backgroundColor: Colors.grey[700],
+        ),
+      );
+    } else {
+      // إضافة الكتاب إلى المفضلة
+      favoritesBox.put(widget.book.id, widget.book);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('تمت إضافة الكتاب إلى المفضلة'),
+          backgroundColor: AppColors.primary,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(widget.book.getFormattedPdfPrice);
-
     double totalPrice = getSelectedPrice() * quantity;
+    final favoritesBox = Hive.box<BookModel>('favorites');
+    final isFavorite = favoritesBox.containsKey(widget.book.id);
+
     return Scaffold(
       backgroundColor: Colors.grey[900],
       body: Stack(
@@ -92,11 +195,33 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       children: [
                         Expanded(
                           child: Text(
-                            widget.book.getLocalizedCategory(context),
+                            widget.book.title,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        // إضافة زر المفضلة مع التحقق من وضع الضيف
+                        GestureDetector(
+                          onTap: _addToFavorites,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[800],
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color:
+                                  _isGuest
+                                      ? Colors
+                                          .grey // تغيير لون أيقونة المفضلة في وضع الضيف
+                                      : AppColors.primary,
+                              size: 24,
                             ),
                           ),
                         ),
@@ -228,54 +353,52 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
 
                     SizedBox(height: 30),
+
+                    // تعديل زر إضافة للسلة مع إظهار ملاحظة في وضع الضيف
                     AppButton(
-                      text: "Add to cart",
-                      onPressed: () async {
-                        if (getSelectedPrice() == 0) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "عذرًا، لا يوجد سعر متاح لهذا النوع من الكتاب. يرجى اختيار نوع مختلف.",
-                              ),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        } else {
-                          final cartBox = Hive.box<CartItemModel>('CartBox');
-
-                          final cartItems = cartBox.values.toList();
-
-                          final existingItem = cartItems.firstWhereOrNull(
-                            (item) =>
-                                item.bookId == widget.book.id &&
-                                item.type == selectedType,
-                          );
-
-                          if (existingItem != null) {
-                            existingItem.quantity += quantity;
-                            await existingItem.save();
-                          } else {
-                            final newItem = CartItemModel(
-                              bookId: widget.book.id,
-                              bookName: widget.book.title,
-                              imageUrl: widget.book.imageUrl,
-                              type: selectedType,
-                              quantity: quantity,
-                              unitPrice: getSelectedPrice(),
-                            );
-                            await cartBox.add(newItem);
-                          }
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('تمت الإضافة إلى السلة!'),
-                              backgroundColor: AppColors.primary,
-                            ),
-                          );
-                        }
-                      },
+                      text:
+                          _isGuest
+                              ? "تسجيل الدخول للإضافة للسلة"
+                              : "Add to cart",
+                      onPressed: _addToCart,
                       height: 55,
                     ),
+
+                    // إضافة إشعار وضع الضيف إذا كان مفعلاً
+                    if (_isGuest)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: AppColors.primary,
+                              width: 0.5,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline,
+                                color: AppColors.primary,
+                                size: 24,
+                              ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  "أنت في وضع الضيف. سجل الدخول للوصول إلى جميع ميزات التطبيق.",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),

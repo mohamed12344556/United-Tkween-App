@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:united_formation_app/core/routes/routes.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
+import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../data/cart_model.dart';
 
@@ -13,6 +16,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   late Box<CartItemModel> cartBox;
+  bool _isGuest = false;
 
   int shippingCost = 48;
 
@@ -20,6 +24,17 @@ class _CartPageState extends State<CartPage> {
   void initState() {
     super.initState();
     cartBox = Hive.box<CartItemModel>('CartBox');
+    _checkGuestStatus();
+  }
+
+  // التحقق من حالة الضيف
+  Future<void> _checkGuestStatus() async {
+    final isGuest = await GuestModeManager.isGuestMode();
+    if (mounted) {
+      setState(() {
+        _isGuest = isGuest;
+      });
+    }
   }
 
   int get subtotal => cartBox.values.fold(
@@ -46,8 +61,18 @@ class _CartPageState extends State<CartPage> {
     setState(() {});
   }
 
-  // New function to handle WhatsApp checkout
-  void sendToWhatsApp() async {
+  // تعديل وظيفة الإرسال عبر الواتساب مع دعم وضع الضيف
+  Future<void> sendToWhatsApp() async {
+    // التحقق مما إذا كان المستخدم في وضع الضيف
+    if (_isGuest) {
+      if (mounted) {
+        // عرض مربع حوار القيود إذا كان في وضع الضيف
+        await context.checkGuestRestriction(featureName: "الطلب عبر واتساب");
+      }
+      return;
+    }
+
+    // الكود الأصلي لإرسال رسالة واتساب للمستخدمين المسجلين
     // Get all cart items
     final cartItems = cartBox.values.toList();
 
@@ -117,218 +142,305 @@ class _CartPageState extends State<CartPage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child:
-            cartItems.isEmpty
-                ? Center(
-                  child: Text(
-                    'السلة فارغة',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                )
-                : Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '${cartItems.length} Items',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
+      body: _isGuest 
+          ? _buildGuestModeView() // عرض واجهة المستخدم للضيف
+          : _buildCartView(cartItems), // عرض واجهة المستخدم للمسجلين
+    );
+  }
+
+  // واجهة المستخدم للضيف
+  Widget _buildGuestModeView() {
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.grey[900],
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.primary, width: 1),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.shopping_cart_outlined,
+              size: 64,
+              color: AppColors.primary,
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'وضع الضيف',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'السلة وميزات الشراء متاحة فقط للمستخدمين المسجلين.',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white70,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: () {
+                // إعادة تعيين وضع الضيف والانتقال إلى صفحة تسجيل الدخول
+                GuestModeManager.resetGuestMode().then((_) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.loginView, 
+                    (route) => false,
+                    arguments: {'fresh_start': true},
+                  );
+                });
+              },
+              icon: const Icon(Icons.login),
+              label: const Text('تسجيل الدخول للوصول للسلة'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.black,
+                minimumSize: const Size(double.infinity, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.hostView, 
+                  (route) => false,
+                );
+              },
+              child: Text(
+                'العودة للتصفح',
+                style: TextStyle(color: AppColors.primary),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // واجهة المستخدم للمسجلين
+  Widget _buildCartView(List<CartItemModel> cartItems) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child:
+          cartItems.isEmpty
+              ? Center(
+                child: Text(
+                  'السلة فارغة',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              )
+              : Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '${cartItems.length} Items',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: cartItems.length,
-                        itemBuilder: (context, index) {
-                          final item = cartItems[index];
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[900],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[800],
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Icon(
-                                    Icons.book,
-                                    color: AppColors.primary,
-                                  ),
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: cartItems.length,
+                      itemBuilder: (context, index) {
+                        final item = cartItems[index];
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[800],
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        item.bookName,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      Text(
-                                        item.type,
-                                        style: const TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        '\$${item.unitPrice}',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                child: Icon(
+                                  Icons.book,
+                                  color: AppColors.primary,
                                 ),
-                                Row(
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.remove,
-                                        color: AppColors.primary,
-                                      ),
-                                      onPressed:
-                                          () => updateQuantity(index, -1),
-                                    ),
                                     Text(
-                                      '${item.quantity}',
+                                      item.bookName,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
                                       ),
                                     ),
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.add,
-                                        color: AppColors.primary,
+                                    Text(
+                                      item.type,
+                                      style: const TextStyle(
+                                        color: Colors.white54,
+                                        fontSize: 14,
                                       ),
-                                      onPressed: () => updateQuantity(index, 1),
                                     ),
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '\$${item.unitPrice}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      onPressed: () => deleteItem(index),
                                     ),
                                   ],
                                 ),
-                              ],
+                              ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.remove,
+                                      color: AppColors.primary,
+                                    ),
+                                    onPressed:
+                                        () => updateQuantity(index, -1),
+                                  ),
+                                  Text(
+                                    '${item.quantity}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.add,
+                                      color: AppColors.primary,
+                                    ),
+                                    onPressed: () => updateQuantity(index, 1),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () => deleteItem(index),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[900],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Subtotal',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[900],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Subtotal',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
+                            Text(
+                              '\$$subtotal',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
                               ),
-                              Text(
-                                '\$$subtotal',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Shipping',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                '\$$shippingCost',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Total amount',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '\$$totalAmount',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    ElevatedButton(
-                      onPressed:
-                          sendToWhatsApp, // Updated to use the new function
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                            ),
+                          ],
                         ),
-                      ),
-                      child: const Text(
-                        'Checkout via WhatsApp',
-                        style: TextStyle(color: Colors.black, fontSize: 18),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Shipping',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              '\$$shippingCost',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Total amount',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              '\$$totalAmount',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: sendToWhatsApp,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                  ],
-                ),
-      ),
+                    child: const Text(
+                      'Checkout via WhatsApp',
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                    ),
+                  ),
+                ],
+              ),
     );
   }
 }
