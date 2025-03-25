@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:united_formation_app/features/settings/ui/widgets/delete_account_dialog.dart';
 import '../../generated/l10n.dart';
 import '../core.dart';
 import '../../features/auth/data/services/guest_mode_manager.dart';
@@ -25,10 +26,10 @@ extension BuildContextExtensions on BuildContext {
   S get localeS => S.of(this);
 
   //! Get Languages
-   bool get isArabic {
-      final locale = Localizations.localeOf(this);
-      return locale.languageCode.toLowerCase() == 'ar';
-    }
+  bool get isArabic {
+    final locale = Localizations.localeOf(this);
+    return locale.languageCode.toLowerCase() == 'ar';
+  }
 
   bool get isEnglish {
     final locale = Localizations.localeOf(this);
@@ -201,10 +202,13 @@ extension BuildContextExtensions on BuildContext {
           title: Text(
             isGuest ? 'تسجيل الدخول' : 'تسجيل الخروج',
             textAlign: TextAlign.center,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           content: Text(
-            isGuest 
+            isGuest
                 ? 'هل تريد الانتقال إلى صفحة تسجيل الدخول؟'
                 : 'هل أنت متأكد من تسجيل الخروج؟',
             textAlign: TextAlign.center,
@@ -230,7 +234,8 @@ extension BuildContextExtensions on BuildContext {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isGuest ? AppColors.primary : AppColors.error,
+                      backgroundColor:
+                          isGuest ? AppColors.primary : AppColors.error,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -243,7 +248,7 @@ extension BuildContextExtensions on BuildContext {
                         // إعادة تعيين وضع الضيف والانتقال إلى صفحة تسجيل الدخول
                         await GuestModeManager.resetGuestMode();
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                          Routes.loginView, 
+                          Routes.loginView,
                           (route) => false,
                           arguments: {'fresh_start': true},
                         );
@@ -251,7 +256,9 @@ extension BuildContextExtensions on BuildContext {
                         // تسجيل الخروج العادي
                         await TokenManager.clearTokens();
                         await GuestModeManager.resetGuestMode(); // إعادة تعيين وضع الضيف أيضًا
-                        Navigator.of(context).pushReplacementNamed(Routes.loginView);
+                        Navigator.of(
+                          context,
+                        ).pushReplacementNamed(Routes.loginView);
                       }
                     },
                   ),
@@ -260,6 +267,17 @@ extension BuildContextExtensions on BuildContext {
             ),
           ],
         );
+      },
+    );
+  }
+
+  // دالة معدلة لعرض ملف حذف الحساب مع دعم وضع الضيف
+  Future<void> showDeleteAccountConfirmation() async {
+    return showDialog<void>(
+      context: this,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const DeleteAccountDialog();
       },
     );
   }

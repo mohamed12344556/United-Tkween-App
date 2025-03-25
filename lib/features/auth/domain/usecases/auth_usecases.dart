@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:united_formation_app/features/auth/data/models/login/login_model_response.dart';
 import 'package:united_formation_app/features/auth/data/models/register/register_model_response.dart';
 import 'package:united_formation_app/features/auth/domain/entities/user_register_entity.dart';
+import '../../data/services/delete_account_service.dart';
 import '../entities/user_login_entity.dart';
 import '../entities/user_reset_password_entity.dart';
 import '../repos/auth_repository.dart';

@@ -8,6 +8,9 @@ import 'package:united_formation_app/features/admin/ui/cubits/add_product/add_pr
 import 'package:united_formation_app/features/admin/ui/cubits/edit_product/edit_product_admin_cubit.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/products/products_admin_cubit.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/support/support_admin_cubit.dart';
+import 'package:united_formation_app/features/auth/data/services/delete_account_service.dart';
+import 'package:united_formation_app/features/settings/domain/usecases/delete_account_usecase.dart';
+import 'package:united_formation_app/features/settings/ui/cubits/delete_account/delete_account_cubit.dart';
 import 'package:united_formation_app/features/home/domain/home_repo.dart';
 import 'package:united_formation_app/features/home/domain/home_repo_impl.dart';
 import 'package:united_formation_app/features/home/ui/cubit/home_cubit.dart';
@@ -60,6 +63,9 @@ Future<void> setupGetIt() async {
   sl.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(),
   );
+  sl.registerLazySingleton<DeleteAccountService>(
+    () => DeleteAccountService(apiService: sl()),
+  );
 
   //! Settings
   sl.registerLazySingleton<ProfileRemoteDataSource>(
@@ -96,6 +102,9 @@ Future<void> setupGetIt() async {
   sl.registerLazySingleton(() => ResetPasswordUseCase(authRepository: sl()));
   sl.registerLazySingleton(() => IsLoggedInUseCase(authRepository: sl()));
   sl.registerLazySingleton(() => LogoutUseCase(authRepository: sl()));
+  sl.registerLazySingleton(
+    () => DeleteAccountUseCase(deleteAccountService: sl()),
+  );
 
   //! Settings
   sl.registerLazySingleton(() => GetProfileUseCase(profileRepository: sl()));
@@ -134,6 +143,8 @@ Future<void> setupGetIt() async {
   );
   sl.registerFactory(() => LearningOptionsCubit());
 
+  sl.registerFactory(() => DeleteAccountCubit(deleteAccountUseCase: sl()));
+
   //! Settings
   sl.registerFactory(() => ProfileCubit(getProfileUseCase: sl()));
 
@@ -163,14 +174,11 @@ Future<void> setupGetIt() async {
 
   sl.registerFactory(() => EditProductAdminCubit(repository: sl()));
 
-
   ///Home Cubit
 
-  sl.registerLazySingleton<DioService>( () =>DioService());
-  sl.registerLazySingleton<HomeRepo>(() => HomeRepoImpl(dioService:sl()),);
-  sl.registerLazySingleton<HomeCubit>(
-        () => HomeCubit(homeRepo: sl()),
-  );
+  sl.registerLazySingleton<DioService>(() => DioService());
+  sl.registerLazySingleton<HomeRepo>(() => HomeRepoImpl(dioService: sl()));
+  sl.registerLazySingleton<HomeCubit>(() => HomeCubit(homeRepo: sl()));
 }
 
 ///! 1. `registerSingleton`

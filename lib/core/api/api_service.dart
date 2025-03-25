@@ -55,6 +55,10 @@ abstract class ApiService {
 
   @GET(ApiConstants.getProfile)
   Future<dynamic> getProfile();
+
+  @POST(ApiConstants.deleteAccount)
+  Future<dynamic> deleteAccount();
+
 }
 
 //! command to run the service file generator

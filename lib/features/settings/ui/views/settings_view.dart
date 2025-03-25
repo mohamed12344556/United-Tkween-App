@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/constants.dart';
+import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/profile/profile_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/social_media_icons.dart';
 import '../widgets/profile_menu_item.dart';
@@ -16,6 +17,7 @@ class SettingsView extends StatefulWidget {
 class _SettingsViewState extends State<SettingsView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
+  bool _isGuestMode = false;
 
   @override
   void initState() {
@@ -25,6 +27,17 @@ class _SettingsViewState extends State<SettingsView>
       duration: const Duration(milliseconds: 800),
     );
     _animationController.forward();
+    _checkGuestMode();
+  }
+
+  // التحقق من وضع الضيف
+  Future<void> _checkGuestMode() async {
+    final isGuest = await GuestModeManager.isGuestMode();
+    if (mounted) {
+      setState(() {
+        _isGuestMode = isGuest;
+      });
+    }
   }
 
   @override
@@ -178,6 +191,21 @@ class _SettingsViewState extends State<SettingsView>
                   highlightColor: AppColors.error,
                 ),
               ),
+
+              // زر حذف الحساب - يظهر فقط إذا كان المستخدم ليس في وضع الضيف
+              if (!_isGuestMode)
+                _buildAnimatedMenuItem(
+                  index: 6,
+                  child: ProfileMenuItem(
+                    title: 'حذف الحساب',
+                    icon: Icons.delete_forever,
+                    onTap: () {
+                      context.showDeleteAccountConfirmation();
+                    },
+                    isHighlighted: true,
+                    highlightColor: AppColors.error,
+                  ),
+                ),
             ],
           ),
 

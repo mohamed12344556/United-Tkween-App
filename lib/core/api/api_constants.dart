@@ -11,6 +11,7 @@ class ApiConstants {
   static const String getProfile = 'getProfile.php';
   static const String updateProfile = 'update_profile.php';
   static const String fetchLibrary = 'fetch_library.php';
+  static const String deleteAccount = 'delete_account.php';
   
   // لا توجد واجهة لتحديث كلمة المرور أو استعادتها في API تكوين الحالي
   // لذلك سنحتفظ بها للتوافق مع الكود الحالي
