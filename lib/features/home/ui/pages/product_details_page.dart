@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -5,6 +7,7 @@ import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/core/helper/format_double_number.dart';
 import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../cart/data/cart_model.dart';
 import '../../data/book_model.dart';
 
@@ -293,76 +296,98 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           }).toList(),
                     ),
                     SizedBox(height: 25),
-                    Text(
-                      "Price:${getSelectedPrice()}\$",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                    SizedBox(height: 16),
 
-                    Row(
-                      children: [
-                        Text(
-                          "Total: ${formatNumber(totalPrice)}\$",
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: 20,
+                    if (!Platform.isIOS) ...[
+                      Text(
+                        "Price:${getSelectedPrice()}\$",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      SizedBox(height: 16),
+
+                      Row(
+                        children: [
+                          Text(
+                            "Total: ${formatNumber(totalPrice)}\$",
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 20,
+                            ),
                           ),
-                        ),
-                        Spacer(),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                if (quantity > 1) {
-                                  setState(() => quantity--);
-                                }
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: AppColors.primary,
-                                ),
-                                child: Icon(Icons.remove, color: Colors.black),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              child: Text(
-                                "$quantity",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
+                          Spacer(),
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  if (quantity > 1) {
+                                    setState(() => quantity--);
+                                  }
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: AppColors.primary,
+                                  ),
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () => setState(() => quantity++),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: AppColors.primary,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
                                 ),
-                                child: Icon(Icons.add, color: Colors.black),
+                                child: Text(
+                                  "$quantity",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                              GestureDetector(
+                                onTap: () => setState(() => quantity++),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: AppColors.primary,
+                                  ),
+                                  child: Icon(Icons.add, color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
 
                     SizedBox(height: 30),
 
                     // تعديل زر إضافة للسلة مع إظهار ملاحظة في وضع الضيف
-                    AppButton(
-                      text:
-                          _isGuest
-                              ? "تسجيل الدخول للإضافة للسلة"
-                              : "Add to cart",
-                      onPressed: _addToCart,
-                      height: 55,
-                    ),
+                    if (!Platform.isIOS) ...[
+                      AppButton(
+                        text:
+                            _isGuest
+                                ? "تسجيل الدخول للإضافة للسلة"
+                                : "Add to cart",
+                        onPressed: _addToCart,
+                        height: 55,
+                      ),
+                    ],
+
+                    if (!Platform.isAndroid) ...[
+                      AppButton(
+                        text: "View Book Details",
+                        onPressed: () {
+                          launchUrl(
+                            Uri.parse(
+                              'https://tkweenstore.com/book_details.php?id=${widget.book.id}',
+                            ),
+                          );
+                        },
+                        height: 55,
+                      ),
+                    ],
 
                     // إضافة إشعار وضع الضيف إذا كان مفعلاً
                     if (_isGuest)

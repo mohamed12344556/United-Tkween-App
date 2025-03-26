@@ -125,7 +125,7 @@ Future<void> setupGetIt() async {
 
   //? Cubits
   //! Authentication
-  sl.registerLazySingleton<LoginCubit>(() => LoginCubit(loginUseCase: sl()));
+  sl.registerFactory<LoginCubit>(() => LoginCubit(loginUseCase: sl()));
   sl.registerFactory(() => RegisterCubit(registerUseCase: sl()));
   // sl.registerFactory<OtpCubit>(
   //   () => OtpCubit(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:united_formation_app/core/core.dart';
@@ -12,7 +14,8 @@ class HomeProductsGridViewItem extends StatefulWidget {
   const HomeProductsGridViewItem({super.key, required this.book});
 
   @override
-  State<HomeProductsGridViewItem> createState() => _HomeProductsGridViewItemState();
+  State<HomeProductsGridViewItem> createState() =>
+      _HomeProductsGridViewItemState();
 }
 
 class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
@@ -109,50 +112,55 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                   const SizedBox(height: 8),
                   Column(
                     children: [
-                      if(widget.book.getFormattedPdfPrice != 0)
-                      Row(
-                        children: [
-                          Text('PDF: ',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Colors.white,
-                            ),
+                      if (!Platform.isIOS) ...[
+                        if (widget.book.getFormattedPdfPrice != 0)
+                          Row(
+                            children: [
+                              Text(
+                                'PDF: ',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${widget.book.getFormattedPdfPrice}\$',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${widget.book.getFormattedPdfPrice}\$',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                      ],
                       const SizedBox(height: 4),
-                      if(widget.book.getFormattedPrice != 0)
-                        Row(
-                        children: [
-
-                          Text('Paper: ',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Colors.white,
-                            ),
+                      if (!Platform.isIOS) ...[
+                        if (widget.book.getFormattedPrice != 0)
+                          Row(
+                            children: [
+                              Text(
+                                'Paper: ',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${widget.book.getFormattedPrice}\$',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${widget.book.getFormattedPrice}\$',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                      ],
                     ],
                   ),
                 ],

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/constants.dart';
@@ -127,27 +129,30 @@ class _SettingsViewState extends State<SettingsView>
                   },
                 ),
               ),
-              _buildAnimatedMenuItem(
-                index: 1,
-                child: ProfileMenuItem(
-                  title: 'مشترياتي',
-                  icon: Icons.shopping_cart,
-                  onTap: () {
-                    context.navigateToNamed(Routes.ordersView);
-                  },
-                ),
-              ),
 
-              _buildAnimatedMenuItem(
-                index: 2,
-                child: ProfileMenuItem(
-                  title: 'مكتبتي',
-                  icon: Icons.book,
-                  onTap: () {
-                    context.navigateToNamed(Routes.libraryView);
-                  },
+              if (!Platform.isIOS) ...[
+                _buildAnimatedMenuItem(
+                  index: 1,
+                  child: ProfileMenuItem(
+                    title: 'مشترياتي',
+                    icon: Icons.shopping_cart,
+                    onTap: () {
+                      context.navigateToNamed(Routes.ordersView);
+                    },
+                  ),
                 ),
-              ),
+
+                _buildAnimatedMenuItem(
+                  index: 2,
+                  child: ProfileMenuItem(
+                    title: 'مكتبتي',
+                    icon: Icons.book,
+                    onTap: () {
+                      context.navigateToNamed(Routes.libraryView);
+                    },
+                  ),
+                ),
+              ],
               Divider(color: AppColors.primary),
 
               const SizedBox(height: 16),
