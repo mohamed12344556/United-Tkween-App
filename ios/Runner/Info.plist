@@ -5,7 +5,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
-	<string>Tkween</string>
+		<string>Tkween</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
-	<string>Tkween</string>
+		<string>Tkween</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>
@@ -57,15 +57,14 @@
 		<string>نحتاج إلى الوصول إلى المعرض لعرض الصور والفيديوهات.</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
-		
 		<key>CFBundleURLTypes</key>
 		<array>
-		  <dict>
-		  <key>CFBundleURLSchemes</key>
-		  <array>
-		    <string>fb2039511746475921</string>
-		  </array>
-		  </dict>
+			<dict>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>fb2039511746475921</string>
+				</array>
+			</dict>
 		</array>
 		<key>FacebookAppID</key>
 		<string>2039511746475921</string>
@@ -73,16 +72,15 @@
 		<string>37dfc9867a3ef87cf98f81b9520ec4e5</string>
 		<key>FacebookDisplayName</key>
 		<string>United Tkween Group</string>
-
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
-		  <string>fbapi</string>
-		  <string>fb-messenger-share-api</string>
+			<string>fbapi</string>
+			<string>fb-messenger-share-api</string>
 		</array>
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
-		  <string>sms</string>
-		  <string>tel</string>
+			<string>sms</string>
+			<string>tel</string>
 		</array>
 	</dict>
 </plist>
