@@ -530,9 +530,10 @@ class _EditProfileViewState extends State<EditProfileView> {
           if (state.isLoading && state.profile == null) {
             return Center(
               child: CircularProgressIndicator(
-                color: AppColors.primary,
-                backgroundColor: AppColors.lightGrey,
-              ),
+              color: AppColors.primary,
+              backgroundColor: AppColors.secondary.withValues(alpha: 51),
+              strokeWidth: context.isTablet ? 3.0 : 2.0,
+            ),
             );
           }
 

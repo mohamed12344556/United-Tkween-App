@@ -492,7 +492,11 @@ class _HomePageState extends State<HomePage>
       builder: (context, state) {
         if (state is HomeBooksLoadingState) {
           return Center(
-            child: CircularProgressIndicator(color: AppColors.primary),
+            child: CircularProgressIndicator(
+              color: AppColors.primary,
+              backgroundColor: AppColors.secondary.withValues(alpha: 51),
+              strokeWidth: context.isTablet ? 3.0 : 2.0,
+            ),
           );
         } else if (state is HomeBooksSuccessState) {
           final books = state.books;

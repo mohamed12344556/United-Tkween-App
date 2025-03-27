@@ -312,9 +312,6 @@
 //   }
 // }
 
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/core.dart';
@@ -466,7 +463,8 @@ class _ProfileViewState extends State<ProfileView> {
     return Center(
       child: CircularProgressIndicator(
         color: AppColors.primary,
-        backgroundColor: AppColors.lightGrey,
+        backgroundColor: AppColors.secondary.withValues(alpha: 51),
+        strokeWidth: context.isTablet ? 3.0 : 2.0,
       ),
     );
   }

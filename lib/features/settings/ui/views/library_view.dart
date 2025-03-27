@@ -509,7 +509,7 @@ class _LibraryViewState extends State<LibraryView>
             return Center(
               child: CircularProgressIndicator(
                 color: AppColors.primary,
-                backgroundColor: AppColors.lightGrey,
+                backgroundColor: AppColors.secondary.withValues(alpha: 51),
                 strokeWidth: context.isTablet ? 3.0 : 2.0,
               ),
             );
