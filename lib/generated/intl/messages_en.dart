@@ -143,7 +143,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Login successful!",
     ),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
-    "main_store": MessageLookupByLibrary.simpleMessage("Main Store"),
+    "main_store": MessageLookupByLibrary.simpleMessage("Main Library"),
     "marketing": MessageLookupByLibrary.simpleMessage("Marketing"),
     "message_sent_successfully": MessageLookupByLibrary.simpleMessage(
       "Your message has been sent successfully",
@@ -229,7 +229,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Something went wrong, please try again",
         ),
     "status": MessageLookupByLibrary.simpleMessage("Status"),
-    "store_support": MessageLookupByLibrary.simpleMessage("Store Support"),
+    "store_support": MessageLookupByLibrary.simpleMessage("Library Support"),
     "success": MessageLookupByLibrary.simpleMessage("Success"),
     "test": MessageLookupByLibrary.simpleMessage("test"),
     "theme": MessageLookupByLibrary.simpleMessage("Theme"),

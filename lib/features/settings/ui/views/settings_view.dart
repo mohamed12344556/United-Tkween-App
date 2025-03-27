@@ -161,7 +161,8 @@ class _SettingsViewState extends State<SettingsView>
               _buildAnimatedMenuItem(
                 index: 3,
                 child: ProfileMenuItem(
-                  title: 'دعم المتجر',
+                  // title: 'دعم المتجر',
+                  title: 'دعم المكتبة',
                   icon: Icons.headset_mic,
                   onTap: () {
                     context.navigateToNamed(Routes.supportView);
@@ -172,7 +173,8 @@ class _SettingsViewState extends State<SettingsView>
               _buildAnimatedMenuItem(
                 index: 4,
                 child: ProfileMenuItem(
-                  title: 'المتجر الرئيسي',
+                  // title: 'المتجر الرئيسي',
+                  title: "المكتبة الرئيسية",
                   icon: Icons.store,
                   onTap: () {
                     context.navigateToNamed(Routes.hostView);

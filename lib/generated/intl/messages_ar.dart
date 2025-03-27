@@ -147,7 +147,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "تم تسجيل الدخول بنجاح!",
     ),
     "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
-    "main_store": MessageLookupByLibrary.simpleMessage("المتجر الرئيسي"),
+    "main_store": MessageLookupByLibrary.simpleMessage("المكتبة الرئيسية"),
     "marketing": MessageLookupByLibrary.simpleMessage("التسويق"),
     "message_sent_successfully": MessageLookupByLibrary.simpleMessage(
       "تم إرسال رسالتك بنجاح",
@@ -231,7 +231,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "حدث خطأ ما، يرجى المحاولة مرة أخرى",
         ),
     "status": MessageLookupByLibrary.simpleMessage("الحالة"),
-    "store_support": MessageLookupByLibrary.simpleMessage("دعم المتجر"),
+    "store_support": MessageLookupByLibrary.simpleMessage("دعم المكتبة"),
     "success": MessageLookupByLibrary.simpleMessage("نجاح"),
     "test": MessageLookupByLibrary.simpleMessage("اختبار"),
     "theme": MessageLookupByLibrary.simpleMessage("المظهر"),

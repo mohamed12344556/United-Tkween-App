@@ -559,9 +559,9 @@ class S {
     return Intl.message('Logout', name: 'logout', desc: '', args: []);
   }
 
-  /// `Main Store`
+  /// `Main Library`
   String get main_store {
-    return Intl.message('Main Store', name: 'main_store', desc: '', args: []);
+    return Intl.message('Main Library', name: 'main_store', desc: '', args: []);
   }
 
   /// `Marketing`
@@ -914,10 +914,10 @@ class S {
     return Intl.message('Status', name: 'status', desc: '', args: []);
   }
 
-  /// `Store Support`
+  /// `Library Support`
   String get store_support {
     return Intl.message(
-      'Store Support',
+      'Library Support',
       name: 'store_support',
       desc: '',
       args: [],

@@ -381,7 +381,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         onPressed: () {
                           launchUrl(
                             Uri.parse(
-                              'https://tkweenstore.com/book_details.php?id=${widget.book.id}',
+                              'https://tkweenstore.com/',
                             ),
                           );
                         },
