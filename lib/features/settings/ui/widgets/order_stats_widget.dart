@@ -42,7 +42,7 @@ class OrderStatsWidget extends StatelessWidget {
             title: 'قيد التوصيل',
             value: pendingOrders.toString(),
             icon: Icons.local_shipping,
-            color: Colors.orange,
+            color: Colors.orange,  // استخدام اللون البرتقالي كما كان
             isResponsive: true, 
           ),
           SizedBox(width: context.isTablet ? 16.w : 12.w),
@@ -50,8 +50,8 @@ class OrderStatsWidget extends StatelessWidget {
             title: 'تم التوصيل',
             value: deliveredOrders.toString(),
             icon: Icons.check_circle,
-            color: Colors.green,
-            isResponsive: true, // إضافة خاصية للتجاوبية
+            color: AppColors.success,
+            isResponsive: true,
           ),
         ],
       ),
@@ -61,7 +61,7 @@ class OrderStatsWidget extends StatelessWidget {
   // التخطيط الرأسي - للوضع الأفقي في الشاشات الكبيرة
   Widget _buildVerticalLayout(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(context.isTablet ? 20.r : 16.r), // تباعد متجاوب
+      margin: EdgeInsets.all(context.isTablet ? 20.r : 16.r),
       child: Column(
         children: [
           StatCardWidget(
@@ -69,26 +69,26 @@ class OrderStatsWidget extends StatelessWidget {
             value: totalOrders.toString(),
             icon: Icons.shopping_bag,
             color: AppColors.primary,
-            isResponsive: true, // إضافة خاصية للتجاوبية
-            isVertical: true, // استخدام نسق رأسي في البطاقة
+            isResponsive: true,
+            isVertical: true,
           ),
-          SizedBox(height: context.isTablet ? 16.h : 12.h), // مسافة متجاوبة
+          SizedBox(height: context.isTablet ? 16.h : 12.h),
           StatCardWidget(
             title: 'قيد التوصيل',
             value: pendingOrders.toString(),
             icon: Icons.local_shipping,
-            color: Colors.orange,
-            isResponsive: true, // إضافة خاصية للتجاوبية
-            isVertical: true, // استخدام نسق رأسي في البطاقة
+            color: Colors.orange,  // استخدام اللون البرتقالي كما كان
+            isResponsive: true,
+            isVertical: true,
           ),
-          SizedBox(height: context.isTablet ? 16.h : 12.h), // مسافة متجاوبة
+          SizedBox(height: context.isTablet ? 16.h : 12.h),
           StatCardWidget(
             title: 'تم التوصيل',
             value: deliveredOrders.toString(),
             icon: Icons.check_circle,
-            color: Colors.green,
-            isResponsive: true, // إضافة خاصية للتجاوبية
-            isVertical: true, // استخدام نسق رأسي في البطاقة
+            color: AppColors.success,
+            isResponsive: true,
+            isVertical: true,
           ),
         ],
       ),

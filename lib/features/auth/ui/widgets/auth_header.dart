@@ -17,7 +17,6 @@ class AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.isDarkMode;
     final verticalSpacing = context.screenHeight * 0.02;
 
     return Column(
@@ -34,7 +33,7 @@ class AuthHeader extends StatelessWidget {
           style: TextStyle(
             fontSize: context.screenWidth * 0.06,
             fontWeight: FontWeight.bold,
-            color: isDark ? AppColors.textHint : AppColors.text,
+            color: AppColors.text,
           ),
         ),
 
@@ -45,7 +44,7 @@ class AuthHeader extends StatelessWidget {
           subtitle,
           style: TextStyle(
             fontSize: context.screenWidth * 0.035,
-            color: isDark ? AppColors.textHint : AppColors.textSecondary,
+            color:  AppColors.textSecondary,
           ),
         ),
 

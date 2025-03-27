@@ -74,7 +74,7 @@ class OrderItemCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: bottomMargin),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(cardBorderRadius),
         boxShadow: [
           BoxShadow(
@@ -266,7 +266,7 @@ class OrderItemCard extends StatelessWidget {
                 Icon(
                   Icons.calendar_today,
                   size: iconSize * 0.7,
-                  color: AppColors.primary,
+                  color: AppColors.primary,  // الألوان الأصلية
                 ),
                 SizedBox(width: isResponsive ? 4.w : 4),
                 Text(
@@ -325,7 +325,7 @@ class OrderItemCard extends StatelessWidget {
             child: Text(
               '${order.price.toStringAsFixed(0)} ج.م',
               style: TextStyle(
-                color: AppColors.secondary,
+                color: AppColors.secondary,  // الألوان الأصلية
                 fontSize: priceFontSize,
                 fontWeight: FontWeight.bold,
               ),
@@ -422,7 +422,7 @@ class OrderItemCard extends StatelessWidget {
             child: Text(
               '${order.price.toStringAsFixed(0)} ج.م',
               style: TextStyle(
-                color: AppColors.secondary,
+                color: AppColors.secondary,  // الألوان الأصلية
                 fontSize: priceFontSize,
                 fontWeight: FontWeight.bold,
               ),
@@ -450,7 +450,7 @@ class OrderItemCard extends StatelessWidget {
             style: TextStyle(
               fontSize: titleFontSize,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: AppColors.text,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -487,7 +487,7 @@ class OrderItemCard extends StatelessWidget {
         vertical: isResponsive ? 12.h : 12,
       ),
       decoration: BoxDecoration(
-        color: AppColors.darkBackground.withOpacity(0.5),
+        color: AppColors.lightGrey.withOpacity(0.5),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(isResponsive ? 16.r : 16),
           bottomRight: Radius.circular(isResponsive ? 16.r : 16),
@@ -505,7 +505,7 @@ class OrderItemCard extends StatelessWidget {
             _getStatusMessage(order.status),
             style: TextStyle(
               fontSize: statusMessageFontSize,
-              color: Colors.grey[300],
+              color: Colors.grey[700],
             ),
           ),
           const Spacer(),
@@ -517,9 +517,9 @@ class OrderItemCard extends StatelessWidget {
               icon: Icon(Icons.download, size: footerIconSize),
               label: Text('تحميل', style: TextStyle(fontSize: buttonFontSize)),
               style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.primary,
+                foregroundColor: AppColors.primary,  // الألوان الأصلية
                 side: BorderSide(
-                  color: AppColors.primary,
+                  color: AppColors.primary,  // الألوان الأصلية
                   width: isResponsive ? 1.5 : 1,
                 ),
                 shape: RoundedRectangleBorder(
@@ -569,9 +569,9 @@ class OrderItemCard extends StatelessWidget {
   Color _getStatusColor(OrderStatus status) {
     switch (status) {
       case OrderStatus.processing:
-        return Colors.blue;
+        return Colors.blue;  // الألوان الأصلية
       case OrderStatus.shipped:
-        return Colors.orange;
+        return Colors.orange;  // الألوان الأصلية
       case OrderStatus.delivered:
         return AppColors.success;
       case OrderStatus.cancelled:

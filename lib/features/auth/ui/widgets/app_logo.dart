@@ -43,7 +43,7 @@ class AppLogo extends StatelessWidget {
       ),
       child: Icon(
         icon,
-        color: isDark ? AppColors.text : AppColors.textSecondary,
+        color: AppColors.unselectedChip,
         size: iconSize,
       ),
     );

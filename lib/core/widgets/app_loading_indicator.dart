@@ -19,8 +19,7 @@ class AppLoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final Color indicatorColor =
-        color ?? (isDarkMode ? Colors.white : AppColors.secondary);
+    final Color indicatorColor = color ?? AppColors.primary;
 
     final Widget loadingIndicator = Center(
       child: Column(
@@ -40,7 +39,7 @@ class AppLoadingIndicator extends StatelessWidget {
               message!,
               style: TextStyle(
                 fontSize: 16,
-                color: isDarkMode ? Colors.white70 : AppColors.textSecondary,
+                color: AppColors.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -52,8 +51,15 @@ class AppLoadingIndicator extends StatelessWidget {
     if (showBackground) {
       return Container(
         decoration: BoxDecoration(
-          color: isDarkMode ? Colors.black54 : Colors.white70,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
         padding: const EdgeInsets.all(24),
         child: loadingIndicator,

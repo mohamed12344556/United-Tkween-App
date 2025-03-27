@@ -39,15 +39,13 @@ class SelectionOptionChip extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color:
-              isSelected
-                  ? AppColors.selectedChip
-                  : (isDark ? AppColors.darkSurface : AppColors.unselectedChip),
+              isSelected ? AppColors.selectedChip : (AppColors.unselectedChip),
           borderRadius: BorderRadius.circular(borderRadius),
           border: Border.all(
             color:
                 isSelected
                     ? AppColors.selectedChip.withValues(alpha: 0.7)
-                    : (isDark ? AppColors.darkSecondary : AppColors.border),
+                    : AppColors.selectedChip.withValues(alpha: 0.7),
             width: 1,
           ),
           boxShadow:
@@ -70,7 +68,7 @@ class SelectionOptionChip extends StatelessWidget {
               opacity: isSelected ? 1.0 : 0.0,
               child: Icon(
                 Icons.check_circle,
-                color: isDark ? AppColors.text : AppColors.text,
+                color: AppColors.unselectedChip,
                 size: iconSize,
               ),
             ),
@@ -85,10 +83,9 @@ class SelectionOptionChip extends StatelessWidget {
                     fontSize: fontSize,
                     color:
                         isSelected
-                            ? (isDark ? AppColors.text : AppColors.text)
-                            : (isDark
-                                ? AppColors.textSecondary
-                                : AppColors.text),
+                            ? AppColors.unselectedChip
+                            : AppColors.darkBackground,
+
                     fontWeight:
                         isSelected ? FontWeight.w600 : FontWeight.normal,
                   ),

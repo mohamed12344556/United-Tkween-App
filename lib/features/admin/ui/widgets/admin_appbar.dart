@@ -16,7 +16,7 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title,
         style: const TextStyle(
-          color: AppColors.textColorWhite,
+          // color: AppColors.textColorWhite,
           fontWeight: FontWeight.bold,
         ),
       ),

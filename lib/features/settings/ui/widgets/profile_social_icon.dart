@@ -25,7 +25,7 @@ class _ProfileSocialIconState extends State<ProfileSocialIcon> {
   @override
   Widget build(BuildContext context) {
     final iconColor = widget.color ?? AppColors.primary;
-    final bgColor = widget.backgroundColor ?? Colors.black.withOpacity(0.3);
+    final bgColor = widget.backgroundColor ?? Colors.white.withOpacity(0.9);
     
     return GestureDetector(
       onTap: widget.onTap,

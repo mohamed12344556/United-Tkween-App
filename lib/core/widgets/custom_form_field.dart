@@ -36,7 +36,7 @@ class CustomFormField extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.black87,
               ),
             ),
             if (isOptional)
@@ -45,7 +45,7 @@ class CustomFormField extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
-                  color: Colors.grey[400],
+                  color: Colors.grey[600],
                 ),
               ),
           ],
@@ -54,7 +54,7 @@ class CustomFormField extends StatelessWidget {
         AppTextField(
           controller: controller,
           hintText: label,
-          style: TextStyle(color: readOnly ? Colors.grey[400] : Colors.white),
+          style: TextStyle(color: readOnly ? Colors.grey[600] : AppColors.text),
           keyboardType: keyboardType,
           isPassword: false,
           validator: validator,
@@ -70,7 +70,7 @@ class CustomFormField extends StatelessWidget {
                   )
                   : null,
           filled: true,
-          fillColor: AppColors.darkSurface,
+          fillColor: AppColors.lightGrey,
           borderRadius: 16.0,
         ),
       ],

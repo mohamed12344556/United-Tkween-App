@@ -90,13 +90,14 @@ class SupportMessageInput extends StatelessWidget {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.send, size: 20),
+                    const Icon(Icons.send, color: Colors.white, size: 20),
                     const SizedBox(width: 8),
                     Text(
                       sendButtonText,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                   ],

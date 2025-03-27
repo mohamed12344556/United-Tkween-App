@@ -5,12 +5,16 @@ class FilterTabsWidget extends StatelessWidget {
   final TabController tabController;
   final List<String> tabTitles;
   final ValueChanged<int>? onTabChanged;
+  final Color? textColor;
+  final Color? backgroundColor;
 
   const FilterTabsWidget({
     super.key,
     required this.tabController,
     required this.tabTitles,
     this.onTabChanged,
+    this.textColor = AppColors.primary,
+    this.backgroundColor = Colors.white,
   });
 
   @override
@@ -21,7 +25,7 @@ class FilterTabsWidget extends StatelessWidget {
         vertical: context.isTablet ? 16.h : 12.h,
       ),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
@@ -39,8 +43,8 @@ class FilterTabsWidget extends StatelessWidget {
             color: AppColors.primary,
             borderRadius: BorderRadius.circular(12.r),
           ),
-          labelColor: AppColors.secondary,
-          unselectedLabelColor: Colors.white,
+          labelColor: Colors.white,
+          unselectedLabelColor: textColor,
           labelStyle: TextStyle(
             fontSize: context.isTablet ? 16.sp : 14.sp,
             fontWeight: FontWeight.bold,

@@ -13,6 +13,7 @@ class EmptyStateWidget extends StatelessWidget {
   final double? titleSize;
   final double? messageSize;
   final double? buttonWidth;
+  final Color? textColor;
 
   const EmptyStateWidget({
     super.key,
@@ -26,6 +27,7 @@ class EmptyStateWidget extends StatelessWidget {
     this.titleSize,
     this.messageSize,
     this.buttonWidth,
+    this.textColor,
   });
 
   @override
@@ -48,7 +50,7 @@ class EmptyStateWidget extends StatelessWidget {
               width: context.isTablet ? 120.r : 100.r,
               height: context.isTablet ? 120.r : 100.r,
               decoration: BoxDecoration(
-                color: AppColors.darkSurface,
+                color: AppColors.unselectedChip,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
@@ -75,7 +77,7 @@ class EmptyStateWidget extends StatelessWidget {
               message,
               style: TextStyle(
                 fontSize: finalMessageSize,
-                color: Colors.grey[400],
+                color: Colors.grey[700],
               ),
               textAlign: TextAlign.center,
             ),
@@ -98,7 +100,7 @@ class EmptyStateWidget extends StatelessWidget {
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.secondary,
+                    foregroundColor: AppColors.unselectedChip,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50.r),
                     ),

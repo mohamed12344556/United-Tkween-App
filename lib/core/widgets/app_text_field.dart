@@ -66,8 +66,6 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.isDarkMode;
-
     // حجم النص المتجاوب مع الشاشة
     final fontSize = context.screenWidth * 0.04;
     final hintSize = context.screenWidth * 0.035;
@@ -76,8 +74,7 @@ class AppTextField extends StatelessWidget {
     final radius = borderRadius ?? 12.0;
 
     // ألوان محسنة بناءً على وضع السمة
-    final textFieldFillColor =
-        fillColor ?? (isDark ? AppColors.darkSecondary : Colors.white);
+    final textFieldFillColor = fillColor ?? AppColors.darkSecondary;
 
     // خلفية مملوءة بشكل افتراضي ما لم يتم تحديد خلاف ذلك
     final shouldFill = filled ?? true;
@@ -108,7 +105,7 @@ class AppTextField extends StatelessWidget {
           style ??
           TextStyle(
             fontSize: fontSize,
-            color: isDark ? Colors.white : Colors.black87,
+            color: Colors.white,
             fontWeight: FontWeight.normal,
           ),
       cursorColor: AppColors.primary,
@@ -118,7 +115,7 @@ class AppTextField extends StatelessWidget {
         hintText: hintText,
         labelText: labelText,
         hintStyle: TextStyle(
-          color: isDark ? Colors.grey[400] : Colors.grey[500],
+          color:  Colors.grey[400] ,
           fontSize: hintSize,
         ),
         filled: shouldFill,
@@ -130,7 +127,7 @@ class AppTextField extends StatelessWidget {
                 ? IconButton(
                   icon: Icon(
                     passwordVisible ? Icons.visibility_off : Icons.visibility,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    color: Colors.grey[400] ,
                     size: iconSize,
                   ),
                   splashRadius: iconSize * 0.9,
@@ -142,7 +139,7 @@ class AppTextField extends StatelessWidget {
           borderSide:
               borderSide ??
               BorderSide(
-                color: isDark ? Colors.transparent : Colors.grey[300]!,
+                color:  Colors.transparent ,
                 width: 1,
               ),
         ),
@@ -151,7 +148,7 @@ class AppTextField extends StatelessWidget {
           borderSide:
               borderSide ??
               BorderSide(
-                color: isDark ? Colors.transparent : Colors.grey[300]!,
+                color:Colors.transparent ,
                 width: 1,
               ),
         ),
@@ -174,8 +171,8 @@ class AppTextField extends StatelessWidget {
         counterText: "",
 
         prefixIconColor:
-            prefixIconColor ?? (isDark ? Colors.grey[400] : Colors.grey[600]),
-        suffixIconColor: isDark ? Colors.grey[400] : Colors.grey[600],
+            prefixIconColor ??  Colors.grey[400] ,
+        suffixIconColor:  Colors.grey[400] ,
       ),
     );
   }

@@ -5,7 +5,7 @@
 // class EditProfileButtonWidget extends StatelessWidget {
 //   final VoidCallback onPressed;
 //   final String buttonText;
-  
+
 //   const EditProfileButtonWidget({
 //     super.key,
 //     required this.onPressed,
@@ -50,9 +50,6 @@
 //   }
 // }
 
-
-// lib/features/settings/ui/widgets/edit_profile_button_widget.dart
-
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
 
@@ -68,15 +65,13 @@ class EditProfileButtonWidget extends StatelessWidget {
       height: 56.h,
       child: ElevatedButton.icon(
         onPressed: onPressed,
-        icon: Icon(
-          Icons.edit,
-          size: 20.r,
-        ),
+        icon: Icon(Icons.edit, color: AppColors.unselectedChip, size: 20.r),
         label: Text(
           'تعديل الملف الشخصي',
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.bold,
+            color: AppColors.unselectedChip,
           ),
         ),
         style: ElevatedButton.styleFrom(
