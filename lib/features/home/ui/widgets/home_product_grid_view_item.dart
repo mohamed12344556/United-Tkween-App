@@ -173,8 +173,6 @@
 //   }
 // }
 
-
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -234,10 +232,7 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
               offset: const Offset(0, 2),
             ),
           ],
-          border: Border.all(
-            color: Colors.grey.shade200,
-            width: 1,
-          ),
+          border: Border.all(color: Colors.grey.shade200, width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +318,7 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                '${widget.book.getFormattedPdfPrice}\$',
+                                '${widget.book.getFormattedPdfPrice} ر.س',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -348,7 +343,7 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                '${widget.book.getFormattedPrice}\$',
+                                '${widget.book.getFormattedPrice} ر.س',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,

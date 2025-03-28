@@ -343,7 +343,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                                     .getFormattedPdfPrice !=
                                                 0)
                                               Text(
-                                                "PDF: ${products[index].getFormattedPdfPrice}\$",
+                                                "PDF: ${products[index].getFormattedPdfPrice} ر.س",
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
@@ -357,7 +357,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                                     .getFormattedPrice !=
                                                 0)
                                               Text(
-                                                "Paper: ${products[index].getFormattedPrice}\$",
+                                                "Paper: ${products[index].getFormattedPrice} ر.س",
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(

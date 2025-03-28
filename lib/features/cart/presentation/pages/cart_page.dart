@@ -94,12 +94,12 @@
 //       final item = cartItems[i];
 //       message += "${i + 1}. ${item.bookName} (${item.type})\n";
 //       message +=
-//           "   السعر: \$${item.unitPrice.toStringAsFixed(2)} × ${item.quantity} = \$${(item.unitPrice * item.quantity).toStringAsFixed(2)}\n";
+//           "   السعر:  ر.س${item.unitPrice.toStringAsFixed(2)} × ${item.quantity} =  ر.س${(item.unitPrice * item.quantity).toStringAsFixed(2)}\n";
 //     }
 
-//     message += "\n*المجموع الفرعي:* \$${subtotal.toStringAsFixed(2)}\n";
-//     message += "*تكلفة الشحن:* \$${shippingCost.toStringAsFixed(2)}\n";
-//     message += "*إجمالي المبلغ:* \$${totalAmount.toStringAsFixed(2)}\n";
+//     message += "\n*المجموع الفرعي:*  ر.س${subtotal.toStringAsFixed(2)}\n";
+//     message += "*تكلفة الشحن:*  ر.س${shippingCost.toStringAsFixed(2)}\n";
+//     message += "*إجمالي المبلغ:*  ر.س${totalAmount.toStringAsFixed(2)}\n";
 
 //     // Encode the message for URL
 //     final encodedMessage = Uri.encodeComponent(message);
@@ -302,7 +302,7 @@
 //                                     ),
 //                                     const SizedBox(height: 4),
 //                                     Text(
-//                                       '\$${item.unitPrice}',
+//                                       ' ر.س${item.unitPrice}',
 //                                       style: const TextStyle(
 //                                         color: Colors.white,
 //                                         fontSize: 16,
@@ -371,7 +371,7 @@
 //                               ),
 //                             ),
 //                             Text(
-//                               '\$$subtotal',
+//                               ' ر.س$subtotal',
 //                               style: const TextStyle(
 //                                 color: Colors.white,
 //                                 fontSize: 16,
@@ -391,7 +391,7 @@
 //                               ),
 //                             ),
 //                             Text(
-//                               '\$$shippingCost',
+//                               ' ر.س$shippingCost',
 //                               style: const TextStyle(
 //                                 color: Colors.white,
 //                                 fontSize: 16,
@@ -412,7 +412,7 @@
 //                               ),
 //                             ),
 //                             Text(
-//                               '\$$totalAmount',
+//                               ' ر.س$totalAmount',
 //                               style: const TextStyle(
 //                                 color: Colors.white,
 //                                 fontSize: 18,
@@ -541,12 +541,12 @@ class _CartPageState extends State<CartPage> {
       final item = cartItems[i];
       message += "${i + 1}. ${item.bookName} (${item.type})\n";
       message +=
-          "   السعر: \$${item.unitPrice.toStringAsFixed(2)} × ${item.quantity} = \$${(item.unitPrice * item.quantity).toStringAsFixed(2)}\n";
+          "   السعر:  ر.س${item.unitPrice.toStringAsFixed(2)} × ${item.quantity} =  ر.س${(item.unitPrice * item.quantity).toStringAsFixed(2)}\n";
     }
 
-    message += "\n*المجموع الفرعي:* \$${subtotal.toStringAsFixed(2)}\n";
-    message += "*تكلفة الشحن:* \$${shippingCost.toStringAsFixed(2)}\n";
-    message += "*إجمالي المبلغ:* \$${totalAmount.toStringAsFixed(2)}\n";
+    message += "\n*المجموع الفرعي:*  ر.س${subtotal.toStringAsFixed(2)}\n";
+    message += "*تكلفة الشحن:*  ر.س${shippingCost.toStringAsFixed(2)}\n";
+    message += "*إجمالي المبلغ:*  ر.س${totalAmount.toStringAsFixed(2)}\n";
 
     // Encode the message for URL
     final encodedMessage = Uri.encodeComponent(message);
@@ -792,7 +792,7 @@ class _CartPageState extends State<CartPage> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '\$${item.unitPrice}',
+                                      ' ر.س${item.unitPrice}',
                                       style: TextStyle(
                                         color: AppColors.primary,
                                         fontSize: 16,
@@ -885,7 +885,7 @@ class _CartPageState extends State<CartPage> {
                               ),
                             ),
                             Text(
-                              '\$$subtotal',
+                              'ر.س $subtotal',
                               style: TextStyle(
                                 color: AppColors.text,
                                 fontSize: 16,
@@ -906,7 +906,7 @@ class _CartPageState extends State<CartPage> {
                               ),
                             ),
                             Text(
-                              '\$$shippingCost',
+                              'ر.س $shippingCost',
                               style: TextStyle(
                                 color: AppColors.text,
                                 fontSize: 16,
@@ -930,7 +930,7 @@ class _CartPageState extends State<CartPage> {
                               ),
                             ),
                             Text(
-                              '\$$totalAmount',
+                              'ر.س $totalAmount',
                               style: TextStyle(
                                 color: AppColors.primary,
                                 fontSize: 18,

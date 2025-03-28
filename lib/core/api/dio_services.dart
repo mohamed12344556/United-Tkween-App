@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:united_formation_app/core/api/auth_interceptor.dart';
 
 import '../utilities/storage_keys.dart';
 
@@ -19,42 +20,82 @@ class DioService {
     _initializeInterceptors();
   }
 
+  // void _initializeInterceptors() {
+  //   _dio.interceptors.addAll([
+  //     InterceptorsWrapper(
+  //       onRequest: (options, handler) {
+  //         String? userToken = getToken();
+  //         String language = getCurrentLanguage();
+
+  //         options.headers.addAll({
+  //           "Authorization": "Bearer $userToken",
+  //           "Accept": "application/json",
+  //           "locale": language,
+  //         });
+
+  //         debugPrint("✅ Headers Added from Interceptor: ${options.headers}");
+
+  //         return handler.next(options); // continue
+  //       },
+  //       onError: (error, handler) {
+  //         debugPrint("❌ Dio Error: $error");
+  //         return handler.next(error);
+  //       },
+  //       onResponse: (response, handler) {
+  //         debugPrint("✅ Dio Response: ${response.statusCode}");
+  //         return handler.next(response);
+  //       },
+  //     ),
+  //     LogInterceptor(
+  //       request: true,
+  //       requestHeader: true,
+  //       requestBody: true,
+  //       responseHeader: true,
+  //       responseBody: true,
+  //       error: true,
+  //     ),
+  //   ]);
+  // }
+
   void _initializeInterceptors() {
-    _dio.interceptors.addAll([
-      InterceptorsWrapper(
-        onRequest: (options, handler) {
-          String? userToken = getToken();
-          String language = getCurrentLanguage();
+  _dio.interceptors.addAll([
+    // أضف معترض المصادقة
+    AuthInterceptor(),
+    // المعترضات الحالية
+    InterceptorsWrapper(
+      onRequest: (options, handler) {
+        String? userToken = getToken();
+        String language = getCurrentLanguage();
 
-          options.headers.addAll({
-            "Authorization": "Bearer $userToken",
-            "Accept": "application/json",
-            "locale": language,
-          });
+        options.headers.addAll({
+          "Authorization": "Bearer $userToken",
+          "Accept": "application/json",
+          "locale": language,
+        });
 
-          debugPrint("✅ Headers Added from Interceptor: ${options.headers}");
+        debugPrint("✅ Headers Added from Interceptor: ${options.headers}");
 
-          return handler.next(options); // continue
-        },
-        onError: (error, handler) {
-          debugPrint("❌ Dio Error: $error");
-          return handler.next(error);
-        },
-        onResponse: (response, handler) {
-          debugPrint("✅ Dio Response: ${response.statusCode}");
-          return handler.next(response);
-        },
-      ),
-      LogInterceptor(
-        request: true,
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: true,
-        responseBody: true,
-        error: true,
-      ),
-    ]);
-  }
+        return handler.next(options);
+      },
+      onError: (error, handler) {
+        debugPrint("❌ Dio Error: $error");
+        return handler.next(error);
+      },
+      onResponse: (response, handler) {
+        debugPrint("✅ Dio Response: ${response.statusCode}");
+        return handler.next(response);
+      },
+    ),
+    LogInterceptor(
+      request: true,
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: true,
+      responseBody: true,
+      error: true,
+    ),
+  ]);
+}
 
   String getCurrentLanguage() {
     return Prefs.getData(key: 'language') ?? 'en';

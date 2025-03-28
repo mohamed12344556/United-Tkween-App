@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:united_formation_app/features/home/domain/home_repo.dart';
 import '../../data/book_model.dart';
 import '../../data/categories_model.dart';
-
+import '../../../../core/core.dart';
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -18,62 +18,179 @@ class HomeCubit extends Cubit<HomeState> {
 
   HomeCubit({required this.homeRepo}) : super(HomeInitial());
 
-  void getHomeBooks() async {
-    emit(HomeBooksLoadingState());
+  // void getHomeBooks() async {
+  //   emit(HomeBooksLoadingState());
     
-    try {
-      final response = await homeRepo.getHomeBooks();
-      response.fold(
-        (failure) {
-          log("فشل تحميل الكتب: ${failure.errorMessage}");
-          emit(HomeBooksFailureState(failure.toString()));
-          // تحميل الفئات حتى في حال فشل تحميل الكتب
-          getBooksCategories();
-        }, 
-        (booksList) {
-          // تخزين جميع الكتب للفلترة لاحقًا
-          allBooks = booksList;
-          books = booksList;
+  //   try {
+  //     final response = await homeRepo.getHomeBooks();
+  //     response.fold(
+  //       (failure) {
+  //         log("فشل تحميل الكتب: ${failure.errorMessage}");
+  //         emit(HomeBooksFailureState(failure.toString()));
+  //         // تحميل الفئات حتى في حال فشل تحميل الكتب
+  //         getBooksCategories();
+  //       }, 
+  //       (booksList) {
+  //         // تخزين جميع الكتب للفلترة لاحقًا
+  //         allBooks = booksList;
+  //         books = booksList;
           
-          // سجل معلومات التصحيح
-          for (var book in books) {
-            log('Book: ${book.title}, Category EN: ${book.category.nameEn}');
-          }
+  //         // سجل معلومات التصحيح
+  //         for (var book in books) {
+  //           log('Book: ${book.title}, Category EN: ${book.category.nameEn}');
+  //         }
           
-          emit(HomeBooksSuccessState(books: books));
+  //         emit(HomeBooksSuccessState(books: books));
           
-          // تحميل الفئات بعد نجاح تحميل الكتب
-          getBooksCategories();
-        }
-      );
-    } catch (e) {
-      log("استثناء غير متوقع في تحميل الكتب: $e");
-      emit(HomeBooksFailureState(e.toString()));
-      // محاولة تحميل الفئات حتى في حال حدوث استثناء
-      getBooksCategories();
-    }
-  }
+  //         // تحميل الفئات بعد نجاح تحميل الكتب
+  //         getBooksCategories();
+  //       }
+  //     );
+  //   } catch (e) {
+  //     log("استثناء غير متوقع في تحميل الكتب: $e");
+  //     emit(HomeBooksFailureState(e.toString()));
+  //     // محاولة تحميل الفئات حتى في حال حدوث استثناء
+  //     getBooksCategories();
+  //   }
+  // }
 
-  void getBooksCategories() async {
-    emit(HomeCategoriesLoadingState());
+  // void getBooksCategories() async {
+  //   emit(HomeCategoriesLoadingState());
     
-    try {
-      final response = await homeRepo.getBooksCategories();
-      response.fold(
-        (failure) {
-          log("فشل تحميل الفئات: ${failure.errorMessage}");
-          emit(HomeCategoriesFailureState(failure.toString()));
-        }, 
-        (categoriesList) {
-          booksCategories = categoriesList;
-          emit(HomeCategoriesSuccessState(categories: booksCategories));
+  //   try {
+  //     final response = await homeRepo.getBooksCategories();
+  //     response.fold(
+  //       (failure) {
+  //         log("فشل تحميل الفئات: ${failure.errorMessage}");
+  //         emit(HomeCategoriesFailureState(failure.toString()));
+  //       }, 
+  //       (categoriesList) {
+  //         booksCategories = categoriesList;
+  //         emit(HomeCategoriesSuccessState(categories: booksCategories));
+  //       }
+  //     );
+  //   } catch (e) {
+  //     log("استثناء غير متوقع في تحميل الفئات: $e");
+  //     emit(HomeCategoriesFailureState(e.toString()));
+  //   }
+  // }
+
+
+  void getHomeBooks() async {
+  emit(HomeBooksLoadingState());
+  
+  try {
+    final response = await homeRepo.getHomeBooks();
+    response.fold(
+      (failure) {
+        log("فشل تحميل الكتب: ${failure.errorMessage}");
+        
+        // التحقق من رسالة الخطأ إذا كانت متعلقة بالتوكن
+        if (_isTokenError(failure.errorMessage)) {
+          _handleInvalidToken();
+          return;
         }
-      );
-    } catch (e) {
-      log("استثناء غير متوقع في تحميل الفئات: $e");
-      emit(HomeCategoriesFailureState(e.toString()));
+        
+        emit(HomeBooksFailureState(failure.toString()));
+        // تحميل الفئات حتى في حال فشل تحميل الكتب
+        getBooksCategories();
+      }, 
+      (booksList) {
+        // تخزين جميع الكتب للفلترة لاحقًا
+        allBooks = booksList;
+        books = booksList;
+        
+        // سجل معلومات التصحيح
+        for (var book in books) {
+          log('Book: ${book.title}, Category EN: ${book.category.nameEn}');
+        }
+        
+        emit(HomeBooksSuccessState(books: books));
+        
+        // تحميل الفئات بعد نجاح تحميل الكتب
+        getBooksCategories();
+      }
+    );
+  } catch (e) {
+    log("استثناء غير متوقع في تحميل الكتب: $e");
+    
+    // التحقق من الاستثناء إذا كان متعلقًا بالتوكن
+    if (_isTokenException(e)) {
+      _handleInvalidToken();
+      return;
     }
+    
+    emit(HomeBooksFailureState(e.toString()));
+    // محاولة تحميل الفئات حتى في حال حدوث استثناء
+    getBooksCategories();
   }
+}
+
+void getBooksCategories() async {
+  emit(HomeCategoriesLoadingState());
+  
+  try {
+    final response = await homeRepo.getBooksCategories();
+    response.fold(
+      (failure) {
+        log("فشل تحميل الفئات: ${failure.errorMessage}");
+        
+        // التحقق من رسالة الخطأ إذا كانت متعلقة بالتوكن
+        if (_isTokenError(failure.errorMessage)) {
+          _handleInvalidToken();
+          return;
+        }
+        
+        emit(HomeCategoriesFailureState(failure.toString()));
+      }, 
+      (categoriesList) {
+        booksCategories = categoriesList;
+        emit(HomeCategoriesSuccessState(categories: booksCategories));
+      }
+    );
+  } catch (e) {
+    log("استثناء غير متوقع في تحميل الفئات: $e");
+    
+    // التحقق من الاستثناء إذا كان متعلقًا بالتوكن
+    if (_isTokenException(e)) {
+      _handleInvalidToken();
+      return;
+    }
+    
+    emit(HomeCategoriesFailureState(e.toString()));
+  }
+}
+
+// دالة للتحقق من خطأ التوكن
+bool _isTokenError(String errorMessage) {
+  errorMessage = errorMessage.toLowerCase();
+  return errorMessage.contains("invalid token") || 
+         errorMessage.contains("unauthorized") || 
+         errorMessage.contains("401") ||
+         errorMessage.contains("authentication");
+}
+
+// دالة للتحقق من استثناء التوكن
+bool _isTokenException(dynamic exception) {
+  String exceptionStr = exception.toString().toLowerCase();
+  return exceptionStr.contains("invalid token") || 
+         exceptionStr.contains("unauthorized") || 
+         exceptionStr.contains("401") ||
+         exceptionStr.contains("authentication");
+}
+
+// دالة للتعامل مع التوكن غير الصالح
+void _handleInvalidToken() {
+  // مسح التوكن أولاً
+  TokenManager.clearTokens();
+  
+  // التوجيه إلى صفحة تسجيل الدخول
+  NavigationService.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+    Routes.loginView,
+    (route) => false,
+    arguments: {'fresh_start': true},
+  );
+}
 
   void filterBooksByCategoryEn(String categoryNameEn) {
     emit(HomeBooksLoadingState());

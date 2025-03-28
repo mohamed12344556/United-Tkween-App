@@ -407,8 +407,6 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/core.dart';
@@ -529,7 +527,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         builder: (context, state) {
           if (state.isLoading && state.profile == null) {
             return Center(
-              child: CircularProgressIndicator(
+              child:  CircularProgressIndicator(
               color: AppColors.primary,
               backgroundColor: AppColors.secondary.withValues(alpha: 51),
               strokeWidth: context.isTablet ? 3.0 : 2.0,
@@ -768,8 +766,11 @@ class _EditProfileViewState extends State<EditProfileView> {
                           width: 24.r,
                           height: 24.r,
                           child: CircularProgressIndicator(
-                            strokeWidth: 2.r,
-                            color: Colors.white,
+                            color: AppColors.primary,
+                            backgroundColor: AppColors.secondary.withValues(
+                              alpha: 51,
+                            ),
+                            strokeWidth: context.isTablet ? 3.0 : 2.0,
                           ),
                         )
                         : Text(
@@ -811,7 +812,10 @@ class _EditProfileViewState extends State<EditProfileView> {
         style: TextStyle(color: AppColors.text, fontSize: 16.sp),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp),
+          labelStyle: TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 14.sp,
+          ),
           prefixIcon: Icon(prefixIcon, color: AppColors.primary, size: 22.r),
           suffixIcon:
               isOptional

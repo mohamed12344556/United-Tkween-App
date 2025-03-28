@@ -770,7 +770,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
                     if (!Platform.isIOS) ...[
                       Text(
-                        "Price: ${getSelectedPrice()}\$",
+                        "Price: ${getSelectedPrice()} ر.س",
                         style: TextStyle(
                           color: AppColors.text,
                           fontSize: 18,
@@ -782,7 +782,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       Row(
                         children: [
                           Text(
-                            "Total: ${formatNumber(totalPrice)}\$",
+                            "Total: ${formatNumber(totalPrice)} ر.س",
                             style: TextStyle(
                               color: AppColors.primary,
                               fontSize: 20,
