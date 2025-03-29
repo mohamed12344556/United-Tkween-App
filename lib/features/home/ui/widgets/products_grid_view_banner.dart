@@ -59,14 +59,15 @@ class ProductsGridViewBanner extends StatelessWidget {
         topRight: Radius.circular(20),
       ),
       child: SizedBox(
-        height: screenHeight * 0.180,
+        // height: screenHeight * 0.180,
+        height: screenHeight * 0.21,
         width: double.infinity,
         child: FancyShimmerImage(
           imageUrl: book.imageUrl.asFullImageUrl ??
               'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png',
           errorWidget: Image.network(
               'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png'),
-          boxFit: BoxFit.cover,
+          boxFit: BoxFit.fill,
         ),
       ),
     );
