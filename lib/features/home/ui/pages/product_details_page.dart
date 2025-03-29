@@ -457,6 +457,7 @@
 //   }
 // }
 
+
 import 'dart:io';
 
 import 'package:collection/collection.dart';
@@ -482,6 +483,7 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   late String selectedType;
   bool _isGuest = false;
+  bool _isDescriptionExpanded = false; // حالة لتوسيع وتقليص الوصف
 
   @override
   void initState() {
@@ -702,13 +704,88 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       ],
                     ),
                     SizedBox(height: 20),
+                    
+                    // قسم وصف الكتاب
+                    if (widget.book.description.isNotEmpty) ...[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "الوصف",
+                            style: TextStyle(
+                              color: AppColors.text,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                _isDescriptionExpanded = !_isDescriptionExpanded;
+                              });
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AnimatedCrossFade(
+                                  firstChild: Text(
+                                    widget.book.description,
+                                    style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 14,
+                                      height: 1.5,
+                                    ),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  secondChild: Text(
+                                    widget.book.description,
+                                    style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 14,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                  crossFadeState: _isDescriptionExpanded
+                                      ? CrossFadeState.showSecond
+                                      : CrossFadeState.showFirst,
+                                  duration: Duration(milliseconds: 300),
+                                ),
+                                SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _isDescriptionExpanded ? "عرض أقل" : "عرض المزيد",
+                                      style: TextStyle(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Icon(
+                                      _isDescriptionExpanded
+                                          ? Icons.keyboard_arrow_up
+                                          : Icons.keyboard_arrow_down,
+                                      color: AppColors.primary,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Divider(height: 24, color: Colors.grey.shade300),
+                        ],
+                      ),
+                    ],
+                    
                     SizedBox(height: 16),
 
                     Text(
                       "Category",
                       style: TextStyle(
                         color: AppColors.text,
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -729,6 +806,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
 
                     SizedBox(height: 25),
+                    Text(
+                      "نوع الكتاب",
+                      style: TextStyle(
+                        color: AppColors.text,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
@@ -799,6 +885,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   }
                                 },
                                 child: Container(
+                                  padding: EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(4),
                                     color: AppColors.primary,
@@ -806,6 +893,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   child: Icon(
                                     Icons.remove,
                                     color: Colors.white,
+                                    size: 16,
                                   ),
                                 ),
                               ),
@@ -824,11 +912,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               GestureDetector(
                                 onTap: () => setState(() => quantity++),
                                 child: Container(
+                                  padding: EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(4),
                                     color: AppColors.primary,
                                   ),
-                                  child: Icon(Icons.add, color: Colors.white),
+                                  child: Icon(Icons.add, color: Colors.white, size: 16),
                                 ),
                               ),
                             ],

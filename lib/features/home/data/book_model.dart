@@ -53,6 +53,9 @@ class BookModel extends HiveObject {
 
   @HiveField(6)
   final Category category;
+  
+  @HiveField(7)
+  final String description;
 
   BookModel({
     required this.id,
@@ -62,6 +65,7 @@ class BookModel extends HiveObject {
     required this.pdfPrice,
     required this.bookType,
     required this.category,
+    this.description = "", // إضافة حقل الوصف مع قيمة افتراضية
   });
 
   String getLocalizedCategory(BuildContext context) {
@@ -85,6 +89,7 @@ class BookModel extends HiveObject {
       pdfPrice: json['pdf_price'] ?? '',
       bookType: json['book_type'] ?? '',
       category: Category.fromJson(json['category'] ?? {}),
+      description: json['description'] ?? '', // استخراج الوصف من JSON
     );
   }
 
@@ -97,6 +102,7 @@ class BookModel extends HiveObject {
       'pdf_price': pdfPrice,
       'book_type': bookType,
       'category': category.toJson(),
+      'description': description, // إضافة الوصف إلى JSON
     };
   }
 }
