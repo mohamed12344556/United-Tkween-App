@@ -29,14 +29,11 @@
 //         ),
 //         itemBuilder: (context, index) => HomeProductsGridViewItem(book: books[index],),
 
-
 //         itemCount: books.length,
 //       ),
 //     );
 //   }
 // }
-
-
 
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/features/admin/data/models/product_model.dart';
@@ -45,10 +42,7 @@ import '../../data/book_model.dart';
 import 'home_product_grid_view_item.dart';
 
 class HomeProductsGridView extends StatelessWidget {
-  const HomeProductsGridView({
-    super.key,
-    required this.books,
-  });
+  const HomeProductsGridView({super.key, required this.books});
 
   final List<BookModel> books;
 
@@ -63,13 +57,12 @@ class HomeProductsGridView extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: screenWidth / screenHeight * 1.4,
+          childAspectRatio: screenWidth / screenHeight * 1.25,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
         ),
-        itemBuilder: (context, index) => HomeProductsGridViewItem(
-          book: books[index],
-        ),
+        itemBuilder:
+            (context, index) => HomeProductsGridViewItem(book: books[index]),
         itemCount: books.length,
       ),
     );

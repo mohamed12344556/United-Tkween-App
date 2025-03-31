@@ -71,9 +71,9 @@ class GuestModeManager {
       final response = await apiService.login(loginRequestModel);
 
       // التأكد من أن الاستجابة ناجحة وتحتوي على token
-      if (response.status == "success" && response.token.isNotEmpty) {
+      if (response.status == "success" && response.token!.isNotEmpty) {
         // حفظ الـ token في التخزين
-        await TokenManager.saveTokens(token: response.token);
+        await TokenManager.saveTokens(token: response.token!);
 
         // تعيين حالة تسجيل الدخول
         await Prefs.setData(key: StorageKeys.isLoggedIn, value: true);

@@ -53,10 +53,10 @@ class ApiErrorHandler {
     }
   }
 
-  static ApiErrorModel _handleError(int? statusCode, dynamic response) {
+  static ApiErrorModel _handleError(int? statusCode, ApiErrorModel? response) {
     return ApiErrorModel(
-      errorMessage: response?['message'] ?? ' occurred',
-      status: response?['status']?.toString() ?? 'false',
+      errorMessage: response?.errorMessage ?? ' occurred',
+      status: response?.status?.toString() ?? 'false',
     );
   }
 }

@@ -119,12 +119,11 @@ class LoginCubit extends Cubit<LoginState> {
           debugPrint("Login successful: ${loginResponse.token}");
 
           // التحقق من صحة البيانات المُرجعة
-          if (loginResponse.token.isEmpty) {
+          if ( loginResponse.status == 'error') {
             emit(
               LoginError(
                 errorMessage: ApiErrorModel(
-                  errorMessage:
-                      context.localeS.something_went_wrong_please_try_again,
+                  errorMessage: loginResponse.message,
                   // status: 'false',
                 ),
               ),

@@ -41,29 +41,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         password: userLoginEntity.password,
       );
 
-      debugPrint('Calling login API with email: ${userLoginEntity.email}');
-
       final response = await service.login(requestModel);
 
-      // حفظ التوكن مباشرة بعد نجاح الاستجابة
-      debugPrint(
-        'Login successful, saving token: ${response.token.substring(0, 10)}...',
-      );
-
-      // await TokenManager.saveTokens(
-      //   token: response.token,
-      //   refreshToken: response.token, // استخدام نفس التوكن كـ refresh token
-      // );
-      // await SharedPrefHelper.setData(StorageKeys.accessToken,response.token);
-      // await FlutterSecureStorage().write(key: StorageKeys.accessToken, value: response.token);
-
-
-
-      await TokenManager.saveTokens(token: response.token);
-      await Prefs.setData(key:StorageKeys.isLoggedIn,value:  true);
-      return response;
+      if (response.status == 'success' && response.token != null) {
+        await TokenManager.saveTokens(token: response.token!);
+        await Prefs.setData(key: StorageKeys.isLoggedIn, value: true);
+        debugPrint('✅ Login successful: ${response.userData?.name}');
+        return response;
+      } else {
+        return response;
+      }
     } catch (e) {
-      debugPrint('Login error: $e');
+      debugPrint('❌ Login error: $e');
       throw Exception('فشل تسجيل الدخول: $e');
     }
   }

@@ -627,12 +627,12 @@ class _HomePageState extends State<HomePage>
   //         );
   //       }
   //       return Center(
-  //         child: CircularProgressIndicator(
-  //           color: AppColors.primary,
-  //           backgroundColor: AppColors.secondary.withValues(alpha: 51),
-  //           strokeWidth: context.isTablet ? 3.0 : 2.0,
-  //         ),
-  //       );
+        //   child: CircularProgressIndicator(
+        //     color: AppColors.primary,
+        //     backgroundColor: AppColors.secondary.withValues(alpha: 51),
+        //     strokeWidth: context.isTablet ? 3.0 : 2.0,
+        //   ),
+        // );
   //     },
   //   );
   // }
