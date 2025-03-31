@@ -40,10 +40,10 @@ class LoginCubit extends Cubit<LoginState> {
   /// إعادة تعيين حالة الـ Cubit
   void resetState() {
     if (!isActive) return;
-    
+
     emailController.clear();
     passwordController.clear();
-    
+
     _isPasswordVisible = false;
     emit(LoginInitial());
   }
@@ -65,17 +65,38 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       // التحقق من البيانات المدخلة
       if (email.isEmpty) {
-        emit(LoginError(errorMessage: context.localeS.email_is_required));
+        emit(
+          LoginError(
+            errorMessage: ApiErrorModel(
+              errorMessage: context.localeS.email_is_required,
+              // status: 'false',
+            ),
+          ),
+        );
         return;
       }
 
       if (password.isEmpty) {
-        emit(LoginError(errorMessage: context.localeS.password_is_required));
+        emit(
+          LoginError(
+            errorMessage: ApiErrorModel(
+              errorMessage: context.localeS.password_is_required,
+              // status: 'false',
+            ),
+          ),
+        );
         return;
       }
 
       if (!_isValidEmail(email)) {
-        emit(LoginError(errorMessage: context.localeS.invalid_email_address));
+        emit(
+          LoginError(
+            errorMessage: ApiErrorModel(
+              errorMessage: context.localeS.invalid_email_address,
+              // status: 'false',
+            ),
+          ),
+        );
         return;
       }
 
@@ -91,23 +112,26 @@ class LoginCubit extends Cubit<LoginState> {
       result.fold(
         (failure) {
           // معالجة حالة الفشل
-          emit(LoginError(
-            errorMessage: failure.errorMessage ?? 
-                context.localeS.something_went_wrong_please_try_again,
-          ));
+          emit(LoginError(errorMessage: ApiErrorHandler.handle(failure.errorMessage)));
         },
         (loginResponse) {
           // معالجة حالة النجاح
           debugPrint("Login successful: ${loginResponse.token}");
-          
+
           // التحقق من صحة البيانات المُرجعة
           if (loginResponse.token.isEmpty) {
-            emit(LoginError(
-              errorMessage: context.localeS.something_went_wrong_please_try_again,
-            ));
+            emit(
+              LoginError(
+                errorMessage: ApiErrorModel(
+                  errorMessage:
+                      context.localeS.something_went_wrong_please_try_again,
+                  // status: 'false',
+                ),
+              ),
+            );
             return;
           }
-          
+
           // إرسال حالة النجاح
           emit(LoginSuccess(loginModelResponse: loginResponse));
         },
@@ -115,11 +139,11 @@ class LoginCubit extends Cubit<LoginState> {
     } catch (e, stackTrace) {
       debugPrint("Login error: $e");
       debugPrint("Stack trace: $stackTrace");
-      
+
       if (isActive) {
         emit(LoginError(
-          errorMessage: context.localeS.something_went_wrong_please_try_again,
-        ));
+            errorMessage: ApiErrorHandler.handle(e),
+          ));
       }
     }
   }
@@ -127,15 +151,15 @@ class LoginCubit extends Cubit<LoginState> {
   @override
   Future<void> close() {
     _isDisposed = true;
-    
+
     if (!emailController.isDisposed) {
       emailController.dispose();
     }
-    
+
     if (!passwordController.isDisposed) {
       passwordController.dispose();
     }
-    
+
     return super.close();
   }
 }

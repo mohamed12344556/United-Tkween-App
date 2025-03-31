@@ -55,8 +55,8 @@ class ApiErrorHandler {
 
   static ApiErrorModel _handleError(int? statusCode, dynamic response) {
     return ApiErrorModel(
-      errorMessage: response?['error']?['description'] ?? 'Unknown error occurred',
-      status: response?['error']?['status']?.toString() ?? 'false',
+      errorMessage: response?['message'] ?? ' occurred',
+      status: response?['status']?.toString() ?? 'false',
     );
   }
 }

@@ -16,7 +16,7 @@ class LoginSuccess extends LoginState {
 }
 
 class LoginError extends LoginState {
-  final String errorMessage;
+  final ApiErrorModel errorMessage;
 
   LoginError({required this.errorMessage});
 }

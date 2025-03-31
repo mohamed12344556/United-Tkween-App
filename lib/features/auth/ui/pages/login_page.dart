@@ -233,8 +233,6 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/core/core.dart';
@@ -341,7 +339,7 @@ class _LoginPageState extends State<LoginPage> {
           }
         } else if (state is LoginError) {
           if (mounted) {
-            context.showErrorSnackBar(state.errorMessage);
+            context.showErrorSnackBar(state.errorMessage.errorMessage!);
           }
         }
       },
