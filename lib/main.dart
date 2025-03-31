@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -63,12 +65,10 @@ Future<void> main() async {
     Hive.registerAdapter(CategoryAdapter());
   }
 
-
   if (!Hive.isAdapterRegistered(112)) {
     Hive.registerAdapter(CartItemModelAdapter());
   }
   await Hive.openBox<CartItemModel>('CartBox');
-
 
   // ✅ Now it's safe to open the boxes
   await Hive.openBox<UserModel>('userBox');
@@ -82,9 +82,16 @@ Future<void> main() async {
       appRouter: AppRouter(),
       // hasValidSession: hasValidSession,
     ),
+    // DevicePreview(
+    //   enabled: !kReleaseMode,
+    //   builder:
+    //       (context) => UnitedFormationApp(
+    //         appRouter: AppRouter(),
+    //         // hasValidSession: hasValidSession,
+    //       ), // Wrap your app
+    // ),
   );
 }
-
 
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:flutter/material.dart';

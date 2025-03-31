@@ -626,7 +626,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     double totalPrice = getSelectedPrice() * quantity;
     final favoritesBox = Hive.box<BookModel>('favorites');
     final isFavorite = favoritesBox.containsKey(widget.book.id);
-
+    bool isTablet = MediaQuery.of(context).size.width > 600;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -634,10 +634,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           Hero(
             tag: widget.book.id,
             child: Container(
-              height: MediaQuery.of(context).size.height * .5,
+              height: MediaQuery.of(context).size.height * .7,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  fit: BoxFit.cover,
+                  // fit: BoxFit.cover,
+                  fit: isTablet ?BoxFit.fill : BoxFit.cover,
                   image: NetworkImage(
                     widget.book.imageUrl.asFullImageUrl ??
                         'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png',
@@ -649,7 +650,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * .5,
+                // top: MediaQuery.of(context).size.height * .5,
+                top: MediaQuery.of(context).size.height * .7,
               ),
               child: Container(
                 padding: EdgeInsets.all(16),
@@ -794,6 +796,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       padding: EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 8,
+                      ),
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 24,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.primary,

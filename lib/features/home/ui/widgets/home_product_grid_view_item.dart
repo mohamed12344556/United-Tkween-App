@@ -248,7 +248,7 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                   onTap: toggleFavorite,
                   child: Container(
                     padding: EdgeInsets.all(4),
-                    margin: EdgeInsets.all(4),
+                    margin: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
