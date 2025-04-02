@@ -321,6 +321,7 @@ import '../widgets/profile_header_widget.dart';
 import '../widgets/contact_info_card_widget.dart';
 import '../widgets/address_card_widget.dart';
 import '../widgets/edit_profile_button_widget.dart';
+import 'dart:io';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -571,7 +572,8 @@ class _ProfileViewState extends State<ProfileView> {
                   phoneNumber1: profile.phoneNumber1,
                 ),
 
-                AddressCardWidget(address: profile.address),
+                if (!Platform.isIOS)
+                  AddressCardWidget(address: profile.address),
 
                 SizedBox(
                   width: double.infinity,

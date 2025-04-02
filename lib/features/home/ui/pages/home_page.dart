@@ -51,26 +51,26 @@
 //     super.dispose();
 //   }
 
-  // void filterBooks(String query, List<BookModel> allBooks) {
-  //   if (query.isEmpty) {
-  //     setState(() => filteredBooks = []);
-  //     return;
-  //   }
+// void filterBooks(String query, List<BookModel> allBooks) {
+//   if (query.isEmpty) {
+//     setState(() => filteredBooks = []);
+//     return;
+//   }
 
-  //   final tempBooks =
-  //       allBooks
-  //           .where(
-  //             (book) =>
-  //                 book.title.toLowerCase().contains(query.toLowerCase()) ||
-  //                 book
-  //                     .getLocalizedCategory(context)
-  //                     .toLowerCase()
-  //                     .contains(query.toLowerCase()),
-  //           )
-  //           .toList();
+//   final tempBooks =
+//       allBooks
+//           .where(
+//             (book) =>
+//                 book.title.toLowerCase().contains(query.toLowerCase()) ||
+//                 book
+//                     .getLocalizedCategory(context)
+//                     .toLowerCase()
+//                     .contains(query.toLowerCase()),
+//           )
+//           .toList();
 
-  //   setState(() => filteredBooks = tempBooks);
-  // }
+//   setState(() => filteredBooks = tempBooks);
+// }
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -353,36 +353,42 @@ class _HomePageState extends State<HomePage>
   //   setState(() => filteredBooks = tempBooks);
   // }
   void filterBooks(String query, List<BookModel> allBooks) {
-  // تنظيف النص المدخل من المسافات الزائدة
-  final trimmedQuery = query.trim();
-  
-  if (trimmedQuery.isEmpty) {
-    setState(() => filteredBooks = []);
-    return;
+    // تنظيف النص المدخل من المسافات الزائدة
+    final trimmedQuery = query.trim();
+
+    if (trimmedQuery.isEmpty) {
+      setState(() => filteredBooks = []);
+      return;
+    }
+
+    // تحسين طريقة البحث وإضافة المزيد من الحقول للبحث
+    final tempBooks =
+        allBooks.where((book) {
+          // البحث في العنوان
+          final titleMatch = book.title.toLowerCase().contains(
+            trimmedQuery.toLowerCase(),
+          );
+
+          // البحث في الفئة المخصصة للغة
+          final categoryMatch = book
+              .getLocalizedCategory(context)
+              .toLowerCase()
+              .contains(trimmedQuery.toLowerCase());
+
+          // يمكن إضافة المزيد من الحقول للبحث إذا كانت متوفرة
+          // مثل البحث في الوصف أو المؤلف
+          final otherFieldsMatch = false; // قم بتغييره إذا كان هناك حقول أخرى
+
+          return titleMatch || categoryMatch || otherFieldsMatch;
+        }).toList();
+
+    // تسجيل نتائج البحث للتصحيح
+    debugPrint('بحث عن: "$trimmedQuery"');
+    debugPrint('عدد الكتب الأصلية: ${allBooks.length}');
+    debugPrint('عدد النتائج: ${tempBooks.length}');
+
+    setState(() => filteredBooks = tempBooks);
   }
-
-  // تحسين طريقة البحث وإضافة المزيد من الحقول للبحث
-  final tempBooks = allBooks.where((book) {
-    // البحث في العنوان
-    final titleMatch = book.title.toLowerCase().contains(trimmedQuery.toLowerCase());
-    
-    // البحث في الفئة المخصصة للغة
-    final categoryMatch = book.getLocalizedCategory(context).toLowerCase().contains(trimmedQuery.toLowerCase());
-    
-    // يمكن إضافة المزيد من الحقول للبحث إذا كانت متوفرة
-    // مثل البحث في الوصف أو المؤلف
-    final otherFieldsMatch = false;  // قم بتغييره إذا كان هناك حقول أخرى
-    
-    return titleMatch || categoryMatch || otherFieldsMatch;
-  }).toList();
-
-  // تسجيل نتائج البحث للتصحيح
-  debugPrint('بحث عن: "$trimmedQuery"');
-  debugPrint('عدد الكتب الأصلية: ${allBooks.length}');
-  debugPrint('عدد النتائج: ${tempBooks.length}');
-  
-  setState(() => filteredBooks = tempBooks);
-}
 
   @override
   Widget build(BuildContext context) {
@@ -470,57 +476,58 @@ class _HomePageState extends State<HomePage>
   // }
 
   Widget _buildSearchField() {
-  return BlocBuilder<HomeCubit, HomeState>(
-    builder: (context, state) {
-      final isLoading = state is HomeBooksLoadingState;
-      
-      return TextFormField(
-        controller: searchController,
-        onChanged: (query) => filterBooks(query, _homeCubit.books),
-        enabled: !isLoading && _homeCubit.books.isNotEmpty,
-        cursorColor: AppColors.primary,
-        cursorWidth: 1.5,
-        cursorRadius: const Radius.circular(2),
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black,
-          fontWeight: FontWeight.normal,
-        ),
-        decoration: InputDecoration(
-          hintText: 'البحث عن كتاب...',
-          prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
-          suffixIcon: searchController.text.isNotEmpty
-              ? IconButton(
-                  icon: Icon(Icons.clear, color: AppColors.textSecondary),
-                  onPressed: () {
-                    searchController.clear();
-                    filterBooks('', _homeCubit.books);
-                  },
-                )
-              : null,
-          fillColor: AppColors.lightGrey,
-          filled: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: BorderSide.none,
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        final isLoading = state is HomeBooksLoadingState;
+
+        return TextFormField(
+          controller: searchController,
+          onChanged: (query) => filterBooks(query, _homeCubit.books),
+          enabled: !isLoading && _homeCubit.books.isNotEmpty,
+          cursorColor: AppColors.primary,
+          cursorWidth: 1.5,
+          cursorRadius: const Radius.circular(2),
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+            fontWeight: FontWeight.normal,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+          decoration: InputDecoration(
+            hintText: 'البحث عن كتاب...',
+            prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
+            suffixIcon:
+                searchController.text.isNotEmpty
+                    ? IconButton(
+                      icon: Icon(Icons.clear, color: AppColors.textSecondary),
+                      onPressed: () {
+                        searchController.clear();
+                        filterBooks('', _homeCubit.books);
+                      },
+                    )
+                    : null,
+            fillColor: AppColors.lightGrey,
+            filled: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25.0),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25.0),
+              borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25.0),
+              borderSide: BorderSide.none,
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25.0),
+              borderSide: BorderSide.none,
+            ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: BorderSide.none,
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: BorderSide.none,
-          ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   Widget _buildCategoriesSection() {
     return BlocBuilder<HomeCubit, HomeState>(
@@ -627,100 +634,98 @@ class _HomePageState extends State<HomePage>
   //         );
   //       }
   //       return Center(
-        //   child: CircularProgressIndicator(
-        //     color: AppColors.primary,
-        //     backgroundColor: AppColors.secondary.withValues(alpha: 51),
-        //     strokeWidth: context.isTablet ? 3.0 : 2.0,
-        //   ),
-        // );
+  //   child: CircularProgressIndicator(
+  //     color: AppColors.primary,
+  //     backgroundColor: AppColors.secondary.withValues(alpha: 51),
+  //     strokeWidth: context.isTablet ? 3.0 : 2.0,
+  //   ),
+  // );
   //     },
   //   );
   // }
 
   Widget _buildBooksGrid() {
-  return BlocBuilder<HomeCubit, HomeState>(
-    buildWhen: (previous, current) {
-      return current is HomeBooksSuccessState ||
-          current is HomeBooksFailureState ||
-          current is HomeBooksLoadingState;
-    },
-    builder: (context, state) {
-      if (state is HomeBooksLoadingState) {
-        return const Center(
-          child: CircularProgressIndicator(color: AppColors.primary),
-        );
-      } else if (state is HomeBooksSuccessState) {
-        final books = state.books;
-
-        if (books.isEmpty) {
-          return const Center(
-            child: Text(
-              "لا توجد كتب في هذه الفئة",
-              style: TextStyle(color: Colors.black87),
+    return BlocBuilder<HomeCubit, HomeState>(
+      buildWhen: (previous, current) {
+        return current is HomeBooksSuccessState ||
+            current is HomeBooksFailureState ||
+            current is HomeBooksLoadingState;
+      },
+      builder: (context, state) {
+        if (state is HomeBooksLoadingState) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primary,
+              backgroundColor: AppColors.secondary.withValues(alpha: 51),
+              strokeWidth: context.isTablet ? 3.0 : 2.0,
             ),
           );
-        }
+        } else if (state is HomeBooksSuccessState) {
+          final books = state.books;
 
-        // استخدام filteredBooks إذا كان هناك بحث محلي
-        final isSearchActive = searchController.text.isNotEmpty;
-        final displayBooks = isSearchActive ? filteredBooks : books;
+          if (books.isEmpty) {
+            return const Center(
+              child: Text(
+                "لا توجد كتب في هذه الفئة",
+                style: TextStyle(color: Colors.black87),
+              ),
+            );
+          }
 
-        // إضافة عرض لحالة عدم وجود نتائج بحث
-        if (isSearchActive && displayBooks.isEmpty) {
+          // استخدام filteredBooks إذا كان هناك بحث محلي
+          final isSearchActive = searchController.text.isNotEmpty;
+          final displayBooks = isSearchActive ? filteredBooks : books;
+
+          // إضافة عرض لحالة عدم وجود نتائج بحث
+          if (isSearchActive && displayBooks.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.search_off, size: 50, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text(
+                    "لا توجد نتائج تطابق \"${searchController.text}\"",
+                    style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "حاول استخدام كلمات أخرى أو تحقق من الهجاء",
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return HomeProductsGridView(books: displayBooks);
+        } else if (state is HomeBooksFailureState) {
           return Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.search_off, size: 50, color: Colors.grey),
-                SizedBox(height: 16),
-                Text(
-                  "لا توجد نتائج تطابق \"${searchController.text}\"",
-                  style: TextStyle(
-                    color: Colors.grey.shade700,
-                    fontSize: 16,
-                  ),
+                const Text(
+                  "خطأ، يرجى المحاولة مرة أخرى",
+                  style: TextStyle(color: Colors.black87),
                 ),
-                SizedBox(height: 8),
-                Text(
-                  "حاول استخدام كلمات أخرى أو تحقق من الهجاء",
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 14,
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () => _homeCubit.getHomeBooks(),
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(AppColors.primary),
+                    foregroundColor: WidgetStateProperty.all(Colors.white),
                   ),
+                  child: const Text("إعادة المحاولة"),
                 ),
               ],
             ),
           );
         }
-
-        return HomeProductsGridView(books: displayBooks);
-      } else if (state is HomeBooksFailureState) {
         return Center(
-          child: Column(
-            children: [
-              const Text(
-                "خطأ، يرجى المحاولة مرة أخرى",
-                style: TextStyle(color: Colors.black87),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () => _homeCubit.getHomeBooks(),
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(AppColors.primary),
-                  foregroundColor: WidgetStateProperty.all(Colors.white),
-                ),
-                child: const Text("إعادة المحاولة"),
-              ),
-            ],
-          ),
+          child: CircularProgressIndicator(color: AppColors.primary),
         );
-      }
-      return Center(
-        child: CircularProgressIndicator(color: AppColors.primary),
-      );
-    },
-  );
-}
+      },
+    );
+  }
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(

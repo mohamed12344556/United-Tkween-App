@@ -375,7 +375,7 @@
 //                       ),
 //                     ],
 
-//                     if (!Platform.isAndroid) ...[
+//                     if (!Platform.isIOS) ...[
 //                       AppButton(
 //                         text: "View Book Details",
 //                         onPressed: () {
@@ -456,7 +456,6 @@
 //     );
 //   }
 // }
-
 
 import 'dart:io';
 
@@ -638,7 +637,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   // fit: BoxFit.cover,
-                  fit: isTablet ?BoxFit.fill : BoxFit.cover,
+                  fit: isTablet ? BoxFit.fill : BoxFit.cover,
                   image: NetworkImage(
                     widget.book.imageUrl.asFullImageUrl ??
                         'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png',
@@ -706,7 +705,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       ],
                     ),
                     SizedBox(height: 20),
-                    
+
                     // قسم وصف الكتاب
                     if (widget.book.description.isNotEmpty) ...[
                       Column(
@@ -724,7 +723,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           InkWell(
                             onTap: () {
                               setState(() {
-                                _isDescriptionExpanded = !_isDescriptionExpanded;
+                                _isDescriptionExpanded =
+                                    !_isDescriptionExpanded;
                               });
                             },
                             child: Column(
@@ -749,9 +749,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                       height: 1.5,
                                     ),
                                   ),
-                                  crossFadeState: _isDescriptionExpanded
-                                      ? CrossFadeState.showSecond
-                                      : CrossFadeState.showFirst,
+                                  crossFadeState:
+                                      _isDescriptionExpanded
+                                          ? CrossFadeState.showSecond
+                                          : CrossFadeState.showFirst,
                                   duration: Duration(milliseconds: 300),
                                 ),
                                 SizedBox(height: 8),
@@ -759,7 +760,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      _isDescriptionExpanded ? "عرض أقل" : "عرض المزيد",
+                                      _isDescriptionExpanded
+                                          ? "عرض أقل"
+                                          : "عرض المزيد",
                                       style: TextStyle(
                                         color: AppColors.primary,
                                         fontWeight: FontWeight.bold,
@@ -780,7 +783,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         ],
                       ),
                     ],
-                    
+
                     SizedBox(height: 16),
 
                     Text(
@@ -797,9 +800,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         horizontal: 12,
                         vertical: 8,
                       ),
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 24,
-                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 24),
                       decoration: BoxDecoration(
                         color: AppColors.primary,
                         borderRadius: BorderRadius.circular(8),
@@ -811,53 +812,55 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
 
                     SizedBox(height: 25),
-                    Text(
-                      "نوع الكتاب",
-                      style: TextStyle(
-                        color: AppColors.text,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    if (!Platform.isIOS) ...[
+                      Text(
+                        "نوع الكتاب",
+                        style: TextStyle(
+                          color: AppColors.text,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children:
-                          bookTypes.map((type) {
-                            bool isSelected = type == selectedType;
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedType = type;
-                                });
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color:
-                                      isSelected
-                                          ? AppColors.primary
-                                          : AppColors.lightGrey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  type,
-                                  style: TextStyle(
+                      SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children:
+                            bookTypes.map((type) {
+                              bool isSelected = type == selectedType;
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedType = type;
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
                                     color:
                                         isSelected
-                                            ? Colors.white
-                                            : AppColors.text,
+                                            ? AppColors.primary
+                                            : AppColors.lightGrey,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    type,
+                                    style: TextStyle(
+                                      color:
+                                          isSelected
+                                              ? Colors.white
+                                              : AppColors.text,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }).toList(),
-                    ),
-                    SizedBox(height: 25),
+                              );
+                            }).toList(),
+                      ),
+                      SizedBox(height: 25),
+                    ],
 
                     if (!Platform.isIOS) ...[
                       Text(
@@ -922,7 +925,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                     borderRadius: BorderRadius.circular(4),
                                     color: AppColors.primary,
                                   ),
-                                  child: Icon(Icons.add, color: Colors.white, size: 16),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
                                 ),
                               ),
                             ],
@@ -947,17 +954,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       ),
                     ],
 
-                    if (!Platform.isAndroid) ...[
-                      AppButton(
-                        text: "View Book Details",
-                        onPressed: () {
-                          launchUrl(Uri.parse('https://tkweenstore.com/'));
-                        },
-                        height: 55,
-                        backgroundColor: AppColors.primary,
-                        textColor: Colors.white,
-                      ),
-                    ],
+                    // if (Platform.isMacOS) ...[
+                    //   AppButton(
+                    //     text: "View Book Details",
+                    //     onPressed: () {
+                    //       launchUrl(Uri.parse('https://tkweenstore.com/'));
+                    //     },
+                    //     height: 55,
+                    //     backgroundColor: AppColors.primary,
+                    //     textColor: Colors.white,
+                    //   ),
+                    // ],
 
                     // إضافة إشعار وضع الضيف إذا كان مفعلاً
                     if (_isGuest)

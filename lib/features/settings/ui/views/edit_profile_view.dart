@@ -415,6 +415,7 @@ import '../cubits/edit_profile/edit_profile_cubit.dart';
 import '../cubits/edit_profile/edit_profile_state.dart';
 import '../cubits/profile/profile_cubit.dart';
 import '../widgets/profile_avatar.dart';
+import 'dart:io';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -527,11 +528,11 @@ class _EditProfileViewState extends State<EditProfileView> {
         builder: (context, state) {
           if (state.isLoading && state.profile == null) {
             return Center(
-              child:  CircularProgressIndicator(
-              color: AppColors.primary,
-              backgroundColor: AppColors.secondary.withValues(alpha: 51),
-              strokeWidth: context.isTablet ? 3.0 : 2.0,
-            ),
+              child: CircularProgressIndicator(
+                color: AppColors.primary,
+                backgroundColor: AppColors.secondary.withValues(alpha: 51),
+                strokeWidth: context.isTablet ? 3.0 : 2.0,
+              ),
             );
           }
 
@@ -615,22 +616,26 @@ class _EditProfileViewState extends State<EditProfileView> {
             readOnly: true,
           ),
 
-          SizedBox(height: 16.h),
-          _buildTextField(
-            label: 'رقم الهاتف 1',
-            controller: TextEditingController(),
-            prefixIcon: Icons.phone,
-            keyboardType: TextInputType.phone,
-          ),
+          if (!Platform.isIOS) ...[
+            SizedBox(height: 16.h),
+            _buildTextField(
+              label: 'رقم الهاتف 1',
+              controller: TextEditingController(),
+              prefixIcon: Icons.phone,
+              keyboardType: TextInputType.phone,
+            ),
+          ],
 
-          SizedBox(height: 16.h),
-          _buildTextField(
-            label: 'العنوان',
-            controller: TextEditingController(),
-            prefixIcon: Icons.location_on,
-            maxLines: 3,
-            isOptional: true,
-          ),
+          if (!Platform.isIOS) ...[
+            SizedBox(height: 16.h),
+            _buildTextField(
+              label: 'العنوان',
+              controller: TextEditingController(),
+              prefixIcon: Icons.location_on,
+              maxLines: 3,
+              isOptional: true,
+            ),
+          ],
 
           SizedBox(height: 32.h),
 
@@ -720,31 +725,35 @@ class _EditProfileViewState extends State<EditProfileView> {
             SizedBox(height: 16.h),
 
             // حقل رقم الهاتف 1
-            _buildTextField(
-              label: 'رقم الهاتف 1',
-              controller: _phoneNumber1Controller,
-              prefixIcon: Icons.phone,
-              keyboardType: TextInputType.phone,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'الرجاء إدخال رقم الهاتف';
-                }
-                return null;
-              },
-            ),
+            if (!Platform.isIOS) ...[
+              _buildTextField(
+                label: 'رقم الهاتف 1',
+                controller: _phoneNumber1Controller,
+                prefixIcon: Icons.phone,
+                keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'الرجاء إدخال رقم الهاتف';
+                  }
+                  return null;
+                },
+              ),
 
-            SizedBox(height: 16.h),
+              SizedBox(height: 16.h),
+            ],
 
             // حقل العنوان
-            _buildTextField(
-              label: 'العنوان',
-              controller: _addressController,
-              prefixIcon: Icons.location_on,
-              maxLines: 3,
-              isOptional: true,
-            ),
+            if (!Platform.isIOS) ...[
+              _buildTextField(
+                label: 'العنوان',
+                controller: _addressController,
+                prefixIcon: Icons.location_on,
+                maxLines: 3,
+                isOptional: true,
+              ),
 
-            SizedBox(height: 32.h),
+              SizedBox(height: 32.h),
+            ],
 
             // زر الحفظ
             SizedBox(

@@ -136,12 +136,10 @@
 //   }
 // }
 
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/core.dart';
+import 'dart:io';
 
 class ContactInfoCardWidget extends StatelessWidget {
   final String email;
@@ -186,15 +184,16 @@ class ContactInfoCardWidget extends StatelessWidget {
             ),
 
             // عنصر رقم الهاتف 1
-            if (phoneNumber1 != null && phoneNumber1!.isNotEmpty)
-              _buildContactItem(
-                icon: Icons.phone,
-                title: 'رقم الهاتف 1',
-                value: phoneNumber1!,
-                context: context,
-                canCopy: true,
-                canCall: true,
-              ),
+            if (!Platform.isIOS)
+              if (phoneNumber1 != null && phoneNumber1!.isNotEmpty)
+                _buildContactItem(
+                  icon: Icons.phone,
+                  title: 'رقم الهاتف 1',
+                  value: phoneNumber1!,
+                  context: context,
+                  canCopy: true,
+                  canCall: true,
+                ),
 
             // عنصر رقم الهاتف 2
             if (phoneNumber2 != null && phoneNumber2!.isNotEmpty)
@@ -240,7 +239,10 @@ class ContactInfoCardWidget extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp),
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14.sp,
+                  ),
                 ),
                 SizedBox(height: 4.h),
                 Text(

@@ -7,16 +7,19 @@ part 'register_model_request_body.g.dart';
 class RegisterModelRequestBody extends UserRegisterEntity {
   @JsonKey(name: 'full_name')
   final String fullName;
-  final String phone;
+  @JsonKey(defaultValue: "1111111")
+  final String? phone;
 
+  @JsonKey(defaultValue: "Default Address")
+  final String? address;
 
   RegisterModelRequestBody({
     required this.fullName,
     required super.email,
-    required this.phone,
+    this.phone,
     required super.password,
-    required super.address,
-  }) : super(fullName: fullName, phoneNumber: phone);
+    this.address,
+  }) : super(fullName: fullName, phoneNumber: phone, address: address);
 
   factory RegisterModelRequestBody.fromJson(Map<String, dynamic> json) =>
       _$RegisterModelRequestBodyFromJson(json);

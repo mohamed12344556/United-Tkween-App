@@ -65,9 +65,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final requestModel = RegisterModelRequestBody(
         fullName: userRegisterEntity.fullName,
         email: userRegisterEntity.email,
-        phone: userRegisterEntity.phoneNumber,
+        phone:
+            userRegisterEntity.phoneNumber?.isEmpty == true
+                ? "1111111"
+                : userRegisterEntity.phoneNumber,
         password: userRegisterEntity.password,
-        address: userRegisterEntity.address,
+        address:
+            userRegisterEntity.address?.isEmpty == true
+                ? "Default Address"
+                : userRegisterEntity.address,
       );
 
       debugPrint('Calling register API with requestModel: $requestModel');

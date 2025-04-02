@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/entities/user_register_entity.dart';
 import '../../../domain/usecases/auth_usecases.dart';
@@ -27,9 +28,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   // التحقق من حالة الـ Cubit
   bool get isActive => !_isDisposed;
 
-  RegisterCubit({
-    required this.registerUseCase,
-  }) : super(RegisterInitial()) {
+  RegisterCubit({required this.registerUseCase}) : super(RegisterInitial()) {
     nameController = SafeTextEditingController();
     emailController = SafeTextEditingController();
     phoneController = SafeTextEditingController();
@@ -58,9 +57,9 @@ class RegisterCubit extends Cubit<RegisterState> {
       // الحصول على قيم النموذج
       final name = nameController.text.trim();
       final email = emailController.text.trim();
-      final phone = phoneController.text.trim();
+      final phone = phoneController.text?.trim() ?? "1111111";
       final password = passwordController.text;
-      final address = addressController.text.trim();
+      final address = addressController.text?.trim() ?? "for testing";
 
       // التحقق من المدخلات
       if (name.isEmpty) {
@@ -72,10 +71,11 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(RegisterError(errorMessage: context.localeS.email_is_required));
         return;
       }
-
-      if (phone.isEmpty) {
-        emit(RegisterError(errorMessage: context.localeS.phone_is_required));
-        return;
+      if (!Platform.isIOS) {
+        if (phone.isEmpty) {
+          emit(RegisterError(errorMessage: context.localeS.phone_is_required));
+          return;
+        }
       }
 
       if (password.isEmpty) {
@@ -83,32 +83,46 @@ class RegisterCubit extends Cubit<RegisterState> {
         return;
       }
 
-      if (address.isEmpty) {
-        emit(RegisterError(errorMessage: context.localeS.address_is_required));
-        return;
+      if (!Platform.isIOS) {
+        if (address.isEmpty) {
+          emit(
+            RegisterError(errorMessage: context.localeS.address_is_required),
+          );
+          return;
+        }
       }
 
       // التحقق من صحة البريد الإلكتروني
       if (!_isValidEmail(email)) {
-        emit(RegisterError(errorMessage: context.localeS.invalid_email_address));
+        emit(
+          RegisterError(errorMessage: context.localeS.invalid_email_address),
+        );
         return;
       }
 
       // التحقق من صحة كلمة المرور
       if (password.length < 6) {
-        emit(RegisterError(errorMessage: context.localeS.password_must_be_at_least_6_characters_long));
+        emit(
+          RegisterError(
+            errorMessage:
+                context.localeS.password_must_be_at_least_6_characters_long,
+          ),
+        );
         return;
       }
 
       emit(RegisterLoading());
+      // تعيين القيم الافتراضية للعنوان ورقم الهاتف عند الحاجة
+      final defaultPhone = "1111111";
+      final defaultAddress = "Default Address";
 
       // إنشاء كيان التسجيل
       final registerEntity = UserRegisterEntity(
         fullName: name,
         email: email,
-        phoneNumber: phone,
+        phoneNumber: phone.isEmpty ? defaultPhone : phone,
         password: password,
-        address: address,
+        address: address.isEmpty ? defaultAddress : address,
       );
 
       // استدعاء حالة الاستخدام للتسجيل
@@ -117,9 +131,13 @@ class RegisterCubit extends Cubit<RegisterState> {
       if (!isActive) return;
 
       result.fold(
-        (failure) => emit(RegisterError(
-          errorMessage: failure.errorMessage ?? context.localeS.something_went_wrong_please_try_again,
-        )),
+        (failure) => emit(
+          RegisterError(
+            errorMessage:
+                failure.errorMessage ??
+                context.localeS.something_went_wrong_please_try_again,
+          ),
+        ),
         (response) async {
           // التحقق من استجابة التسجيل
           if (response.status == 'success') {
@@ -133,16 +151,18 @@ class RegisterCubit extends Cubit<RegisterState> {
     } catch (e) {
       debugPrint('Register error: $e');
       if (isActive) {
-        emit(RegisterError(
-          errorMessage: context.localeS.something_went_wrong_please_try_again,
-        ));
+        emit(
+          RegisterError(
+            errorMessage: context.localeS.something_went_wrong_please_try_again,
+          ),
+        );
       }
     }
   }
 
   // تسجيل باستخدام وسائل التواصل الاجتماعي
   Future<void> registerWithSocialMedia(
-    String provider, 
+    String provider,
     String email,
     String name,
     String token,
@@ -150,8 +170,10 @@ class RegisterCubit extends Cubit<RegisterState> {
   ) async {
     // هنا يمكنك إضافة منطق التسجيل عبر وسائل التواصل الاجتماعي
     // يمكن استخدام نفس RegisterUseCase أو إنشاء UseCase خاص
-    debugPrint('Social sign-in with $provider: $email, $name, token: ${token.substring(0, 10)}...');
-    
+    debugPrint(
+      'Social sign-in with $provider: $email, $name, token: ${token.substring(0, 10)}...',
+    );
+
     // لتبسيط الأمور، نقوم بإرسال حالة النجاح مباشرة
     emit(RegisterSuccess(userEmail: email));
   }

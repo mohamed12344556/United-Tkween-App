@@ -1,9 +1,9 @@
 class UserRegisterEntity {
   final String fullName;
   final String email;
-  final String phoneNumber;
+  final String? phoneNumber;
   final String password;
-  final String address;
+  final String? address;
 
   UserRegisterEntity({
     required this.fullName,

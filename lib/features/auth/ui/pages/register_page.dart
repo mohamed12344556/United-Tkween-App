@@ -270,9 +270,8 @@
 //   static Future logout() => googleSignIn.disconnect();
 // }
 
-
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -328,7 +327,10 @@ class RegisterViewContent extends StatelessWidget {
                   children: [
                     AuthHeader(
                       title: context.localeS.welcome_back,
-                      subtitle: context.localeS.create_your_account_it_takes_less_than_a_minute_enter_your_email_and_password,
+                      subtitle:
+                          context
+                              .localeS
+                              .create_your_account_it_takes_less_than_a_minute_enter_your_email_and_password,
                     ),
 
                     // حقل الاسم الكامل
@@ -348,12 +350,14 @@ class RegisterViewContent extends StatelessWidget {
                     SizedBox(height: verticalSpacing),
 
                     // حقل رقم الهاتف
-                    AppTextField(
-                      controller: cubit.phoneController,
-                      hintText: context.localeS.phone,
-                      keyboardType: TextInputType.phone,
-                    ),
-                    SizedBox(height: verticalSpacing),
+                    if (!Platform.isIOS) ...[
+                      AppTextField(
+                        controller: cubit.phoneController,
+                        hintText: context.localeS.phone,
+                        keyboardType: TextInputType.phone,
+                      ),
+                      SizedBox(height: verticalSpacing),
+                    ],
 
                     // حقل كلمة المرور
                     AppTextField(
@@ -367,13 +371,15 @@ class RegisterViewContent extends StatelessWidget {
                     SizedBox(height: verticalSpacing),
 
                     // حقل العنوان
-                    AppTextField(
-                      controller: cubit.addressController,
-                      hintText: context.localeS.address,
-                      keyboardType: TextInputType.streetAddress,
-                    ),
+                    if (!Platform.isIOS) ...[
+                      AppTextField(
+                        controller: cubit.addressController,
+                        hintText: context.localeS.address,
+                        keyboardType: TextInputType.streetAddress,
+                      ),
 
-                    SizedBox(height: verticalSpacing * 2),
+                      SizedBox(height: verticalSpacing * 2),
+                    ],
 
                     AppButton(
                       text: context.localeS.create_an_account,
