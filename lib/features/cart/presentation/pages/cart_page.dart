@@ -571,6 +571,30 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
+  void proceedToSummaryPage() {
+    final cartItems = cartBox.values.toList();
+
+    if (cartItems.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('السلة فارغة. لا يمكن إتمام عملية الشراء.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    Navigator.of(context).pushNamed(
+      Routes.orderSummaryView,
+      arguments: {
+        'cartItems': cartItems,
+        'subtotal': subtotal,
+        'shippingCost': shippingCost,
+        'totalAmount': totalAmount,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cartItems = cartBox.values.toList();
@@ -944,7 +968,8 @@ class _CartPageState extends State<CartPage> {
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: sendToWhatsApp,
+                    // onPressed: sendToWhatsApp,
+                    onPressed: proceedToSummaryPage,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,

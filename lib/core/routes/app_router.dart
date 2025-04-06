@@ -189,6 +189,18 @@ class AppRouter {
           builder: (_) => CartPage(),
         );
 
+        // case Routes.ordersSummaryView:
+        // final args = settings.arguments as Map<String, dynamic>;
+        // final orderId = args['orderId'] as String;
+        // return MaterialPageRoute(
+        //   settings: settings,
+        //   builder:
+        //       (_) => BlocProvider(
+        //         create: (context) => sl<OrdersCubit>(),
+        //         child: OrderSummaryView(orderId: orderId),
+        //       ),
+        // );
+
       case Routes.adminOrdersView:
         return MaterialPageRoute(
           settings: settings,

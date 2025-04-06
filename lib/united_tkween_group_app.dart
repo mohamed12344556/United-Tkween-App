@@ -54,10 +54,10 @@ class UnitedFormationApp extends StatelessWidget {
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
+                 
               ],
               // locale: Locale('ar'),
               supportedLocales: S.delegate.supportedLocales,
-              title: 'Flutter Demo',
               initialRoute:getInitialRoute(),
               onGenerateRoute: appRouter.generateRoute,
             ),
