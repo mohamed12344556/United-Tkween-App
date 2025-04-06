@@ -79,7 +79,9 @@ class AppTextField extends StatelessWidget {
     // خلفية مملوءة بشكل افتراضي ما لم يتم تحديد خلاف ذلك
     final shouldFill = filled ?? true;
 
+
     // حساب المسافات الداخلية بشكل متجاوب
+
     final defaultPadding =
         contentPadding ??
         EdgeInsets.symmetric(

@@ -453,6 +453,7 @@ import 'package:united_formation_app/features/auth/data/services/guest_mode_mana
 import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../data/cart_model.dart';
+import 'order_summary_page.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -584,14 +585,26 @@ class _CartPageState extends State<CartPage> {
       return;
     }
 
-    Navigator.of(context).pushNamed(
-      Routes.orderSummaryView,
-      arguments: {
-        'cartItems': cartItems,
-        'subtotal': subtotal,
-        'shippingCost': shippingCost,
-        'totalAmount': totalAmount,
-      },
+    // Navigator.of(context).pushNamed(
+    //   Routes.orderSummaryView,
+    //   arguments: {
+    //     'cartItems': cartItems,
+    //     'subtotal': subtotal,
+    //     'shippingCost': shippingCost,
+    //     'totalAmount': totalAmount,
+    //   },
+    // );
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder:
+            (context) => OrderSummaryPage(
+              cartItems: cartItems,
+              subtotal: subtotal,
+              shippingCost: shippingCost,
+              totalAmount: totalAmount,
+            ),
+      ),
     );
   }
 
@@ -979,7 +992,8 @@ class _CartPageState extends State<CartPage> {
                       ),
                     ),
                     child: const Text(
-                      'Checkout via WhatsApp',
+                      // 'Checkout via WhatsApp',
+                      'Proceed to Checkout',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
