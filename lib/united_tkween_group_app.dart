@@ -11,7 +11,6 @@ import 'core/themes/cubit/theme_cubit.dart';
 import 'generated/l10n.dart';
 import 'dart:async';
 
-
 import 'dart:async'; // 🔧 Add this!
 
 class UnitedFormationApp extends StatelessWidget {
@@ -19,13 +18,13 @@ class UnitedFormationApp extends StatelessWidget {
 
   const UnitedFormationApp({super.key, required this.appRouter});
 
-  String getInitialRoute()  {
-    final isLoggedIn =  Prefs.getData(key:StorageKeys.isLoggedIn);
+  String getInitialRoute() {
+    final isLoggedIn = Prefs.getData(key: StorageKeys.isLoggedIn);
     print("------------------------$isLoggedIn----------------------");
 
     if (isLoggedIn == true) {
       print("------------------------User is logged in----------------------");
-      final token = Prefs.getData(key:StorageKeys.accessToken);
+      final token = Prefs.getData(key: StorageKeys.accessToken);
       DioFactory.setTokenIntoHeader(token);
       return Routes.hostView;
     } else {
@@ -54,18 +53,16 @@ class UnitedFormationApp extends StatelessWidget {
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
-                 
               ],
               // locale: Locale('ar'),
               supportedLocales: S.delegate.supportedLocales,
-              initialRoute:getInitialRoute(),
+              initialRoute: getInitialRoute(),
               onGenerateRoute: appRouter.generateRoute,
             ),
           );
         },
       ),
     );
-
 
     // return FutureBuilder<String>(
     //   future: getInitialRoute(),
@@ -109,27 +106,6 @@ class UnitedFormationApp extends StatelessWidget {
     // );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // class UnitedFormationApp extends StatelessWidget {
 //   final AppRouter appRouter;

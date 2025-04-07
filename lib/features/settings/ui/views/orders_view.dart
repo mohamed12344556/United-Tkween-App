@@ -510,11 +510,25 @@ class OrdersView extends StatefulWidget {
 class _OrdersViewState extends State<OrdersView> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
+  bool _isRefreshEnabled = false;
 
   @override
   void initState() {
     super.initState();
-    context.read<OrdersCubit>().loadOrders();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final ordersCubit = context.read<OrdersCubit>();
+      await ordersCubit.initialize();
+
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args != null && args is Map<String, dynamic>) {
+        final newOrder = args['new_order'] as UserOrderEntity?;
+        if (newOrder != null) {
+          await ordersCubit.addLocalOrder(newOrder);
+        }
+      }
+
+      // await ordersCubit.loadOrders();
+    });
   }
 
   @override
@@ -527,19 +541,6 @@ class _OrdersViewState extends State<OrdersView> {
       appBar: _buildAppBar(),
       body: _buildBody(),
     );
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // التحقق من وجود طلب جديد في arguments
-    final routeArgs = ModalRoute.of(context)?.settings.arguments;
-    if (routeArgs != null && routeArgs is Map) {
-      final newOrder = routeArgs['new_order'] as UserOrderEntity?;
-      if (newOrder != null) {
-        context.read<OrdersCubit>().addLocalOrder(newOrder);
-      }
-    }
   }
 
   AppBar _buildAppBar() {
@@ -589,45 +590,59 @@ class _OrdersViewState extends State<OrdersView> {
   }
 
   Widget _buildBody() {
-    return BlocBuilder<OrdersCubit, OrdersState>(
-      builder: (context, state) {
-        // حساب الإحصائيات من بيانات الطلبات الفعلية
-        int totalOrders = state.orders.length;
-        int pendingOrders =
-            state.orders
-                .where(
-                  (order) =>
-                      order.status == OrderStatus.processing ||
-                      order.status == OrderStatus.shipped,
-                )
-                .length;
-        int deliveredOrders =
-            state.orders
-                .where((order) => order.status == OrderStatus.delivered)
-                .length;
-
-        // إذا كان في وضع أفقي وعلى جهاز كبير، استخدم تخطيط مختلف
-        if (context.isLandscape && (context.isTablet || context.isDesktop)) {
-          return _buildLandscapeLayout(
-            totalOrders,
-            pendingOrders,
-            deliveredOrders,
+    return BlocListener<OrdersCubit, OrdersState>(
+      listener: (context, state) {
+        if (state.isError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                state.errorMessage ?? 'حدث خطأ أثناء تحميل الطلبات',
+              ),
+              backgroundColor: Colors.red,
+            ),
           );
         }
-
-        // التخطيط العمودي الافتراضي
-        return Column(
-          children: [
-            // استخدام الإحصائيات المتجاوبة بالقيم الفعلية
-            OrderStatsWidget(
-              totalOrders: totalOrders,
-              pendingOrders: pendingOrders,
-              deliveredOrders: deliveredOrders,
-            ),
-            Expanded(child: _buildOrdersList()),
-          ],
-        );
       },
+      child: BlocBuilder<OrdersCubit, OrdersState>(
+        builder: (context, state) {
+          // حساب الإحصائيات من بيانات الطلبات الفعلية
+          int totalOrders = state.orders.length;
+          int pendingOrders =
+              state.orders
+                  .where(
+                    (order) =>
+                        order.status == OrderStatus.processing ||
+                        order.status == OrderStatus.shipped,
+                  )
+                  .length;
+          int deliveredOrders =
+              state.orders
+                  .where((order) => order.status == OrderStatus.delivered)
+                  .length;
+
+          // إذا كان في وضع أفقي وعلى جهاز كبير، استخدم تخطيط مختلف
+          if (context.isLandscape && (context.isTablet || context.isDesktop)) {
+            return _buildLandscapeLayout(
+              totalOrders,
+              pendingOrders,
+              deliveredOrders,
+            );
+          }
+
+          // التخطيط العمودي الافتراضي
+          return Column(
+            children: [
+              // استخدام الإحصائيات المتجاوبة بالقيم الفعلية
+              OrderStatsWidget(
+                totalOrders: totalOrders,
+                pendingOrders: pendingOrders,
+                deliveredOrders: deliveredOrders,
+              ),
+              Expanded(child: _buildOrdersList()),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -678,7 +693,7 @@ class _OrdersViewState extends State<OrdersView> {
   Widget _buildOrdersList() {
     return BlocBuilder<OrdersCubit, OrdersState>(
       builder: (context, state) {
-        if (state.isLoading && !state.hasOrders) {
+        if (state.isLoading && state.hasOrders) {
           return Center(
             child: CircularProgressIndicator(
               color: AppColors.primary,
@@ -692,7 +707,7 @@ class _OrdersViewState extends State<OrdersView> {
           return _buildErrorState(state);
         }
 
-        if (!state.hasOrders) {
+        if (!state.hasOrders && state.orders.isEmpty) {
           // عرض رسالة مختلفة إذا كان هناك طلبات ولكن الفلتر لم يُظهر أي منها
           if (state.isFiltered && state.orders.isNotEmpty) {
             return Center(
@@ -731,32 +746,35 @@ class _OrdersViewState extends State<OrdersView> {
           return _buildEmptyState();
         }
 
-        return RefreshIndicator(
-          key: _refreshIndicatorKey,
-          color: AppColors.primary,
-          backgroundColor: Colors.white,
-          onRefresh: () async {
-            if (mounted) {
-              await context.read<OrdersCubit>().loadOrders();
-            }
-          },
-          child: ListView.builder(
-            key: const PageStorageKey('orders_list'),
-            padding: EdgeInsets.all(context.isTablet ? 20.r : 16.r),
-            physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
-            ),
-            itemCount: state.filteredOrders.length,
-            itemBuilder: (context, index) {
-              final order = state.filteredOrders[index];
-              return OrderItemCard(
-                order: order,
-                onTap: () {},
-                isResponsive: true,
-              );
-            },
-          ),
-        );
+        return _isRefreshEnabled
+            ? RefreshIndicator(
+              key: _refreshIndicatorKey,
+              color: AppColors.primary,
+              backgroundColor: Colors.white,
+              onRefresh: () async {
+                if (mounted) {
+                  // await context.read<OrdersCubit>().loadOrders();
+                  await context.read<OrdersCubit>().loadCachedOrders();
+                }
+              },
+              child: _buildOrdersListView(state),
+            )
+            : _buildOrdersListView(state);
+      },
+    );
+  }
+
+  Widget _buildOrdersListView(OrdersState state) {
+    return ListView.builder(
+      key: const PageStorageKey('orders_list'),
+      padding: EdgeInsets.all(context.isTablet ? 20.r : 16.r),
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
+      itemCount: state.filteredOrders.length,
+      itemBuilder: (context, index) {
+        final order = state.filteredOrders[index];
+        return OrderItemCard(order: order, onTap: () {}, isResponsive: true);
       },
     );
   }

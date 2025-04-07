@@ -71,26 +71,26 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(RegisterError(errorMessage: context.localeS.email_is_required));
         return;
       }
-      if (!Platform.isIOS) {
-        if (phone.isEmpty) {
-          emit(RegisterError(errorMessage: context.localeS.phone_is_required));
-          return;
-        }
-      }
+      // if (!Platform.isIOS) {
+      //   if (phone.isEmpty) {
+      //     emit(RegisterError(errorMessage: context.localeS.phone_is_required));
+      //     return;
+      //   }
+      // }
 
       if (password.isEmpty) {
         emit(RegisterError(errorMessage: context.localeS.password_is_required));
         return;
       }
 
-      if (!Platform.isIOS) {
-        if (address.isEmpty) {
-          emit(
-            RegisterError(errorMessage: context.localeS.address_is_required),
-          );
-          return;
-        }
-      }
+      // if (!Platform.isIOS) {
+      //   if (address.isEmpty) {
+      //     emit(
+      //       RegisterError(errorMessage: context.localeS.address_is_required),
+      //     );
+      //     return;
+      //   }
+      // }
 
       // التحقق من صحة البريد الإلكتروني
       if (!_isValidEmail(email)) {

@@ -175,8 +175,6 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/core.dart';
@@ -195,8 +193,11 @@ class AddressCardWidget extends StatelessWidget {
 
     return Card(
       color: Colors.white,
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+      elevation: 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.r),
+        side: BorderSide(color: AppColors.primary, width: 1.r),
+      ),
       margin: EdgeInsets.symmetric(vertical: 8.h),
       child: Padding(
         padding: EdgeInsets.all(16.r),
@@ -255,7 +256,7 @@ class AddressCardWidget extends StatelessWidget {
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Text(
-                    address!,
+                    address == "Default Address" ? "Not Entered" : address!,
                     style: TextStyle(color: AppColors.text, fontSize: 16.sp),
                   ),
                 ),

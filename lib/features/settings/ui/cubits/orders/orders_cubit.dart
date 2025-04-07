@@ -10,21 +10,84 @@ import 'orders_state.dart';
 class OrdersCubit extends Cubit<OrdersState> {
   final GetUserOrdersUseCase _getUserOrdersUseCase;
   final List<UserOrderEntity> _localOrders = [];
- final Box<OrderHiveModel> ordersBox = Hive.box<OrderHiveModel>('orders_box');
+  late Box<OrderHiveModel> ordersBox;
 
   Timer? _refreshTimer;
 
   OrdersCubit({required GetUserOrdersUseCase getUserOrdersUseCase})
     : _getUserOrdersUseCase = getUserOrdersUseCase,
-      super(const OrdersState());
-
-  Future<void> _initHive() async {
-    // ordersBox = await Hive.openBox<OrderHiveModel>('orders_box');
-    _loadCachedOrders();
+      super(const OrdersState()) {
+    // تهيئة Hive مباشرة
+    initialize();
   }
 
-  void _loadCachedOrders() {
-    final cachedOrders = ordersBox.values.toList();
+  // Add this method to the OrdersCubit class
+  Future<void> initialize() async {
+    if (isClosed) return;
+
+    emit(state.copyWith(status: OrdersStatus.loading));
+
+    try {
+      if (!Hive.isBoxOpen('orders_box')) {
+        ordersBox = await Hive.openBox<OrderHiveModel>('orders_box');
+      } else {
+        ordersBox = Hive.box<OrderHiveModel>('orders_box');
+      }
+
+      // تحميل البيانات المحفوظة دائمًا
+      final cachedOrders = ordersBox.values.toList();
+      if (cachedOrders.isNotEmpty) {
+        emit(
+          state.copyWith(
+            orders: cachedOrders.map((e) => e.toUserOrderEntity()).toList(),
+            filteredOrders:
+                cachedOrders.map((e) => e.toUserOrderEntity()).toList(),
+            status: OrdersStatus.success,
+          ),
+        );
+      }
+
+      // تحميل البيانات من الخادم (اختياري)
+      // await loadOrders();
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: OrdersStatus.error,
+          errorMessage: 'فشل في تحميل البيانات: $e',
+        ),
+      );
+    }
+  }
+
+  Future<void> _initHive() async {
+    try {
+      // افتح الصندوق إذا لم يكن مفتوحًا بالفعل
+      if (!Hive.isBoxOpen('orders_box')) {
+        ordersBox = await Hive.openBox<OrderHiveModel>('orders_box');
+      } else {
+        ordersBox = Hive.box<OrderHiveModel>('orders_box');
+      }
+
+      print(
+        "Hive box opened successfully. Contains ${ordersBox.length} orders.",
+      );
+      loadCachedOrders();
+    } catch (e) {
+      print("Error initializing Hive: $e");
+      emit(
+        state.copyWith(
+          status: OrdersStatus.error,
+          errorMessage: 'فشل في تهيئة التخزين المحلي: $e',
+        ),
+      );
+    }
+  }
+
+  Future<void> loadCachedOrders() async {
+    if (isClosed) return;
+
+    emit(state.copyWith(status: OrdersStatus.loading));
+    final cachedOrders = await ordersBox.values.toList();
     if (cachedOrders.isNotEmpty) {
       emit(
         state.copyWith(
@@ -64,21 +127,22 @@ class OrdersCubit extends Cubit<OrdersState> {
     );
   }
 
-  // void addLocalOrder(UserOrderEntity order) {
-  //   _localOrders.insert(0, order); // إضافة الطلب في بداية القائمة
-  //   final allOrders = [..._localOrders];
-  //   final filteredOrders = _applyFilter(allOrders, state.filterStatus);
-  //   emit(state.copyWith(orders: allOrders, filteredOrders: filteredOrders));
-  // }
+  Future<void> addLocalOrder(UserOrderEntity newOrder) async {
+    if (!Hive.isBoxOpen('orders_box')) {
+      await _initHive(); // تأكد من فتح الصندوق أولًا
+    }
 
-  void addLocalOrder(UserOrderEntity newOrder) {
-    final updatedOrders = [...state.orders, newOrder];
-    ordersBox.add(OrderHiveModel.fromUserOrderEntity(newOrder));
+    final hiveModel = OrderHiveModel.fromUserOrderEntity(newOrder);
+    await ordersBox.add(hiveModel); // استخدم await لحفظ البيانات بشكل دائم
 
-    emit(state.copyWith(orders: updatedOrders, filteredOrders: updatedOrders));
+    emit(
+      state.copyWith(
+        orders: [...state.orders, newOrder],
+        filteredOrders: [...state.filteredOrders, newOrder],
+      ),
+    );
   }
 
-  // دالة لتطبيق الفلتر على قائمة الطلبات
   List<UserOrderEntity> _applyFilter(
     List<UserOrderEntity> orders,
     OrderStatus? filterStatus,
@@ -89,40 +153,14 @@ class OrdersCubit extends Cubit<OrdersState> {
     return orders.where((order) => order.status == filterStatus).toList();
   }
 
-  // دالة لتعيين فلتر
-  // void setFilter(OrderStatus? filterStatus) {
-  //   final filteredOrders = _applyFilter(state.orders, filterStatus);
-  //   emit(
-  //     state.copyWith(
-  //       filterStatus: filterStatus,
-  //       filteredOrders: filteredOrders,
-  //     ),
-  //   );
-  // }
-
-  // دالة لإزالة الفلتر
-  // void clearFilter() {
-  //   emit(state.copyWith(filterStatus: null, filteredOrders: state.orders));
-  // }
-
   void setFilter(OrderStatus status) {
     final filtered =
         state.orders.where((order) => order.status == status).toList();
-    emit(
-      state.copyWith(
-        filteredOrders: filtered,
-        filterStatus: status,
-      ),
-    );
+    emit(state.copyWith(filteredOrders: filtered, filterStatus: status));
   }
 
   void clearFilter() {
-    emit(
-      state.copyWith(
-        filteredOrders: state.orders,
-        filterStatus: null,
-      ),
-    );
+    emit(state.copyWith(filteredOrders: state.orders, filterStatus: null));
   }
 
   void selectOrder(String orderId) {

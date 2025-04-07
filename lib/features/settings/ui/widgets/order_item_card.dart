@@ -325,7 +325,7 @@ class OrderItemCard extends StatelessWidget {
             child: Text(
               '${order.price.toStringAsFixed(0)} ر.س',
               style: TextStyle(
-                color: AppColors.secondary, // الألوان الأصلية
+                color: AppColors.unselectedChip, // الألوان الأصلية
                 fontSize: priceFontSize,
                 fontWeight: FontWeight.bold,
               ),

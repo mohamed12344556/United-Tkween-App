@@ -70,9 +70,14 @@ class S {
     );
   }
 
-  /// `Address`
+  /// `Address (Optional)`
   String get address {
-    return Intl.message('Address', name: 'address', desc: '', args: []);
+    return Intl.message(
+      'Address (Optional)',
+      name: 'address',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Address is required`
@@ -749,9 +754,9 @@ class S {
     return Intl.message('PDF', name: 'pdf', desc: '', args: []);
   }
 
-  /// `Phone`
+  /// `Phone (Optional)`
   String get phone {
-    return Intl.message('Phone', name: 'phone', desc: '', args: []);
+    return Intl.message('Phone (Optional)', name: 'phone', desc: '', args: []);
   }
 
   /// `Phone is required`

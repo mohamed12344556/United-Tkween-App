@@ -616,26 +616,41 @@ class _EditProfileViewState extends State<EditProfileView> {
             readOnly: true,
           ),
 
-          if (!Platform.isIOS) ...[
-            SizedBox(height: 16.h),
-            _buildTextField(
-              label: 'رقم الهاتف 1',
-              controller: TextEditingController(),
-              prefixIcon: Icons.phone,
-              keyboardType: TextInputType.phone,
-            ),
-          ],
+          // if (!Platform.isIOS) ...[
+          //   SizedBox(height: 16.h),
+          //   _buildTextField(
+          //     label: 'رقم الهاتف 1',
+          //     controller: TextEditingController(),
+          //     prefixIcon: Icons.phone,
+          //     keyboardType: TextInputType.phone,
+          //   ),
+          // ],
+          SizedBox(height: 16.h),
+          _buildTextField(
+            label: 'رقم الهاتف 1',
+            controller: TextEditingController(),
+            prefixIcon: Icons.phone,
+            keyboardType: TextInputType.phone,
+          ),
 
-          if (!Platform.isIOS) ...[
-            SizedBox(height: 16.h),
-            _buildTextField(
-              label: 'العنوان',
-              controller: TextEditingController(),
-              prefixIcon: Icons.location_on,
-              maxLines: 3,
-              isOptional: true,
-            ),
-          ],
+          // if (!Platform.isIOS) ...[
+          //   SizedBox(height: 16.h),
+          //   _buildTextField(
+          //     label: 'العنوان',
+          //     controller: TextEditingController(),
+          //     prefixIcon: Icons.location_on,
+          //     maxLines: 3,
+          //     isOptional: true,
+          //   ),
+          // ],
+          SizedBox(height: 16.h),
+          _buildTextField(
+            label: 'العنوان',
+            controller: TextEditingController(),
+            prefixIcon: Icons.location_on,
+            maxLines: 3,
+            isOptional: true,
+          ),
 
           SizedBox(height: 32.h),
 
@@ -725,36 +740,61 @@ class _EditProfileViewState extends State<EditProfileView> {
             SizedBox(height: 16.h),
 
             // حقل رقم الهاتف 1
-            if (!Platform.isIOS) ...[
-              _buildTextField(
-                label: 'رقم الهاتف 1',
-                controller: _phoneNumber1Controller,
-                prefixIcon: Icons.phone,
-                keyboardType: TextInputType.phone,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'الرجاء إدخال رقم الهاتف';
-                  }
-                  return null;
-                },
-              ),
-
-              SizedBox(height: 16.h),
-            ],
+            // if (!Platform.isIOS) ...[
+            //   _buildTextField(
+            //     label: 'رقم الهاتف 1',
+            //     controller: _phoneNumber1Controller,
+            //     prefixIcon: Icons.phone,
+            //     keyboardType: TextInputType.phone,
+            //     validator: (value) {
+            //       if (value == null || value.isEmpty) {
+            //         return 'الرجاء إدخال رقم الهاتف';
+            //       }
+            //       return null;
+            //     },
+            //   ),
+            //   SizedBox(height: 16.h),
+            // ],
+            _buildTextField(
+              label: 'رقم الهاتف',
+              controller:
+                  _phoneNumber1Controller.text == "1111111"
+                      ? TextEditingController(text: "Not Entered Yet")
+                      : _phoneNumber1Controller,
+              prefixIcon: Icons.phone,
+              isOptional: true,
+              keyboardType: TextInputType.phone,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'الرجاء إدخال رقم الهاتف';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 16.h),
 
             // حقل العنوان
-            if (!Platform.isIOS) ...[
-              _buildTextField(
-                label: 'العنوان',
-                controller: _addressController,
-                prefixIcon: Icons.location_on,
-                maxLines: 3,
-                isOptional: true,
-              ),
-
-              SizedBox(height: 32.h),
-            ],
-
+            // if (!Platform.isIOS) ...[
+            //   _buildTextField(
+            //     label: 'العنوان',
+            //     controller: _addressController,
+            //     prefixIcon: Icons.location_on,
+            //     maxLines: 3,
+            //     isOptional: true,
+            //   ),
+            //   SizedBox(height: 32.h),
+            // ],
+            _buildTextField(
+              label: 'العنوان',
+              controller:
+                  _addressController.text == "Default Address"
+                      ? TextEditingController(text: "Not Entered Yet")
+                      : _addressController,
+              prefixIcon: Icons.location_on,
+              maxLines: 3,
+              isOptional: true,
+            ),
+            SizedBox(height: 32.h),
             // زر الحفظ
             SizedBox(
               height: 56.h,

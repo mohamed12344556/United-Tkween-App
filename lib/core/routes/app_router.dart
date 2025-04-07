@@ -20,6 +20,8 @@ import 'package:united_formation_app/features/settings/ui/views/profile_view.dar
 import 'package:united_formation_app/features/settings/ui/views/settings_view.dart';
 import '../../features/admin/ui/views/orders_admin_view.dart';
 import '../../features/admin/ui/views/support_admin_view.dart';
+import '../../features/cart/data/cart_model.dart';
+import '../../features/cart/presentation/pages/order_summary_page.dart';
 import '../../features/home/ui/pages/product_details_page.dart';
 import 'routes.dart';
 import '../../features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
@@ -189,17 +191,24 @@ class AppRouter {
           builder: (_) => CartPage(),
         );
 
-        // case Routes.ordersSummaryView:
-        // final args = settings.arguments as Map<String, dynamic>;
-        // final orderId = args['orderId'] as String;
-        // return MaterialPageRoute(
-        //   settings: settings,
-        //   builder:
-        //       (_) => BlocProvider(
-        //         create: (context) => sl<OrdersCubit>(),
-        //         child: OrderSummaryView(orderId: orderId),
-        //       ),
-        // );
+      case Routes.orderSummaryView:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          settings: settings,
+          builder:
+              (_) => MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(value: sl<ProfileCubit>()),
+                  BlocProvider.value(value: sl<OrdersCubit>()),
+                ],
+                child: OrderSummaryPage(
+                  cartItems: args['cartItems'] as List<CartItemModel>,
+                  subtotal: args['subtotal'] as int,
+                  shippingCost: args['shippingCost'] as int,
+                  totalAmount: args['totalAmount'] as int,
+                ),
+              ),
+        );
 
       case Routes.adminOrdersView:
         return MaterialPageRoute(

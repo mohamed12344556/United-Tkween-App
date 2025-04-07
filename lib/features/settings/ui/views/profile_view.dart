@@ -572,7 +572,7 @@ class _ProfileViewState extends State<ProfileView> {
                   phoneNumber1: profile.phoneNumber1,
                 ),
 
-                if (!Platform.isIOS)
+                // if (!Platform.isIOS)
                   AddressCardWidget(address: profile.address),
 
                 SizedBox(

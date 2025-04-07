@@ -240,8 +240,8 @@ class _HostPageState extends State<HostPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildNavItem(Icons.home, 0),
-                  if (!Platform.isIOS)
-                    _buildNavItem(Icons.shopping_bag_outlined, 1),
+                  // if (!Platform.isIOS)
+                  _buildNavItem(Icons.shopping_bag_outlined, 1),
                   _buildNavItem(Icons.favorite_border, 2),
                   _buildNavItem(Icons.settings, 3),
                 ],

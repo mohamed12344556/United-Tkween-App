@@ -862,97 +862,180 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       SizedBox(height: 25),
                     ],
 
-                    if (!Platform.isIOS) ...[
-                      Text(
-                        "Price: ${getSelectedPrice()} ر.س",
-                        style: TextStyle(
-                          color: AppColors.text,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16),
+                    // if (!Platform.isIOS) ...[
+                    //   Text(
+                    //     "Price: ${getSelectedPrice()} ر.س",
+                    //     style: TextStyle(
+                    //       color: AppColors.text,
+                    //       fontSize: 18,
+                    //       fontWeight: FontWeight.bold,
+                    //     ),
+                    //   ),
+                    //   SizedBox(height: 16),
 
-                      Row(
-                        children: [
-                          Text(
-                            "Total: ${formatNumber(totalPrice)} ر.س",
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Spacer(),
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (quantity > 1) {
-                                    setState(() => quantity--);
-                                  }
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: AppColors.primary,
-                                  ),
-                                  child: Icon(
-                                    Icons.remove,
-                                    color: Colors.white,
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                ),
-                                child: Text(
-                                  "$quantity",
-                                  style: TextStyle(
-                                    color: AppColors.text,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () => setState(() => quantity++),
-                                child: Container(
-                                  padding: EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: AppColors.primary,
-                                  ),
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                    //   Row(
+                    //     children: [
+                    //       Text(
+                    //         "Total: ${formatNumber(totalPrice)} ر.س",
+                    //         style: TextStyle(
+                    //           color: AppColors.primary,
+                    //           fontSize: 20,
+                    //           fontWeight: FontWeight.bold,
+                    //         ),
+                    //       ),
+                    //       Spacer(),
+                    //       Row(
+                    //         children: [
+                    //           GestureDetector(
+                    //             onTap: () {
+                    //               if (quantity > 1) {
+                    //                 setState(() => quantity--);
+                    //               }
+                    //             },
+                    //             child: Container(
+                    //               padding: EdgeInsets.all(4),
+                    //               decoration: BoxDecoration(
+                    //                 borderRadius: BorderRadius.circular(4),
+                    //                 color: AppColors.primary,
+                    //               ),
+                    //               child: Icon(
+                    //                 Icons.remove,
+                    //                 color: Colors.white,
+                    //                 size: 16,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //               horizontal: 10,
+                    //             ),
+                    //             child: Text(
+                    //               "$quantity",
+                    //               style: TextStyle(
+                    //                 color: AppColors.text,
+                    //                 fontSize: 20,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           GestureDetector(
+                    //             onTap: () => setState(() => quantity++),
+                    //             child: Container(
+                    //               padding: EdgeInsets.all(4),
+                    //               decoration: BoxDecoration(
+                    //                 borderRadius: BorderRadius.circular(4),
+                    //                 color: AppColors.primary,
+                    //               ),
+                    //               child: Icon(
+                    //                 Icons.add,
+                    //                 color: Colors.white,
+                    //                 size: 16,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ],
+                    Text(
+                      "Price: ${getSelectedPrice()} ر.س",
+                      style: TextStyle(
+                        color: AppColors.text,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
+                    ),
+                    SizedBox(height: 16),
+
+                    Row(
+                      children: [
+                        Text(
+                          "Total: ${formatNumber(totalPrice)} ر.س",
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (quantity > 1) {
+                                  setState(() => quantity--);
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: AppColors.primary,
+                                ),
+                                child: Icon(
+                                  Icons.remove,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
+                              child: Text(
+                                "$quantity",
+                                style: TextStyle(
+                                  color: AppColors.text,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => setState(() => quantity++),
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: AppColors.primary,
+                                ),
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
 
                     SizedBox(height: 30),
 
                     // تعديل زر إضافة للسلة مع إظهار ملاحظة في وضع الضيف
-                    if (!Platform.isIOS) ...[
-                      AppButton(
-                        text:
-                            _isGuest
-                                ? "تسجيل الدخول للإضافة للسلة"
-                                : "Add to cart",
-                        onPressed: _addToCart,
-                        height: 55,
-                        backgroundColor: AppColors.primary,
-                        textColor: Colors.white,
-                      ),
-                    ],
+                    // if (!Platform.isIOS) ...[
+                    //   AppButton(
+                    //     text:
+                    //         _isGuest
+                    //             ? "تسجيل الدخول للإضافة للسلة"
+                    //             : "Add to cart",
+                    //     onPressed: _addToCart,
+                    //     height: 55,
+                    //     backgroundColor: AppColors.primary,
+                    //     textColor: Colors.white,
+                    //   ),
+                    // ],
+                    AppButton(
+                      text:
+                          _isGuest
+                              ? "تسجيل الدخول للإضافة للسلة"
+                              : "Add to cart",
+                      onPressed: _addToCart,
+                      height: 55,
+                      backgroundColor: AppColors.primary,
+                      textColor: Colors.white,
+                    ),
 
                     // if (Platform.isMacOS) ...[
                     //   AppButton(

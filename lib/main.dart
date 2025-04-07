@@ -73,6 +73,7 @@ Future<void> main() async {
   // ✅ Now it's safe to open the boxes
   await Hive.openBox<UserModel>('userBox');
   await Hive.openBox<BookModel>('favorites');
+  await Hive.openBox<OrderHiveModel>('orders_box');
   // await AppState.initialize();
   // final bool hasValidSession = await TokenManager.hasValidTokens();
   // log('Main - AppState.isLoggedIn: ${AppState.isLoggedIn}');

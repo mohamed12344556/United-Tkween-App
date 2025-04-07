@@ -350,14 +350,20 @@ class RegisterViewContent extends StatelessWidget {
                     SizedBox(height: verticalSpacing),
 
                     // حقل رقم الهاتف
-                    if (!Platform.isIOS) ...[
-                      AppTextField(
-                        controller: cubit.phoneController,
-                        hintText: context.localeS.phone,
-                        keyboardType: TextInputType.phone,
-                      ),
-                      SizedBox(height: verticalSpacing),
-                    ],
+                    // if (!Platform.isIOS) ...[
+                    //   AppTextField(
+                    //     controller: cubit.phoneController,
+                    //     hintText: context.localeS.phone,
+                    //     keyboardType: TextInputType.phone,
+                    //   ),
+                    //   SizedBox(height: verticalSpacing),
+                    // ],
+                    AppTextField(
+                      controller: cubit.phoneController,
+                      hintText: context.localeS.phone,
+                      keyboardType: TextInputType.phone,
+                    ),
+                    SizedBox(height: verticalSpacing),
 
                     // حقل كلمة المرور
                     AppTextField(
@@ -371,15 +377,21 @@ class RegisterViewContent extends StatelessWidget {
                     SizedBox(height: verticalSpacing),
 
                     // حقل العنوان
-                    if (!Platform.isIOS) ...[
-                      AppTextField(
-                        controller: cubit.addressController,
-                        hintText: context.localeS.address,
-                        keyboardType: TextInputType.streetAddress,
-                      ),
+                    // if (!Platform.isIOS) ...[
+                    //   AppTextField(
+                    //     controller: cubit.addressController,
+                    //     hintText: context.localeS.address,
+                    //     keyboardType: TextInputType.streetAddress,
+                    //   ),
 
-                      SizedBox(height: verticalSpacing * 2),
-                    ],
+                    //   SizedBox(height: verticalSpacing * 2),
+                    // ],
+                    AppTextField(
+                      controller: cubit.addressController,
+                      hintText: context.localeS.address,
+                      keyboardType: TextInputType.streetAddress,
+                    ),
+                    SizedBox(height: verticalSpacing * 2),
 
                     AppButton(
                       text: context.localeS.create_an_account,

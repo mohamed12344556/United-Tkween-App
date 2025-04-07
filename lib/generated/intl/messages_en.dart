@@ -26,7 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "account_created_successfully": MessageLookupByLibrary.simpleMessage(
       "Account created successfully!",
     ),
-    "address": MessageLookupByLibrary.simpleMessage("Address"),
+    "address": MessageLookupByLibrary.simpleMessage("Address (Optional)"),
     "address_is_required": MessageLookupByLibrary.simpleMessage(
       "Address is required",
     ),
@@ -189,7 +189,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Passwords do not match",
     ),
     "pdf": MessageLookupByLibrary.simpleMessage("PDF"),
-    "phone": MessageLookupByLibrary.simpleMessage("Phone"),
+    "phone": MessageLookupByLibrary.simpleMessage("Phone (Optional)"),
     "phone_is_required": MessageLookupByLibrary.simpleMessage(
       "Phone is required",
     ),

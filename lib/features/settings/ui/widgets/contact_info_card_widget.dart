@@ -157,8 +157,11 @@ class ContactInfoCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+      elevation: 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.r),
+        side: BorderSide(color: AppColors.primary, width: 1.r),
+      ),
       margin: EdgeInsets.symmetric(vertical: 8.h),
       child: Padding(
         padding: EdgeInsets.all(16.r),
@@ -184,16 +187,17 @@ class ContactInfoCardWidget extends StatelessWidget {
             ),
 
             // عنصر رقم الهاتف 1
-            if (!Platform.isIOS)
-              if (phoneNumber1 != null && phoneNumber1!.isNotEmpty)
-                _buildContactItem(
-                  icon: Icons.phone,
-                  title: 'رقم الهاتف 1',
-                  value: phoneNumber1!,
-                  context: context,
-                  canCopy: true,
-                  canCall: true,
-                ),
+            // if (!Platform.isIOS)
+            if (phoneNumber1 != null && phoneNumber1!.isNotEmpty)
+              _buildContactItem(
+                icon: Icons.phone,
+                title: 'رقم الهاتف ',
+                value:
+                    phoneNumber1 == "1111111" ? "Not Entered" : phoneNumber1!,
+                context: context,
+                canCopy: true,
+                canCall: true,
+              ),
 
             // عنصر رقم الهاتف 2
             if (phoneNumber2 != null && phoneNumber2!.isNotEmpty)

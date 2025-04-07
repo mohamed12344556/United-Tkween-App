@@ -400,35 +400,62 @@ class _SettingsViewState extends State<SettingsView>
                 ),
               ),
 
-              if (!Platform.isIOS) ...[
-                _buildAnimatedMenuItem(
-                  index: 1,
-                  child: ProfileMenuItem(
-                    title: 'مشترياتي',
-                    icon: Icons.shopping_cart,
-                    iconColor: AppColors.primary,
-                    backgroundColor: AppColors.lightGrey,
-                    textColor: AppColors.text,
-                    onTap: () {
-                      context.navigateToNamed(Routes.ordersView);
-                    },
-                  ),
-                ),
+              // if (!Platform.isIOS) ...[
+              //   _buildAnimatedMenuItem(
+              //     index: 1,
+              //     child: ProfileMenuItem(
+              //       title: 'مشترياتي',
+              //       icon: Icons.shopping_cart,
+              //       iconColor: AppColors.primary,
+              //       backgroundColor: AppColors.lightGrey,
+              //       textColor: AppColors.text,
+              //       onTap: () {
+              //         context.navigateToNamed(Routes.ordersView);
+              //       },
+              //     ),
+              //   ),
 
-                _buildAnimatedMenuItem(
-                  index: 2,
-                  child: ProfileMenuItem(
-                    title: 'مكتبتي',
-                    icon: Icons.book,
-                    iconColor: AppColors.primary,
-                    backgroundColor: AppColors.lightGrey,
-                    textColor: AppColors.text,
-                    onTap: () {
-                      context.navigateToNamed(Routes.libraryView);
-                    },
-                  ),
+              //   _buildAnimatedMenuItem(
+              //     index: 2,
+              //     child: ProfileMenuItem(
+              //       title: 'مكتبتي',
+              //       icon: Icons.book,
+              //       iconColor: AppColors.primary,
+              //       backgroundColor: AppColors.lightGrey,
+              //       textColor: AppColors.text,
+              //       onTap: () {
+              //         context.navigateToNamed(Routes.libraryView);
+              //       },
+              //     ),
+              //   ),
+              // ],
+              _buildAnimatedMenuItem(
+                index: 1,
+                child: ProfileMenuItem(
+                  title: 'مشترياتي',
+                  icon: Icons.shopping_cart,
+                  iconColor: AppColors.primary,
+                  backgroundColor: AppColors.lightGrey,
+                  textColor: AppColors.text,
+                  onTap: () {
+                    context.navigateToNamed(Routes.ordersView);
+                  },
                 ),
-              ],
+              ),
+
+              _buildAnimatedMenuItem(
+                index: 2,
+                child: ProfileMenuItem(
+                  title: 'مكتبتي',
+                  icon: Icons.book,
+                  iconColor: AppColors.primary,
+                  backgroundColor: AppColors.lightGrey,
+                  textColor: AppColors.text,
+                  onTap: () {
+                    context.navigateToNamed(Routes.libraryView);
+                  },
+                ),
+              ),
               Divider(color: Colors.grey[200]),
 
               const SizedBox(height: 16),
