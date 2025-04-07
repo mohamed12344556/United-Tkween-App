@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import '../../../data/datasources/hive_models/order_hive_model.dart';
 import '../../../domain/entities/user_order_entity.dart';
 import '../../../domain/usecases/get_user_orders_usecase.dart';
 import 'orders_state.dart';
 
 class OrdersCubit extends Cubit<OrdersState> {
   final GetUserOrdersUseCase _getUserOrdersUseCase;
+  final List<UserOrderEntity> _localOrders = [];
+ final Box<OrderHiveModel> ordersBox = Hive.box<OrderHiveModel>('orders_box');
 
   Timer? _refreshTimer;
 
@@ -14,7 +18,22 @@ class OrdersCubit extends Cubit<OrdersState> {
     : _getUserOrdersUseCase = getUserOrdersUseCase,
       super(const OrdersState());
 
-  // في OrdersCubit.dart
+  Future<void> _initHive() async {
+    // ordersBox = await Hive.openBox<OrderHiveModel>('orders_box');
+    _loadCachedOrders();
+  }
+
+  void _loadCachedOrders() {
+    final cachedOrders = ordersBox.values.toList();
+    if (cachedOrders.isNotEmpty) {
+      emit(
+        state.copyWith(
+          orders: cachedOrders.map((e) => e.toUserOrderEntity()).toList(),
+        ),
+      );
+    }
+  }
+
   Future<void> loadOrders() async {
     if (isClosed) return;
 
@@ -45,6 +64,20 @@ class OrdersCubit extends Cubit<OrdersState> {
     );
   }
 
+  // void addLocalOrder(UserOrderEntity order) {
+  //   _localOrders.insert(0, order); // إضافة الطلب في بداية القائمة
+  //   final allOrders = [..._localOrders];
+  //   final filteredOrders = _applyFilter(allOrders, state.filterStatus);
+  //   emit(state.copyWith(orders: allOrders, filteredOrders: filteredOrders));
+  // }
+
+  void addLocalOrder(UserOrderEntity newOrder) {
+    final updatedOrders = [...state.orders, newOrder];
+    ordersBox.add(OrderHiveModel.fromUserOrderEntity(newOrder));
+
+    emit(state.copyWith(orders: updatedOrders, filteredOrders: updatedOrders));
+  }
+
   // دالة لتطبيق الفلتر على قائمة الطلبات
   List<UserOrderEntity> _applyFilter(
     List<UserOrderEntity> orders,
@@ -57,19 +90,39 @@ class OrdersCubit extends Cubit<OrdersState> {
   }
 
   // دالة لتعيين فلتر
-  void setFilter(OrderStatus? filterStatus) {
-    final filteredOrders = _applyFilter(state.orders, filterStatus);
+  // void setFilter(OrderStatus? filterStatus) {
+  //   final filteredOrders = _applyFilter(state.orders, filterStatus);
+  //   emit(
+  //     state.copyWith(
+  //       filterStatus: filterStatus,
+  //       filteredOrders: filteredOrders,
+  //     ),
+  //   );
+  // }
+
+  // دالة لإزالة الفلتر
+  // void clearFilter() {
+  //   emit(state.copyWith(filterStatus: null, filteredOrders: state.orders));
+  // }
+
+  void setFilter(OrderStatus status) {
+    final filtered =
+        state.orders.where((order) => order.status == status).toList();
     emit(
       state.copyWith(
-        filterStatus: filterStatus,
-        filteredOrders: filteredOrders,
+        filteredOrders: filtered,
+        filterStatus: status,
       ),
     );
   }
 
-  // دالة لإزالة الفلتر
   void clearFilter() {
-    emit(state.copyWith(filterStatus: null, filteredOrders: state.orders));
+    emit(
+      state.copyWith(
+        filteredOrders: state.orders,
+        filterStatus: null,
+      ),
+    );
   }
 
   void selectOrder(String orderId) {

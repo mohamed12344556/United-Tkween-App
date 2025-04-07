@@ -488,8 +488,7 @@
 //   }
 // }
 
-
-
+//!
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/empty_state_widget.dart';
@@ -528,6 +527,19 @@ class _OrdersViewState extends State<OrdersView> {
       appBar: _buildAppBar(),
       body: _buildBody(),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // التحقق من وجود طلب جديد في arguments
+    final routeArgs = ModalRoute.of(context)?.settings.arguments;
+    if (routeArgs != null && routeArgs is Map) {
+      final newOrder = routeArgs['new_order'] as UserOrderEntity?;
+      if (newOrder != null) {
+        context.read<OrdersCubit>().addLocalOrder(newOrder);
+      }
+    }
   }
 
   AppBar _buildAppBar() {
@@ -978,3 +990,5 @@ class _OrdersViewState extends State<OrdersView> {
     );
   }
 }
+
+//!

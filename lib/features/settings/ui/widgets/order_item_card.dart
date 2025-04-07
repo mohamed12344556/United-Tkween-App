@@ -6,7 +6,7 @@ import '../../domain/entities/user_order_entity.dart';
 class OrderItemCard extends StatelessWidget {
   final UserOrderEntity order;
   final VoidCallback? onTap;
-  final bool isResponsive; 
+  final bool isResponsive;
   const OrderItemCard({
     super.key,
     required this.order,
@@ -266,7 +266,7 @@ class OrderItemCard extends StatelessWidget {
                 Icon(
                   Icons.calendar_today,
                   size: iconSize * 0.7,
-                  color: AppColors.primary,  // الألوان الأصلية
+                  color: AppColors.primary, // الألوان الأصلية
                 ),
                 SizedBox(width: isResponsive ? 4.w : 4),
                 Text(
@@ -323,9 +323,9 @@ class OrderItemCard extends StatelessWidget {
               ),
             ),
             child: Text(
-              '${order.price.toStringAsFixed(0)} ج.م',
+              '${order.price.toStringAsFixed(0)} ر.س',
               style: TextStyle(
-                color: AppColors.secondary,  // الألوان الأصلية
+                color: AppColors.secondary, // الألوان الأصلية
                 fontSize: priceFontSize,
                 fontWeight: FontWeight.bold,
               ),
@@ -420,9 +420,9 @@ class OrderItemCard extends StatelessWidget {
               ),
             ),
             child: Text(
-              '${order.price.toStringAsFixed(0)} ج.م',
+              '${order.price.toStringAsFixed(0)} ر.س',
               style: TextStyle(
-                color: AppColors.secondary,  // الألوان الأصلية
+                color: AppColors.unselectedChip,
                 fontSize: priceFontSize,
                 fontWeight: FontWeight.bold,
               ),
@@ -462,7 +462,7 @@ class OrderItemCard extends StatelessWidget {
               order.description!,
               style: TextStyle(
                 fontSize: descriptionFontSize,
-                color: Colors.grey[400],
+                color: AppColors.text.withOpacity(0.7),
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -517,9 +517,9 @@ class OrderItemCard extends StatelessWidget {
               icon: Icon(Icons.download, size: footerIconSize),
               label: Text('تحميل', style: TextStyle(fontSize: buttonFontSize)),
               style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.primary,  // الألوان الأصلية
+                foregroundColor: AppColors.primary, // الألوان الأصلية
                 side: BorderSide(
-                  color: AppColors.primary,  // الألوان الأصلية
+                  color: AppColors.primary, // الألوان الأصلية
                   width: isResponsive ? 1.5 : 1,
                 ),
                 shape: RoundedRectangleBorder(
@@ -569,9 +569,9 @@ class OrderItemCard extends StatelessWidget {
   Color _getStatusColor(OrderStatus status) {
     switch (status) {
       case OrderStatus.processing:
-        return Colors.blue;  // الألوان الأصلية
+        return Colors.blue; // الألوان الأصلية
       case OrderStatus.shipped:
-        return Colors.orange;  // الألوان الأصلية
+        return Colors.orange; // الألوان الأصلية
       case OrderStatus.delivered:
         return AppColors.success;
       case OrderStatus.cancelled:

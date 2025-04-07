@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/delete_account_dialog.dart';
+import '../../features/cart/data/cart_model.dart';
+import '../../features/settings/domain/entities/user_order_entity.dart';
 import '../../generated/l10n.dart';
 import '../core.dart';
 import '../../features/auth/data/services/guest_mode_manager.dart';
@@ -296,5 +298,38 @@ extension UrlFormatter on String {
     const String baseUrl = 'https://tkweenstore.com/';
     String cleanedPath = replaceFirst(RegExp(r'^(\.\./)+'), '');
     return '$baseUrl$cleanedPath';
+  }
+}
+
+// extension CartToOrderExtension on List<CartItemModel> {
+//   UserOrderEntity toOrderEntity() {
+//     return UserOrderEntity(
+//       id: DateTime.now().millisecondsSinceEpoch.toString(),
+//       title: "طلب ${length} منتجات",
+//       description: "تحتوي على ${map((e) => e.bookName).join(', ')}",
+//       orderDate: DateTime.now(),
+//       status: OrderStatus.processing,
+//       price: fold(0, (sum, item) => sum + (item.unitPrice * item.quantity)),
+//       imageUrl: null,
+//     );
+//   }
+// }
+
+extension CartItemsToOrder on List<CartItemModel> {
+  UserOrderEntity toOrderEntity({
+    required String customerName,
+    required String customerPhone,
+    required String customerAddress,
+    required int totalAmount,
+  }) {
+    return UserOrderEntity(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: 'طلب #${DateTime.now().millisecondsSinceEpoch}',
+      description: '${length} منتجات - ${customerName} - ${customerPhone}',
+      orderDate: DateTime.now(),
+      status: OrderStatus.processing,
+      price: totalAmount.toDouble(),
+      imageUrl: null,
+    );
   }
 }

@@ -446,12 +446,16 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:united_formation_app/core/routes/routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
+import '../../../../core/core.dart';
 import '../../../../core/themes/app_colors.dart';
+import '../../../settings/ui/cubits/orders/orders_cubit.dart';
+import '../../../settings/ui/cubits/profile/profile_cubit.dart';
 import '../../data/cart_model.dart';
 import 'order_summary_page.dart';
 
@@ -572,6 +576,42 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
+  // void proceedToSummaryPage() {
+  //   final cartItems = cartBox.values.toList();
+
+  //   if (cartItems.isEmpty) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('السلة فارغة. لا يمكن إتمام عملية الشراء.'),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //     return;
+  //   }
+
+  //   // Navigator.of(context).pushNamed(
+  //   //   Routes.orderSummaryView,
+  //   //   arguments: {
+  //   //     'cartItems': cartItems,
+  //   //     'subtotal': subtotal,
+  //   //     'shippingCost': shippingCost,
+  //   //     'totalAmount': totalAmount,
+  //   //   },
+  //   // );
+
+  //   Navigator.of(context).push(
+  //     MaterialPageRoute(
+  //       builder:
+  //           (context) => OrderSummaryPage(
+  //             cartItems: cartItems,
+  //             subtotal: subtotal,
+  //             shippingCost: shippingCost,
+  //             totalAmount: totalAmount,
+  //           ),
+  //     ),
+  //   );
+  // }
+
   void proceedToSummaryPage() {
     final cartItems = cartBox.values.toList();
 
@@ -585,27 +625,55 @@ class _CartPageState extends State<CartPage> {
       return;
     }
 
-    // Navigator.of(context).pushNamed(
-    //   Routes.orderSummaryView,
-    //   arguments: {
-    //     'cartItems': cartItems,
-    //     'subtotal': subtotal,
-    //     'shippingCost': shippingCost,
-    //     'totalAmount': totalAmount,
-    //   },
-    // );
+    // Approach 1: Using BlocProvider to pass the ProfileCubit to the OrderSummaryPage
+    try {
+      // Get the current ProfileCubit from the context
+      final profileCubit = context.read<ProfileCubit>();
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder:
-            (context) => OrderSummaryPage(
-              cartItems: cartItems,
-              subtotal: subtotal,
-              shippingCost: shippingCost,
-              totalAmount: totalAmount,
-            ),
-      ),
-    );
+      // Navigate with ProfileCubit provided
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder:
+              (context) => MultiBlocProvider(
+                // value: profileCubit,
+                // create: (context) => sl<OrdersCubit>(),
+                providers: [
+                  BlocProvider.value(value: sl<ProfileCubit>()),
+                  BlocProvider.value(value: sl<OrdersCubit>()),
+                ],
+                child: OrderSummaryPage(
+                  cartItems: cartItems,
+                  subtotal: subtotal,
+                  shippingCost: shippingCost,
+                  totalAmount: totalAmount,
+                ),
+              ),
+        ),
+      );
+    } catch (e) {
+      // Fallback approach if ProfileCubit can't be accessed
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder:
+              (context) => OrderSummaryPage(
+                cartItems: cartItems,
+                subtotal: subtotal,
+                shippingCost: shippingCost,
+                totalAmount: totalAmount,
+              ),
+        ),
+      );
+
+      // Show a message about potential functionality limitations
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Some user information might not be available on the checkout page.',
+          ),
+          backgroundColor: Colors.orange,
+        ),
+      );
+    }
   }
 
   @override
