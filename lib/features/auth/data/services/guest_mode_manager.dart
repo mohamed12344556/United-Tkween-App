@@ -26,6 +26,7 @@ class GuestModeManager {
   static Future<void> resetGuestMode() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_isGuestModeKey, false);
+    await prefs.setBool(StorageKeys.isLoggedIn, false); 
     debugPrint('Guest mode reset');
   }
 
