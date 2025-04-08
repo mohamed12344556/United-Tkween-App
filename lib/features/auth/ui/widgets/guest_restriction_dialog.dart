@@ -31,29 +31,19 @@ class GuestRestrictionDialog {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.lock_outlined,
-                  size: 50.r,
-                  color: AppColors.primary,
-                ),
+                Icon(Icons.lock_outlined, size: 50.r, color: AppColors.primary),
                 SizedBox(height: 16.h),
                 Text(
-                  feature != null 
-                      ? 'ميزة "$feature" متاحة فقط للمستخدمين المسجلين.' 
+                  feature != null
+                      ? 'ميزة "$feature" متاحة فقط للمستخدمين المسجلين.'
                       : 'هذه الميزة متاحة فقط للمستخدمين المسجلين.',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.sp,
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 16.sp),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 8.h),
                 Text(
                   'يرجى تسجيل الدخول أو إنشاء حساب للاستمتاع بجميع مميزات التطبيق.',
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontSize: 14.sp,
-                  ),
+                  style: TextStyle(color: Colors.grey[400], fontSize: 14.sp),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -83,12 +73,18 @@ class GuestRestrictionDialog {
                       ),
                       padding: EdgeInsets.symmetric(vertical: 10.h),
                     ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
+                    onPressed: () async {
+                      // Navigator.pop(context);
+                      // Navigator.pushNamedAndRemoveUntil(
+                      //   context,
+                      //   Routes.loginView,
+                      //   (route) => false,
+                      // );
+                      await GuestModeManager.resetGuestMode();
+                      Navigator.of(context).pushNamedAndRemoveUntil(
                         Routes.loginView,
                         (route) => false,
+                        arguments: {'fresh_start': true},
                       );
                     },
                     child: const Text('تسجيل الدخول'),
