@@ -38,11 +38,27 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   /// إعادة تعيين حالة الـ Cubit
-  void resetState() {
+  // void resetState() {
+  //   if (!isActive) return;
+
+  //   emailController.clear();
+  //   passwordController.clear();
+
+  //   _isPasswordVisible = false;
+  //   emit(LoginInitial());
+  // }
+  void resetState({bool clearControllers = false}) {
     if (!isActive) return;
 
-    emailController.clear();
-    passwordController.clear();
+    if (clearControllers) {
+      if (!emailController.isDisposed) {
+        emailController.clear();
+      }
+
+      if (!passwordController.isDisposed) {
+        passwordController.clear();
+      }
+    }
 
     _isPasswordVisible = false;
     emit(LoginInitial());
@@ -112,14 +128,18 @@ class LoginCubit extends Cubit<LoginState> {
       result.fold(
         (failure) {
           // معالجة حالة الفشل
-          emit(LoginError(errorMessage: ApiErrorHandler.handle(failure.errorMessage)));
+          emit(
+            LoginError(
+              errorMessage: ApiErrorHandler.handle(failure.errorMessage),
+            ),
+          );
         },
         (loginResponse) {
           // معالجة حالة النجاح
           debugPrint("Login successful: ${loginResponse.token}");
 
           // التحقق من صحة البيانات المُرجعة
-          if ( loginResponse.status == 'error') {
+          if (loginResponse.status == 'error') {
             emit(
               LoginError(
                 errorMessage: ApiErrorModel(
@@ -140,9 +160,7 @@ class LoginCubit extends Cubit<LoginState> {
       debugPrint("Stack trace: $stackTrace");
 
       if (isActive) {
-        emit(LoginError(
-            errorMessage: ApiErrorHandler.handle(e),
-          ));
+        emit(LoginError(errorMessage: ApiErrorHandler.handle(e)));
       }
     }
   }

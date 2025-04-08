@@ -281,6 +281,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/features/home/data/book_model.dart';
 import 'package:united_formation_app/features/home/ui/cubit/home_cubit.dart';
@@ -734,19 +735,20 @@ class _HomePageState extends State<HomePage>
       leading: Icon(Icons.person, color: AppColors.primary),
       title: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
-          if (state.isSuccess && state.profile != null) {
-            // عرض اسم المستخدم إذا كان متاحاً
-            return Text(
-              state.profile!.fullName,
+          return Skeletonizer(
+            enabled: state.isLoading,
+            effect: PulseEffect(
+              duration: const Duration(milliseconds: 800),
+              from: AppColors.secondary.withValues(alpha: 51),
+              to: AppColors.primary.withValues(alpha: 51),
+            ),
+            child: Text(
+              state.isSuccess && state.profile != null
+                  ? state.profile!.fullName
+                  : 'مستخدم تكوين',
               style: TextStyle(color: AppColors.text),
-            );
-          } else {
-            // عرض اسم افتراضي إذا لم يكن الاسم متاحاً بعد
-            return Text(
-              'مستخدم تكوين',
-              style: TextStyle(color: AppColors.text),
-            );
-          }
+            ),
+          );
         },
       ),
       centerTitle: false,

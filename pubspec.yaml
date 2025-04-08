@@ -47,6 +47,7 @@ dependencies:
   shared_preferences: ^2.5.2
   shimmer: ^3.0.0
   sign_in_with_apple: ^6.1.4
+  skeletonizer: ^1.4.3
   url_launcher: ^6.3.1
 
 dev_dependencies:
