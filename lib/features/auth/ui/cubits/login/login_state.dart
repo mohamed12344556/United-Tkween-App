@@ -10,7 +10,7 @@ class LoginLoading extends LoginState {}
 class LoginFormUpdated extends LoginState {}
 
 class LoginSuccess extends LoginState {
- final LoginModelResponse loginModelResponse;
+  final LoginModelResponse loginModelResponse;
 
   LoginSuccess({required this.loginModelResponse});
 }

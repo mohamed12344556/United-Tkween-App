@@ -133,8 +133,6 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 
 import '../core.dart';
@@ -230,8 +228,8 @@ class AppButton extends StatelessWidget {
                 width: 16,
                 height: 16,
                 child: CircularProgressIndicator(
-                 color: defaultTextColor,
-                 strokeWidth: 2,
+                  color: defaultTextColor,
+                  strokeWidth: 2,
                 ),
               ),
               const SizedBox(width: 12),
@@ -242,12 +240,12 @@ class AppButton extends StatelessWidget {
                 fontSize: fontSize ?? 16,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.5,
+                height: 1.2,
               ),
               overflow: TextOverflow.ellipsis,
             ),
           ],
         );
-
     return SizedBox(
       width: defaultWidth,
       height: defaultHeight,
