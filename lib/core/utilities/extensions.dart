@@ -283,6 +283,69 @@ extension BuildContextExtensions on BuildContext {
       },
     );
   }
+
+  // إضافة دالة لإظهار رسالة "الميزة قادمة قريبًا"
+  Future<void> showComingSoonFeature({
+    String title = 'قريبًا',
+    String message = 'اصبر تاخد حاجة نضيفة ⚒️ ,قريبًا',
+    IconData icon = Icons.upcoming_outlined,
+  }) async {
+    return showDialog<void>(
+      context: this,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.darkSurface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Column(
+            children: [
+              Icon(icon, size: 50, color: AppColors.primary),
+              const SizedBox(height: 16),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            message,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white70, fontSize: 16),
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 12,
+                    ),
+                  ),
+                  child: const Text('حسنًا'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 extension NullOrEmpty on String? {

@@ -63,6 +63,7 @@ class EditProfileButtonWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 16.h),
       height: 56.h,
+      width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: onPressed,
         icon: Icon(Icons.edit, color: AppColors.unselectedChip, size: 20.r),

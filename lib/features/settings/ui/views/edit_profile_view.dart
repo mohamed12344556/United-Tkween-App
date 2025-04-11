@@ -415,7 +415,6 @@ import '../cubits/edit_profile/edit_profile_cubit.dart';
 import '../cubits/edit_profile/edit_profile_state.dart';
 import '../cubits/profile/profile_cubit.dart';
 import '../widgets/profile_avatar.dart';
-import 'dart:io';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});

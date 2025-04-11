@@ -344,7 +344,7 @@ class _SettingsViewState extends State<SettingsView>
                   ),
                 ),
                 onPressed: () {
-                  // إجراء الإشعارات
+                  context.showComingSoonFeature();
                 },
               ),
               const SizedBox(width: 8),

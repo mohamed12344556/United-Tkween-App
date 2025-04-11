@@ -505,6 +505,9 @@ class _LibraryViewState extends State<LibraryView>
       appBar: _buildAppBar(),
       body: BlocBuilder<LibraryCubit, LibraryState>(
         builder: (context, state) {
+          if (!state.hasItems) {
+            return _buildEmptyState();
+          }
           if (state.isLoading && !state.hasItems) {
             return Center(
               child: CircularProgressIndicator(
@@ -517,10 +520,6 @@ class _LibraryViewState extends State<LibraryView>
 
           if (state.isError && !state.hasItems) {
             return _buildErrorState(state);
-          }
-
-          if (!state.hasItems) {
-            return _buildEmptyState();
           }
 
           return RefreshIndicator(

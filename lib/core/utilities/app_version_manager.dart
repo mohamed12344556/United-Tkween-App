@@ -28,7 +28,7 @@ class AppVersionManager {
 
       final playStoreVersion = upgrader.currentAppStoreVersion;
       // final playStoreVersion = "1.0.4";
-      final currentVersion = upgrader.versionInfo?.installedVersion;
+      final currentVersion = upgrader.currentInstalledVersion;
       // final currentVersion = "1.0.4";
       log('App version: $currentVersion | Store version: $playStoreVersion');
 
@@ -111,7 +111,7 @@ class UpdatePopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: AppColors.unselectedChip,
+      backgroundColor: AppColors.darkSurface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       insetPadding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Padding(
@@ -121,23 +121,23 @@ class UpdatePopup extends StatelessWidget {
           children: [
             Icon(
               Icons.system_security_update_rounded,
-              size: 60,
+              size: 50,
               color: AppColors.primary,
             ),
             const SizedBox(height: 16),
             Text(
               '! تحديث متاح',
               style: TextStyle(
-                fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: AppColors.secondary,
+                color: Colors.white,
+                fontSize: 20,
               ),
             ),
             const SizedBox(height: 12),
             Text(
               'متاح نسخة جديدة من التطبيق. قم بالتحديث للاستمتاع بأحدث الميزات والتحسينات',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: AppColors.text),
+              style: const TextStyle(color: Colors.white70, fontSize: 16),
             ),
             const SizedBox(height: 24),
             AppButton(onPressed: onUpdatePressed, text: 'تحديث الآن'),

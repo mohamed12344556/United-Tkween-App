@@ -279,6 +279,8 @@
 //   }
 // }
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -753,22 +755,26 @@ class _HomePageState extends State<HomePage>
       ),
       centerTitle: false,
       actions: [
-        if (Theme.of(context).platform != TargetPlatform.iOS)
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.lightGrey,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
+        if (!Platform.isIOS) ...[
+          IconButton(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.lightGrey,
+                shape: BoxShape.circle,
+              ),
               child: Icon(
                 Icons.notifications_none,
                 color: AppColors.primary,
                 size: 20,
               ),
             ),
+            onPressed: () {
+              context.showComingSoonFeature();
+            },
           ),
-        const SizedBox(width: 10),
+          const SizedBox(width: 8),
+        ],
       ],
       scrolledUnderElevation: 0,
     );

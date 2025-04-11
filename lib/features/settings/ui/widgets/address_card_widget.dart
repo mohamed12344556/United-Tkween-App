@@ -219,18 +219,7 @@ class AddressCardWidget extends StatelessWidget {
                   icon: Icon(Icons.copy, color: AppColors.primary, size: 18.r),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: address!)).then((_) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('تم نسخ العنوان'),
-                          backgroundColor: AppColors.success,
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          margin: EdgeInsets.all(16.r),
-                          duration: const Duration(seconds: 1),
-                        ),
-                      );
+                      context.showSuccessSnackBar('تم نسخ العنوان');
                     });
                   },
                   splashRadius: 20.r,

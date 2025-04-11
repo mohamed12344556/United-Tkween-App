@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:united_formation_app/core/widgets/connection_wrapper.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/add_product/add_product_admin_cubit.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/edit_product/edit_product_admin_cubit.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/orders/orders_admin_cubit.dart';
@@ -64,7 +65,7 @@ class AppRouter {
 
                   return cubit;
                 },
-                child: const LoginPage(),
+                child: ConnectionWrapper(child: const LoginPage()),
               ),
         );
 
@@ -74,7 +75,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<RegisterCubit>(),
-                child: const RegisterPage(),
+                child: ConnectionWrapper(child: const RegisterPage()),
               ),
         );
 
@@ -84,7 +85,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<LearningOptionsCubit>(),
-                child: const LearningOptionsPage(),
+                child: ConnectionWrapper(child: const LearningOptionsPage()),
               ),
         );
 
@@ -102,7 +103,9 @@ class AppRouter {
                   cubit.setEmail(email);
                   return cubit;
                 },
-                child: ResetPasswordPage(email: email),
+                child: ConnectionWrapper(
+                  child: ResetPasswordPage(email: email),
+                ),
               ),
         );
 
@@ -110,7 +113,7 @@ class AppRouter {
       case Routes.settingsView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const SettingsView(),
+          builder: (_) => ConnectionWrapper(child: const SettingsView()),
         );
 
       case Routes.profileView:
@@ -119,7 +122,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<ProfileCubit>(),
-                child: const ProfileView(),
+                child: ConnectionWrapper(child: const ProfileView()),
               ),
         );
 
@@ -137,7 +140,7 @@ class AppRouter {
                   else
                     BlocProvider(create: (_) => sl<ProfileCubit>()),
                 ],
-                child: const EditProfileView(),
+                child: ConnectionWrapper(child: const EditProfileView()),
               ),
         );
 
@@ -147,7 +150,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<OrdersCubit>(),
-                child: const OrdersView(),
+                child: ConnectionWrapper(child: const OrdersView()),
               ),
         );
 
@@ -157,7 +160,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<LibraryCubit>(),
-                child: const LibraryView(),
+                child: ConnectionWrapper(child: const LibraryView()),
               ),
         );
 
@@ -167,28 +170,30 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<SupportCubit>(),
-                child: const SupportView(),
+                child: ConnectionWrapper(child: const SupportView()),
               ),
         );
 
       case Routes.hostView:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const HostPage(),
+          builder: (_) => ConnectionWrapper(child: const HostPage()),
         );
 
       case Routes.productDetailsView:
         BookModel bookModel = arguments as BookModel;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => ProductDetailsPage(book: bookModel),
+          builder:
+              (_) =>
+                  ConnectionWrapper(child: ProductDetailsPage(book: bookModel)),
         );
 
       case Routes.cartView:
         ProductModel product = arguments as ProductModel;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => CartPage(),
+          builder: (_) => ConnectionWrapper(child: CartPage()),
         );
 
       case Routes.orderSummaryView:
@@ -201,11 +206,13 @@ class AppRouter {
                   BlocProvider.value(value: sl<ProfileCubit>()),
                   BlocProvider.value(value: sl<OrdersCubit>()),
                 ],
-                child: OrderSummaryPage(
-                  cartItems: args['cartItems'] as List<CartItemModel>,
-                  subtotal: args['subtotal'] as int,
-                  shippingCost: args['shippingCost'] as int,
-                  totalAmount: args['totalAmount'] as int,
+                child: ConnectionWrapper(
+                  child: OrderSummaryPage(
+                    cartItems: args['cartItems'] as List<CartItemModel>,
+                    subtotal: args['subtotal'] as int,
+                    shippingCost: args['shippingCost'] as int,
+                    totalAmount: args['totalAmount'] as int,
+                  ),
                 ),
               ),
         );
@@ -216,7 +223,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<OrdersAdminCubit>(),
-                child: const OrdersAdminView(),
+                child: ConnectionWrapper(child: const OrdersAdminView()),
               ),
         );
 
@@ -228,7 +235,9 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<OrdersAdminCubit>(),
-                child: OrderDetailsAdminView(orderId: orderId),
+                child: ConnectionWrapper(
+                  child: OrderDetailsAdminView(orderId: orderId),
+                ),
               ),
         );
 
@@ -238,7 +247,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<ProductsAdminCubit>(),
-                child: const ProductsAdminView(),
+                child: ConnectionWrapper(child: const ProductsAdminView()),
               ),
         );
 
@@ -248,7 +257,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<AddProductAdminCubit>(),
-                child: const AddProductAdminView(),
+                child: ConnectionWrapper(child: const AddProductAdminView()),
               ),
         );
 
@@ -260,7 +269,7 @@ class AppRouter {
             builder:
                 (_) => BlocProvider(
                   create: (context) => sl<AddProductAdminCubit>(),
-                  child: const AddProductAdminView(),
+                  child: ConnectionWrapper(child: const AddProductAdminView()),
                 ),
           );
         }
@@ -272,7 +281,9 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<EditProductAdminCubit>(),
-                child: EditProductAdminView(product: product),
+                child: ConnectionWrapper(
+                  child: EditProductAdminView(product: product),
+                ),
               ),
         );
 
@@ -282,7 +293,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<SupportAdminCubit>(),
-                child: const SupportAdminView(),
+                child: ConnectionWrapper(child: const SupportAdminView()),
               ),
         );
 
@@ -293,9 +304,11 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<SupportAdminCubit>(),
-                child: SupportChatAdminView(
-                  customerId: args['customerId']!,
-                  customerName: args['customerName']!,
+                child: ConnectionWrapper(
+                  child: SupportChatAdminView(
+                    customerId: args['customerId']!,
+                    customerName: args['customerName']!,
+                  ),
                 ),
               ),
         );
@@ -306,7 +319,7 @@ class AppRouter {
           builder:
               (_) => BlocProvider(
                 create: (context) => sl<SupportAdminCubit>(),
-                child: FavoritesView(),
+                child: ConnectionWrapper(child: FavoritesView()),
               ),
         );
 

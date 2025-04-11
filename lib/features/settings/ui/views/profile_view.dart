@@ -314,7 +314,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
 import '../../../../core/core.dart';
+import '../../../auth/data/services/guest_mode_manager.dart';
 import '../cubits/profile/profile_cubit.dart';
 import '../cubits/profile/profile_state.dart';
 import '../widgets/profile_header_widget.dart';
@@ -331,13 +333,36 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  bool _isGuest = false;
+
   @override
   void initState() {
     super.initState();
+    // التحقق من وضع الضيف
+    _checkGuestStatus();
     // تحميل البيانات مباشرة عند فتح الصفحة
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadProfileData();
     });
+  }
+
+  Future<void> _checkGuestStatus() async {
+    final isGuest = await GuestModeManager.isGuestMode();
+    if (mounted) {
+      setState(() {
+        _isGuest = isGuest;
+      });
+    }
+  }
+
+  void _onItemTapped() async {
+    // التحقق من القيود في وضع الضيف للصفحات المقيدة
+    if (_isGuest) {
+      // EditProfileView
+      if (mounted) {
+        await context.checkGuestRestriction(featureName: "تعديل الملف الشخصي");
+      }
+    }
   }
 
   // تحميل البيانات بشكل منفصل
@@ -356,6 +381,7 @@ class _ProfileViewState extends State<ProfileView> {
   // انتقال إلى صفحة التعديل مع استقبال النتيجة عند العودة
   void _navigateToEditProfile() async {
     // استخدام await للانتظار حتى العودة من الصفحة
+
     final result = await Navigator.pushNamed(context, Routes.editProfileView);
     // إذا كانت النتيجة true، قم بتحديث البيانات
     if (result == true) {
@@ -448,7 +474,7 @@ class _ProfileViewState extends State<ProfileView> {
             ),
             child: Icon(Icons.edit, color: AppColors.primary, size: 20.r),
           ),
-          onPressed: _navigateToEditProfile,
+          onPressed: _isGuest ? _onItemTapped : _navigateToEditProfile,
         ),
         SizedBox(width: 8.w),
       ],
@@ -532,6 +558,7 @@ class _ProfileViewState extends State<ProfileView> {
                   width: double.infinity,
                   child: EditProfileButtonWidget(
                     onPressed: _navigateToEditProfile,
+
                   ),
                 ),
 
@@ -573,12 +600,16 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
 
                 // if (!Platform.isIOS)
-                  AddressCardWidget(address: profile.address),
+                AddressCardWidget(address: profile.address),
 
-                SizedBox(
-                  width: double.infinity,
-                  child: EditProfileButtonWidget(
-                    onPressed: _navigateToEditProfile,
+                Opacity(
+                  opacity: _isGuest ? 0.5 : 1.0,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: EditProfileButtonWidget(
+                      onPressed:
+                          _isGuest ? _onItemTapped : _navigateToEditProfile,
+                    ),
                   ),
                 ),
 
@@ -623,7 +654,9 @@ class _ProfileViewState extends State<ProfileView> {
 
                     AddressCardWidget(address: profile.address),
 
-                    EditProfileButtonWidget(onPressed: _navigateToEditProfile),
+                    EditProfileButtonWidget(
+                      onPressed: _navigateToEditProfile,
+                    ),
                   ],
                 ),
               ),

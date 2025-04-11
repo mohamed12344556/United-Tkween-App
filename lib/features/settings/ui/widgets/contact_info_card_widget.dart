@@ -261,18 +261,7 @@ class ContactInfoCardWidget extends StatelessWidget {
               icon: Icon(Icons.copy, color: AppColors.primary, size: 18.r),
               onPressed: () {
                 Clipboard.setData(ClipboardData(text: value)).then((_) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('تم نسخ $title'),
-                      backgroundColor: AppColors.success,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      margin: EdgeInsets.all(16.r),
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
+                  context.showSuccessSnackBar('تم نسخ $title');
                 });
               },
               splashRadius: 20.r,

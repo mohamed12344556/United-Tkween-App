@@ -30,17 +30,15 @@ class AppLoadingIndicator extends StatelessWidget {
             height: size,
             child: CircularProgressIndicator(
               color: indicatorColor,
-              strokeWidth: 3,
+              backgroundColor: AppColors.secondary.withValues(alpha: 51),
+              strokeWidth: context.isTablet ? 3.0 : 2.0,
             ),
           ),
           if (message != null) ...[
             const SizedBox(height: 16),
             Text(
               message!,
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColors.textSecondary,
-              ),
+              style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
           ],
