@@ -21,20 +21,18 @@ final ThemeData darkTheme = ThemeData(
   ),
   // Text Style:
   textTheme: ThemeData.dark().textTheme.apply(
-        bodyColor: Colors.white,
-        displayColor: Colors.white,
-        fontFamily: AppFonts.textFont,
-      ),
+    bodyColor: Colors.white,
+    displayColor: Colors.white,
+    fontFamily: AppFonts.textFont,
+  ),
   // Elevated Button Style:
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: AppColors.primary,
       foregroundColor: Colors.black,
-      disabledBackgroundColor: AppColors.primary.withValues(alpha:  0.5),
+      disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
       disabledForegroundColor: Colors.black.withValues(alpha: 0.5),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
       textStyle: AppTextStyling.font10W400TextColor.copyWith(
         fontWeight: FontWeight.w600,
         fontSize: 16,
@@ -47,9 +45,7 @@ final ThemeData darkTheme = ThemeData(
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
       foregroundColor: AppColors.primary,
-      textStyle: const TextStyle(
-        fontWeight: FontWeight.w500,
-      ),
+      textStyle: const TextStyle(fontWeight: FontWeight.w500),
     ),
   ),
   // Text Field Style:
@@ -77,10 +73,7 @@ final ThemeData darkTheme = ThemeData(
     ),
     fillColor: AppColors.darkSecondary,
     filled: true,
-    hintStyle: TextStyle(
-      color: Colors.grey[400],
-      fontSize: 14,
-    ),
+    hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
     prefixIconColor: Colors.grey[400],
     suffixIconColor: Colors.grey[400],
   ),
@@ -98,9 +91,7 @@ final ThemeData darkTheme = ThemeData(
     ),
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     side: const BorderSide(color: AppColors.darkSecondary),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50),
-    ),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
   ),
   // Divider style:
   dividerTheme: const DividerThemeData(
@@ -110,12 +101,10 @@ final ThemeData darkTheme = ThemeData(
     indent: 10,
   ),
   // Card Theme:
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     color: AppColors.darkSurface,
-    elevation: 0, 
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
+    elevation: 0,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   ),
   // App Bar Theme:
   appBarTheme: AppBarTheme(
@@ -136,7 +125,7 @@ final ThemeData darkTheme = ThemeData(
     selectedItemColor: AppColors.primary,
     unselectedItemColor: Colors.grey,
     type: BottomNavigationBarType.fixed,
-    elevation: 0, 
+    elevation: 0,
   ),
   // Switch Theme:
   switchTheme: SwitchThemeData(
@@ -164,11 +153,9 @@ final ThemeData darkTheme = ThemeData(
     ),
   ),
   // Dialog Theme:
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
     backgroundColor: AppColors.darkSurface,
-    elevation: 0, 
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
-    ),
+    elevation: 0,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
   ),
 );

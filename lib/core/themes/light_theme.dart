@@ -135,7 +135,7 @@ final ThemeData lightTheme = ThemeData(
     indent: 10,
   ),
   // Card Theme:
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     color: Colors.white,
     elevation: 0,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -170,7 +170,7 @@ final ThemeData lightTheme = ThemeData(
     shape: CircleBorder(),
   ),
   // Dialog Theme:
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
     backgroundColor: Colors.white,
     elevation: 0,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
