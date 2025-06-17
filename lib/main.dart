@@ -1,5 +1,3 @@
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -93,6 +91,9 @@ Future<void> main() async {
     // ),
   );
 }
+
+// email: m7@gmail.com
+// password: 123456789@mA
 
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:flutter/material.dart';

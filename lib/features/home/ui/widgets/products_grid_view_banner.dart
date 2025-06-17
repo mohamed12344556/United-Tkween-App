@@ -40,7 +40,6 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/features/home/data/book_model.dart';
-import '../../../admin/data/models/product_model.dart';
 
 class ProductsGridViewBanner extends StatelessWidget {
   const ProductsGridViewBanner({

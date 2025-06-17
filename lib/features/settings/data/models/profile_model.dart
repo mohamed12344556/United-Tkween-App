@@ -6,24 +6,31 @@ part 'profile_model.g.dart';
 
 @JsonSerializable()
 class ProfileModel extends ProfileEntity {
+  @override
   @JsonKey(name: 'id')
   final String id;
 
+  @override
   @JsonKey(name: 'fullName')
   final String fullName;
 
+  @override
   @JsonKey(name: 'email')
   final String email;
 
+  @override
   @JsonKey(name: 'phoneNumber1')
   final String? phoneNumber1;
 
+  @override
   @JsonKey(name: 'phoneNumber2')
   final String? phoneNumber2;
 
+  @override
   @JsonKey(name: 'address')
   final String? address;
 
+  @override
   @JsonKey(name: 'profileImageUrl')
   final String? profileImageUrl;
 

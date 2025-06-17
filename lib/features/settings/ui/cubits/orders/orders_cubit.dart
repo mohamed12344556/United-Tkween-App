@@ -87,7 +87,7 @@ class OrdersCubit extends Cubit<OrdersState> {
     if (isClosed) return;
 
     emit(state.copyWith(status: OrdersStatus.loading));
-    final cachedOrders = await ordersBox.values.toList();
+    final cachedOrders = ordersBox.values.toList();
     if (cachedOrders.isNotEmpty) {
       emit(
         state.copyWith(

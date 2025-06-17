@@ -184,7 +184,7 @@ import '../../../../core/routes/routes.dart';
 import 'package:united_formation_app/features/home/data/book_model.dart';
 
 class FavoritesView extends StatefulWidget {
-  FavoritesView({super.key});
+  const FavoritesView({super.key});
 
   @override
   State<FavoritesView> createState() => _FavoritesViewState();

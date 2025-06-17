@@ -6,7 +6,7 @@ import '../cubits/delete_account/delete_account_cubit.dart';
 
 /// حوار تأكيد حذف الحساب
 class DeleteAccountDialog extends StatelessWidget {
-  const DeleteAccountDialog({Key? key}) : super(key: key);
+  const DeleteAccountDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

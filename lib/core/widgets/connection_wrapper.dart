@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:united_formation_app/core/widgets/app_button.dart';
 
 import '../core.dart';
 import '../helper/network_connection.dart';

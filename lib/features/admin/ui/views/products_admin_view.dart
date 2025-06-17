@@ -314,7 +314,7 @@ class _ProductsAdminViewState extends State<ProductsAdminView> {
                           child: _buildHeaderCardItem(
                               icon: Icons.attach_money,
                               label: 'إجمالي القيمة',
-                              labelValue: ' ${formatNumber(totalValue)}' +" ج.م ",
+                              labelValue: ' ${formatNumber(totalValue)}' " ج.م ",
                               isRow: true
                           ),
                         ),

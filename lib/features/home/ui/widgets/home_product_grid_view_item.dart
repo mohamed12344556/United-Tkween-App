@@ -178,8 +178,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:united_formation_app/core/core.dart';
-import 'package:united_formation_app/core/utilities/extensions.dart';
-import '../../../../core/routes/routes.dart';
 import '../../data/book_model.dart';
 import 'products_grid_view_banner.dart';
 

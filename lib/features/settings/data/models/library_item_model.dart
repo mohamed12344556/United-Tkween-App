@@ -5,30 +5,38 @@ part 'library_item_model.g.dart';
 
 @JsonSerializable()
 class LibraryItemModel extends LibraryItemEntity {
+  @override
   @JsonKey(name: 'id')
   final String id;
   
+  @override
   @JsonKey(name: 'title')
   final String title;
   
+  @override
   @JsonKey(name: 'description')
   final String? description;
   
+  @override
   @JsonKey(name: 'orderDate')
   final DateTime orderDate;
   
   @JsonKey(name: 'type')
   final String typeString;
   
+  @override
   @JsonKey(name: 'price')
   final double price;
   
+  @override
   @JsonKey(name: 'thumbnailUrl')
   final String? thumbnailUrl;
   
+  @override
   @JsonKey(name: 'fileUrl')
   final String? fileUrl;
   
+  @override
   @JsonKey(name: 'isDelivered')
   final bool isDelivered;
 

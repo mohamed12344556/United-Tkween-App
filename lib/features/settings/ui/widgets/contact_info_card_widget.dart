@@ -139,7 +139,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/core.dart';
-import 'dart:io';
 
 class ContactInfoCardWidget extends StatelessWidget {
   final String email;

@@ -30,7 +30,7 @@ class DeleteAccountService {
       Map<String, dynamic> response = await _apiService.deleteAccount();
 
       // التحقق من استجابة الخادم
-      if (response != null && response['status'] == 'success') {
+      if (response['status'] == 'success') {
         // تنظيف بيانات الجلسة بعد حذف الحساب
         await _cleanupAfterDeletion();
         return const Right(true);

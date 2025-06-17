@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:united_formation_app/core/core.dart';
-import '../../../../core/routes/routes.dart';
 import '../cubits/add_product/add_product_admin_cubit.dart';
 import '../widgets/admin_appbar.dart';
 import '../widgets/admin_drawer.dart';

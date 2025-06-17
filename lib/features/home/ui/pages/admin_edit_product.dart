@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/core/core.dart';
 import '../../../admin/data/models/product_model.dart';
-import '../../data/book_model.dart';
 
 class AdminEditProductPage extends StatefulWidget {
   final ProductModel product;

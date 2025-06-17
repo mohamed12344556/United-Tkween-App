@@ -8,7 +8,6 @@ import '../../features/auth/data/models/otp_verification/otp_verification_model.
 import '../../features/auth/data/models/reset_password/reset_password_model.dart';
 
 import '../../features/auth/data/models/send_otp/send_otp_model.dart';
-import '../../features/settings/data/models/profile_model.dart';
 import '../core.dart';
 
 part 'api_service.g.dart';

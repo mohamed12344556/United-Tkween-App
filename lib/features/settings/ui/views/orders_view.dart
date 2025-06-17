@@ -510,7 +510,7 @@ class OrdersView extends StatefulWidget {
 class _OrdersViewState extends State<OrdersView> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
-  bool _isRefreshEnabled = false;
+  final bool _isRefreshEnabled = false;
 
   @override
   void initState() {

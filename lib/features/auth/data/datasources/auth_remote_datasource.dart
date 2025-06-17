@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:united_formation_app/features/auth/data/models/login/login_model_request_body.dart';
 import 'package:united_formation_app/features/auth/data/models/login/login_model_response.dart';
 import 'package:united_formation_app/features/auth/data/models/register/register_model_request_body.dart';

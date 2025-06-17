@@ -1,9 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../constants.dart';
 import '../../../admin/data/models/product_model.dart';
-import '../../data/book_model.dart';
 
 class ProductOfferAndPrice extends StatelessWidget {
   const ProductOfferAndPrice({

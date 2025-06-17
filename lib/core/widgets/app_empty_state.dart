@@ -87,7 +87,7 @@ class AppEmptyState extends StatelessWidget {
   final Color? iconColor;
 
   const AppEmptyState({
-    Key? key,
+    super.key,
     required this.title,
     required this.message,
     required this.icon,
@@ -95,7 +95,7 @@ class AppEmptyState extends StatelessWidget {
     this.onButtonPressed,
     this.iconSize,
     this.iconColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

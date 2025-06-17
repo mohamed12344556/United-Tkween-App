@@ -62,7 +62,7 @@ class SharedPrefHelper {
           await sharedPreferences.setDouble(key, value);
           break;
         default:
-          return null;
+          return;
       }
     } catch (e) {
       debugPrint("Error saving data: $e");

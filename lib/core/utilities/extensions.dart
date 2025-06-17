@@ -388,7 +388,7 @@ extension CartItemsToOrder on List<CartItemModel> {
     return UserOrderEntity(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: 'طلب #${DateTime.now().millisecondsSinceEpoch}',
-      description: '${length} منتجات - ${customerName} - ${customerPhone}',
+      description: '$length منتجات - $customerName - $customerPhone',
       orderDate: DateTime.now(),
       status: OrderStatus.processing,
       price: totalAmount.toDouble(),

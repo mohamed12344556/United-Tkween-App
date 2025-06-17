@@ -57,9 +57,9 @@ class RegisterCubit extends Cubit<RegisterState> {
       // الحصول على قيم النموذج
       final name = nameController.text.trim();
       final email = emailController.text.trim();
-      final phone = phoneController.text?.trim() ?? "1111111";
+      final phone = phoneController.text.trim() ?? "1111111";
       final password = passwordController.text;
-      final address = addressController.text?.trim() ?? "for testing";
+      final address = addressController.text.trim() ?? "for testing";
 
       // التحقق من المدخلات
       if (name.isEmpty) {

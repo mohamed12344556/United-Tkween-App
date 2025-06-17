@@ -11,7 +11,7 @@ class SupportMessageInput extends StatelessWidget {
   final String sendButtonText;
 
   const SupportMessageInput({
-    Key? key,
+    super.key,
     required this.controller,
     required this.focusNode,
     required this.onChanged,
@@ -19,7 +19,7 @@ class SupportMessageInput extends StatelessWidget {
     required this.onSend,
     this.hintText = 'اكتب رسالتك هنا...',
     this.sendButtonText = 'إرسال',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

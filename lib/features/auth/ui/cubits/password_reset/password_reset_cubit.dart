@@ -137,8 +137,9 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
     // حذف المحتوى الآمن باستخدام SafeTextEditingController
     if (!emailController.isDisposed) emailController.clear();
     if (!passwordController.isDisposed) passwordController.clear();
-    if (!confirmPasswordController.isDisposed)
+    if (!confirmPasswordController.isDisposed) {
       confirmPasswordController.clear();
+    }
 
     emit(PasswordResetInitial());
   }

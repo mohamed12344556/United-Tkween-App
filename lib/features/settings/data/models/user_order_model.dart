@@ -6,24 +6,30 @@ part 'user_order_model.g.dart';
 
 @JsonSerializable()
 class UserOrderModel extends UserOrderEntity {
+  @override
   @JsonKey(name: 'id')
   final String id;
   
+  @override
   @JsonKey(name: 'title')
   final String title;
   
+  @override
   @JsonKey(name: 'description')
   final String? description;
   
+  @override
   @JsonKey(name: 'orderDate')
   final DateTime orderDate;
   
   @JsonKey(name: 'status')
   final String statusString;
   
+  @override
   @JsonKey(name: 'price')
   final double price;
   
+  @override
   @JsonKey(name: 'imageUrl')
   final String? imageUrl;
 

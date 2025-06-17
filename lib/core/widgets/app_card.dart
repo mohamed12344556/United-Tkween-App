@@ -77,7 +77,6 @@
 
 import 'package:flutter/material.dart';
 
-import '../core.dart';
 
 class AppCard extends StatelessWidget {
   final Widget child;

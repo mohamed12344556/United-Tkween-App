@@ -107,7 +107,6 @@
 // lib/features/settings/ui/widgets/profile_avatar.dart
 
 import 'package:flutter/material.dart';
-import '../../../../core/core.dart';
 
 class ProfileAvatar extends StatelessWidget {
   final String fullName;
