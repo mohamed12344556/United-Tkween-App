@@ -447,9 +447,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../../../core/core.dart';
 import '../../data/cart_model.dart';
 
@@ -495,7 +496,7 @@ class _CartPageState extends State<CartPage> {
     if (item == null) return;
 
     final newQuantity = (item.quantity + change).clamp(1, 10);
-    await item
+    item
       ..quantity = newQuantity
       ..save();
 
