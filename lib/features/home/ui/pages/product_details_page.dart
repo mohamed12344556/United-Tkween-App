@@ -466,7 +466,7 @@ import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/core/helper/format_double_number.dart';
 import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
-import '../../../cart/data/cart_model.dart';
+import '../../../cart/data/models/cart_model.dart';
 import '../../data/book_model.dart';
 
 class ProductDetailsPage extends StatefulWidget {

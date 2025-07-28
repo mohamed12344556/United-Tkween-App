@@ -14,6 +14,7 @@ import '../../../../core/core.dart';
 
 abstract class AuthRemoteDataSource {
   Future<LoginModelResponse> login({required UserLoginEntity userLoginEntity});
+
   Future<RegisterModelResponse> register({
     required UserRegisterEntity userRegisterEntity,
   });

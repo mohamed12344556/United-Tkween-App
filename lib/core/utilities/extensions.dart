@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/delete_account_dialog.dart';
-import '../../features/cart/data/cart_model.dart';
+import '../../features/cart/data/models/cart_model.dart';
 import '../../features/settings/domain/entities/user_order_entity.dart';
 import '../../generated/l10n.dart';
 import '../core.dart';

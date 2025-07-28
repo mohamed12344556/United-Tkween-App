@@ -8,6 +8,7 @@ class ApiConstants {
   static const String getBooks = 'get_books.php';
   static const String getCategories = 'get_categories.php';
   static const String createPurchase = 'create_purchase.php';
+  static const String createMultiplePurchase = 'create_multiple_purchases.php';
   static const String getProfile = 'getProfile.php';
   static const String updateProfile = 'update_profile.php';
   static const String fetchLibrary = 'fetch_library.php';

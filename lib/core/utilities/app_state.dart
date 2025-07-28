@@ -12,9 +12,8 @@ class AppState {
   static Future<void> initialize() async {
     try { 
       final loggedIn = await SharedPrefHelper.getBool(StorageKeys.isLoggedIn);
-      final token =
-          await SharedPrefHelper.getSecuredString(StorageKeys.accessToken);
-      isLoggedIn = loggedIn && token.isNotEmpty;
+      final token = SharedPrefHelper.getSecuredString(StorageKeys.accessToken) as String?;
+      isLoggedIn = loggedIn && (token?.isNotEmpty ?? false);
       log("AppState initialized - isLoggedIn: $isLoggedIn");
     } catch (e) {
       log("Error initializing AppState: $e");

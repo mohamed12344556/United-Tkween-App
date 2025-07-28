@@ -9,17 +9,20 @@ import 'package:united_formation_app/features/admin/ui/cubits/edit_product/edit_
 import 'package:united_formation_app/features/admin/ui/cubits/products/products_admin_cubit.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/support/support_admin_cubit.dart';
 import 'package:united_formation_app/features/auth/data/services/delete_account_service.dart';
-import 'package:united_formation_app/features/settings/domain/usecases/delete_account_usecase.dart';
-import 'package:united_formation_app/features/settings/ui/cubits/delete_account/delete_account_cubit.dart';
+import 'package:united_formation_app/features/cart/data/repos/create_purchase_service.dart';
+import 'package:united_formation_app/features/cart/presentation/logic/purchase_cubit.dart';
 import 'package:united_formation_app/features/home/domain/home_repo.dart';
 import 'package:united_formation_app/features/home/domain/home_repo_impl.dart';
 import 'package:united_formation_app/features/home/ui/cubit/home_cubit.dart';
+import 'package:united_formation_app/features/settings/domain/usecases/delete_account_usecase.dart';
 import 'package:united_formation_app/features/settings/domain/usecases/remove_profile_image_usecase.dart';
 import 'package:united_formation_app/features/settings/domain/usecases/upload_profile_image_usecase.dart';
+import 'package:united_formation_app/features/settings/ui/cubits/delete_account/delete_account_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/edit_profile/edit_profile_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/library/library_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/orders/orders_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/profile/profile_cubit.dart';
+
 import '../../features/admin/ui/cubits/orders/orders_admin_cubit.dart';
 import '../../features/auth/data/datasources/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
@@ -40,7 +43,6 @@ import '../../features/settings/domain/usecases/get_profile_usecase.dart';
 import '../../features/settings/domain/usecases/get_user_orders_usecase.dart';
 import '../../features/settings/domain/usecases/update_profile_usecase.dart';
 import '../../features/settings/ui/cubits/support/support_cubit.dart';
-
 import '../core.dart';
 
 final sl = GetIt.instance;
@@ -92,6 +94,11 @@ Future<void> setupGetIt() async {
 
   //! Admin
   sl.registerLazySingleton<AdminRepository>(() => AdminRepositoryImpl());
+
+  //! Cart & Purchase
+  sl.registerLazySingleton<CreatePurchaseService>(
+    () => CreatePurchaseService(apiService: sl()),
+  );
 
   //? Use Cases
   //! Authentication
@@ -179,6 +186,12 @@ Future<void> setupGetIt() async {
   sl.registerLazySingleton<DioService>(() => DioService());
   sl.registerLazySingleton<HomeRepo>(() => HomeRepoImpl(dioService: sl()));
   sl.registerLazySingleton<HomeCubit>(() => HomeCubit(homeRepo: sl()));
+
+  //! Cart & Purchase
+
+  sl.registerFactory<CreatePurchaseCubit>(
+    () => CreatePurchaseCubit(createPurchaseService: sl(), ordersCubit: sl()),
+  );
 }
 
 ///! 1. `registerSingleton`

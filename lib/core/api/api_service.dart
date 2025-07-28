@@ -3,10 +3,11 @@ import 'package:retrofit/retrofit.dart';
 import 'package:united_formation_app/features/auth/data/models/login/login_model_response.dart';
 import 'package:united_formation_app/features/auth/data/models/register/register_model_request_body.dart';
 import 'package:united_formation_app/features/auth/data/models/register/register_model_response.dart';
+import 'package:united_formation_app/features/cart/data/repos/create_purchase_service.dart';
+
 import '../../features/auth/data/models/login/login_model_request_body.dart';
 import '../../features/auth/data/models/otp_verification/otp_verification_model.dart';
 import '../../features/auth/data/models/reset_password/reset_password_model.dart';
-
 import '../../features/auth/data/models/send_otp/send_otp_model.dart';
 import '../core.dart';
 
@@ -47,7 +48,14 @@ abstract class ApiService {
   Future<dynamic> getCategories();
 
   @POST(ApiConstants.createPurchase)
-  Future<dynamic> createPurchase(@Body() Map<String, dynamic> purchaseData);
+  Future<CreatePurchaseResponse> createPurchase(
+    @Body() Map<String, dynamic> request,
+  );
+
+  @POST(ApiConstants.createMultiplePurchase)
+  Future<CreatePurchaseResponse> createMultiplePurchase(
+    @Body() Map<String, dynamic> request,
+  );
 
   @GET(ApiConstants.fetchLibrary)
   Future<dynamic> fetchLibrary();
@@ -57,7 +65,6 @@ abstract class ApiService {
 
   @POST(ApiConstants.deleteAccount)
   Future<dynamic> deleteAccount();
-
 }
 
 //! command to run the service file generator

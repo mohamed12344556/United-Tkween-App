@@ -302,13 +302,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<dynamic> createPurchase(Map<String, dynamic> purchaseData) async {
+  Future<CreatePurchaseResponse> createPurchase(
+      Map<String, dynamic> request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(purchaseData);
-    final _options = _setStreamType<dynamic>(Options(
+    _data.addAll(request);
+    final _options = _setStreamType<CreatePurchaseResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -324,8 +325,49 @@ class _ApiService implements ApiService {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch(_options);
-    final _value = _result.data;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late CreatePurchaseResponse _value;
+    try {
+      _value = CreatePurchaseResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<CreatePurchaseResponse> createMultiplePurchase(
+      Map<String, dynamic> request) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(request);
+    final _options = _setStreamType<CreatePurchaseResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          'create_multiple_purchases.php',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late CreatePurchaseResponse _value;
+    try {
+      _value = CreatePurchaseResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 

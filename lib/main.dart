@@ -6,21 +6,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:united_formation_app/features/settings/data/datasources/hive_models/library_hive_model.dart';
 import 'package:united_formation_app/features/settings/data/datasources/hive_models/order_hive_model.dart';
 import 'package:united_formation_app/features/settings/data/datasources/hive_models/profile_hive_model.dart';
-import 'core/routes/app_router.dart';
+
 import 'core/api/dio_services.dart';
+import 'core/core.dart';
+import 'core/routes/app_router.dart';
 import 'features/auth/ui/pages/user_model.dart';
-import 'features/cart/data/cart_model.dart';
+import 'features/cart/data/models/cart_model.dart';
 import 'features/home/data/book_model.dart';
 import 'united_tkween_group_app.dart';
-
-import 'core/core.dart';
-
-/// Main entry point of the application.
-///
-/// This function ensures all necessary initializations are performed before
-/// the app starts. It sets up dependency injection, initializes the BLoC system
-/// and Hydrated Bloc storage, and prepares Hive for local data storage. Finally,
-/// it ensures screen size is set up and runs the UnitedFormationApp widget.
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

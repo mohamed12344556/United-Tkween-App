@@ -196,7 +196,7 @@ class ApiConstants {
 class Prefs {
   static late SharedPreferences prefs;
 
-  static init() async {
+  static Future<void> init() async {
     prefs = await SharedPreferences.getInstance();
   }
 

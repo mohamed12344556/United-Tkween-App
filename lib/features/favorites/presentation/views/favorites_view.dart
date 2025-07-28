@@ -180,7 +180,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:united_formation_app/core/core.dart';
-import '../../../../core/routes/routes.dart';
 import 'package:united_formation_app/features/home/data/book_model.dart';
 
 class FavoritesView extends StatefulWidget {

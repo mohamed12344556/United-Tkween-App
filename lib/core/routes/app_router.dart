@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:united_formation_app/core/widgets/connection_wrapper.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/add_product/add_product_admin_cubit.dart';
 import 'package:united_formation_app/features/admin/ui/cubits/edit_product/edit_product_admin_cubit.dart';
@@ -11,6 +12,7 @@ import 'package:united_formation_app/features/admin/ui/views/edit_product_admin_
 import 'package:united_formation_app/features/admin/ui/views/order_details_admin_view.dart';
 import 'package:united_formation_app/features/admin/ui/views/products_admin_view.dart';
 import 'package:united_formation_app/features/admin/ui/views/support_chat_admin_view.dart';
+import 'package:united_formation_app/features/cart/presentation/logic/purchase_cubit.dart';
 import 'package:united_formation_app/features/favorites/presentation/views/favorites_view.dart';
 import 'package:united_formation_app/features/home/data/book_model.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/library/library_cubit.dart';
@@ -19,12 +21,10 @@ import 'package:united_formation_app/features/settings/ui/views/library_view.dar
 import 'package:united_formation_app/features/settings/ui/views/orders_view.dart';
 import 'package:united_formation_app/features/settings/ui/views/profile_view.dart';
 import 'package:united_formation_app/features/settings/ui/views/settings_view.dart';
+
+import '../../features/admin/data/models/product_model.dart';
 import '../../features/admin/ui/views/orders_admin_view.dart';
 import '../../features/admin/ui/views/support_admin_view.dart';
-import '../../features/cart/data/cart_model.dart';
-import '../../features/cart/presentation/pages/order_summary_page.dart';
-import '../../features/home/ui/pages/product_details_page.dart';
-import 'routes.dart';
 import '../../features/auth/ui/cubits/learning_options/learning_options_cubit.dart';
 import '../../features/auth/ui/cubits/login/login_cubit.dart';
 import '../../features/auth/ui/cubits/password_reset/password_reset_cubit.dart';
@@ -33,16 +33,17 @@ import '../../features/auth/ui/pages/learning_options_page.dart';
 import '../../features/auth/ui/pages/login_page.dart';
 import '../../features/auth/ui/pages/register_page.dart';
 import '../../features/auth/ui/pages/reset_password_page.dart';
+import '../../features/cart/data/models/cart_model.dart';
+import '../../features/cart/presentation/pages/cart_page.dart';
+import '../../features/cart/presentation/pages/order_summary_page.dart';
+import '../../features/home/ui/pages/host_screen.dart';
+import '../../features/home/ui/pages/product_details_page.dart';
 import '../../features/settings/ui/cubits/edit_profile/edit_profile_cubit.dart';
 import '../../features/settings/ui/cubits/profile/profile_cubit.dart';
 import '../../features/settings/ui/cubits/support/support_cubit.dart';
 import '../../features/settings/ui/views/edit_profile_view.dart';
 import '../../features/settings/ui/views/support_view.dart';
-import 'package:get_it/get_it.dart';
-
-import '../../features/cart/presentation/pages/cart_page.dart';
-import '../../features/admin/data/models/product_model.dart';
-import '../../features/home/ui/pages/host_screen.dart';
+import 'routes.dart';
 
 final sl = GetIt.instance;
 
@@ -205,6 +206,9 @@ class AppRouter {
                 providers: [
                   BlocProvider.value(value: sl<ProfileCubit>()),
                   BlocProvider.value(value: sl<OrdersCubit>()),
+                  BlocProvider(
+                    create: (_) => sl<CreatePurchaseCubit>(),
+                  ), // Add this
                 ],
                 child: ConnectionWrapper(
                   child: OrderSummaryPage(
@@ -212,6 +216,7 @@ class AppRouter {
                     subtotal: args['subtotal'] as int,
                     shippingCost: args['shippingCost'] as int,
                     totalAmount: args['totalAmount'] as int,
+                    // Remove the hardcoded tapPaymentUrl - it will be handled dynamically
                   ),
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'api_constants.dart';
 import 'auth_interceptor.dart';
@@ -18,7 +19,7 @@ class DioFactory {
       dio!.interceptors.add(AuthInterceptor());
 
       dio!.interceptors.add(
-        LogInterceptor(
+        PrettyDioLogger(
           request: true,
           requestHeader: true,
           requestBody: true,
