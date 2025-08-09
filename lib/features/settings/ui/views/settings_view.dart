@@ -439,6 +439,7 @@ class _SettingsViewState extends State<SettingsView>
                   textColor: AppColors.text,
                   onTap: () {
                     context.navigateToNamed(Routes.ordersView);
+                    // context.showComingSoonFeature();
                   },
                 ),
               ),
@@ -453,6 +454,7 @@ class _SettingsViewState extends State<SettingsView>
                   textColor: AppColors.text,
                   onTap: () {
                     context.navigateToNamed(Routes.libraryView);
+                    // context.showComingSoonFeature();
                   },
                 ),
               ),

@@ -37,36 +37,36 @@ class CreatePurchaseService {
     }
   }
 
-  Future<CreatePurchaseResponse> createMultipleBooksPurchase({
-    required List<String> bookIds,
-    required List<int> quantities,
-    required String fullName,
-    required String email,
-    required String phone,
-    required String address,
-    String paymentMethod = 'credit_card',
-  }) async {
-    try {
-      final requestBody = {
-        'book_ids': bookIds.map((id) => int.parse(id)).toList(),
-        'quantities': quantities,
-        'full_name': fullName,
-        'email': email,
-        'phone': phone,
-        'payment_method': paymentMethod,
-        'address': address,
-      };
+  // Future<CreatePurchaseResponse> createMultipleBooksPurchase({
+  //   required List<String> bookIds,
+  //   required List<int> quantities,
+  //   required String fullName,
+  //   required String email,
+  //   required String phone,
+  //   required String address,
+  //   String paymentMethod = 'credit_card',
+  // }) async {
+  //   try {
+  //     final requestBody = {
+  //       'book_ids': bookIds.map((id) => int.parse(id)).toList(),
+  //       'quantities': quantities,
+  //       'full_name': fullName,
+  //       'email': email,
+  //       'phone': phone,
+  //       'payment_method': paymentMethod,
+  //       'address': address,
+  //     };
 
-      // Now this will return CreatePurchaseResponse directly
-      final response = await _apiService.createMultiplePurchase(requestBody);
-      return response;
-    } on DioException catch (e) {
-      String errorMessage = _handleDioError(e);
-      throw Exception(errorMessage);
-    } catch (e) {
-      throw Exception('خطأ غير متوقع: $e');
-    }
-  }
+  //     // Now this will return CreatePurchaseResponse directly
+  //     final response = await _apiService.createMultiplePurchase(requestBody);
+  //     return response;
+  //   } on DioException catch (e) {
+  //     String errorMessage = _handleDioError(e);
+  //     throw Exception(errorMessage);
+  //   } catch (e) {
+  //     throw Exception('خطأ غير متوقع: $e');
+  //   }
+  // }
 
   String _handleDioError(DioException e) {
     if (e.response?.data != null) {

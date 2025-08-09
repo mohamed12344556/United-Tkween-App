@@ -18,14 +18,15 @@ class _CartPageState extends State<CartPage> {
   late Box<CartItemModel> cartBox;
   bool _isGuest = false;
 
-  int shippingCost = 48;
+  // int shippingCost = 48;
 
   int get subtotal => cartBox.values.fold(
     0,
     (sum, item) => sum + (item.unitPrice * item.quantity).toInt(),
   );
 
-  int get totalAmount => subtotal + shippingCost;
+  // int get totalAmount => subtotal + shippingCost;
+  int get totalAmount => subtotal;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +125,7 @@ class _CartPageState extends State<CartPage> {
       arguments: {
         'cartItems': cartItems,
         'subtotal': subtotal,
-        'shippingCost': shippingCost,
+        // 'shippingCost': shippingCost,
         'totalAmount': totalAmount,
       },
     );
@@ -167,7 +168,7 @@ class _CartPageState extends State<CartPage> {
     }
 
     message += "\n*المجموع الفرعي:*  ر.س${subtotal.toStringAsFixed(2)}\n";
-    message += "*تكلفة الشحن:*  ر.س${shippingCost.toStringAsFixed(2)}\n";
+    // message += "*تكلفة الشحن:*  ر.س${shippingCost.toStringAsFixed(2)}\n";
     message += "*إجمالي المبلغ:*  ر.س${totalAmount.toStringAsFixed(2)}\n";
 
     // Encode the message for URL
@@ -325,44 +326,47 @@ class _CartPageState extends State<CartPage> {
                               ),
                               Row(
                                 children: [
-                                  IconButton(
-                                    icon: Container(
-                                      padding: EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.lightGrey,
+                                  if (0 > 1) ...[
+                                    IconButton(
+                                      icon: Container(
+                                        padding: EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColors.lightGrey,
+                                        ),
+                                        child: Icon(
+                                          Icons.remove,
+                                          color: AppColors.primary,
+                                          size: 16,
+                                        ),
                                       ),
-                                      child: Icon(
-                                        Icons.remove,
-                                        color: AppColors.primary,
-                                        size: 16,
+                                      onPressed:
+                                          () => updateQuantity(index, -1),
+                                    ),
+                                    Text(
+                                      '${item.quantity}',
+                                      style: TextStyle(
+                                        color: AppColors.text,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    onPressed: () => updateQuantity(index, -1),
-                                  ),
-                                  Text(
-                                    '${item.quantity}',
-                                    style: TextStyle(
-                                      color: AppColors.text,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Container(
-                                      padding: EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.primary,
+                                    IconButton(
+                                      icon: Container(
+                                        padding: EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColors.primary,
+                                        ),
+                                        child: Icon(
+                                          Icons.add,
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
                                       ),
-                                      child: Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                        size: 16,
-                                      ),
+                                      onPressed: () => updateQuantity(index, 1),
                                     ),
-                                    onPressed: () => updateQuantity(index, 1),
-                                  ),
+                                  ],
                                   IconButton(
                                     icon: Icon(
                                       Icons.delete_outline,
@@ -416,27 +420,27 @@ class _CartPageState extends State<CartPage> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Shipping',
-                              style: TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Text(
-                              'ر.س $shippingCost',
-                              style: TextStyle(
-                                color: AppColors.text,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Text(
+                        //       'Shipping',
+                        //       style: TextStyle(
+                        //         color: AppColors.textSecondary,
+                        //         fontSize: 16,
+                        //       ),
+                        //     ),
+                        //     Text(
+                        //       'ر.س $shippingCost',
+                        //       style: TextStyle(
+                        //         color: AppColors.text,
+                        //         fontSize: 16,
+                        //         fontWeight: FontWeight.bold,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // const SizedBox(height: 12),
                         Divider(color: Colors.grey.shade200),
                         const SizedBox(height: 12),
                         Row(

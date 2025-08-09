@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/delete_account_dialog.dart';
 import '../../features/cart/data/models/cart_model.dart';
@@ -37,6 +38,9 @@ extension BuildContextExtensions on BuildContext {
     final locale = Localizations.localeOf(this);
     return locale.languageCode.toLowerCase() == 'en';
   }
+
+  //! check if it under development
+  bool get isDebug => kDebugMode;
 
   //! Navigation
   void navigateTo(String routeName) =>
@@ -393,6 +397,200 @@ extension CartItemsToOrder on List<CartItemModel> {
       status: OrderStatus.processing,
       price: totalAmount.toDouble(),
       imageUrl: null,
+    );
+  }
+}
+
+extension UnderDevelopmentX on Widget {
+  Widget underDevelopment({
+    bool isActive = true,
+    String message = '🚧 Under Development',
+    Color backgroundColor = const Color(0xFFFF9800), // Orange color
+    Color textColor = Colors.white,
+    EdgeInsetsGeometry padding = const EdgeInsets.symmetric(
+      horizontal: 12,
+      vertical: 8,
+    ),
+    double opacity = 0.95,
+    TextStyle? textStyle,
+    CrossAxisAlignment alignment = CrossAxisAlignment.center,
+    bool showBorder = true,
+    Color borderColor = const Color(0xFFE65100), // Darker orange
+  }) {
+    if (!isActive) return this;
+
+    return Stack(
+      children: [
+        this,
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: backgroundColor.withOpacity(opacity),
+              border:
+                  showBorder
+                      ? Border(bottom: BorderSide(color: borderColor, width: 2))
+                      : null,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            padding: padding,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: alignment,
+              children: [
+                Text(
+                  message,
+                  style:
+                      textStyle ??
+                      TextStyle(
+                        color: textColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        letterSpacing: 0.5,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                if (message.length >
+                    30) // Add some breathing space for long messages
+                  const SizedBox(height: 2),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Alternative method for corner badge style
+  Widget underDevelopmentBadge({
+    bool isActive = true,
+    String message = '🚧',
+    Color backgroundColor = const Color(0xFFFF5722),
+    Color textColor = Colors.white,
+    double size = 40,
+    Alignment alignment = Alignment.topRight,
+  }) {
+    if (!isActive) return this;
+
+    return Stack(
+      children: [
+        this,
+        Positioned.fill(
+          child: Align(
+            alignment: alignment,
+            child: Container(
+              width: size,
+              height: size,
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 6,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  message,
+                  style: TextStyle(
+                    color: textColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: size * 0.4,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Animated version for more attention
+  Widget underDevelopmentAnimated({
+    bool isActive = true,
+    String message = '🚧 Under Development',
+    Color backgroundColor = const Color(0xFFFF9800),
+    Color textColor = Colors.white,
+    Duration duration = const Duration(seconds: 2),
+  }) {
+    if (!isActive) return this;
+
+    return Stack(
+      children: [
+        this,
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.7, end: 1.0),
+            duration: duration,
+            builder: (context, value, child) {
+              return Transform.scale(
+                scale: value,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: backgroundColor.withOpacity(0.9),
+                    gradient: LinearGradient(
+                      colors: [
+                        backgroundColor.withOpacity(0.8),
+                        backgroundColor.withOpacity(0.95),
+                      ],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: backgroundColor.withOpacity(0.4),
+                        blurRadius: 8,
+                        spreadRadius: 2,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        message,
+                        style: TextStyle(
+                          color: textColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withOpacity(0.3),
+                              offset: const Offset(1, 1),
+                              blurRadius: 2,
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

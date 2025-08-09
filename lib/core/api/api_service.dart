@@ -50,6 +50,7 @@ abstract class ApiService {
   @POST(ApiConstants.createPurchase)
   Future<CreatePurchaseResponse> createPurchase(
     @Body() Map<String, dynamic> request,
+    // @Header('Cookie') String? cookie,
   );
 
   @POST(ApiConstants.createMultiplePurchase)

@@ -56,46 +56,46 @@ class CreatePurchaseCubit extends Cubit<CreatePurchaseState> {
     }
   }
 
-  Future<void> createMultipleBooksPurchase({
-    required List<String> bookIds,
-    required List<int> quantities,
-    required String fullName,
-    required String email,
-    required String phone,
-    required String address,
-    String paymentMethod = 'credit_card',
-  }) async {
-    emit(CreatePurchaseLoading());
+  // Future<void> createMultipleBooksPurchase({
+  //   required List<String> bookIds,
+  //   required List<int> quantities,
+  //   required String fullName,
+  //   required String email,
+  //   required String phone,
+  //   required String address,
+  //   String paymentMethod = 'credit_card',
+  // }) async {
+  //   emit(CreatePurchaseLoading());
 
-    try {
-      final response = await _createPurchaseService.createMultipleBooksPurchase(
-        bookIds: bookIds,
-        quantities: quantities,
-        fullName: fullName,
-        email: email,
-        phone: phone,
-        address: address,
-        paymentMethod: paymentMethod,
-      );
+  //   try {
+  //     final response = await _createPurchaseService.createMultipleBooksPurchase(
+  //       bookIds: bookIds,
+  //       quantities: quantities,
+  //       fullName: fullName,
+  //       email: email,
+  //       phone: phone,
+  //       address: address,
+  //       paymentMethod: paymentMethod,
+  //     );
 
-      if (response.success) {
-        final orderEntity = _createOrderEntityFromResponse(response);
-        await _ordersCubit?.addLocalOrder(orderEntity);
+  //     if (response.success) {
+  //       final orderEntity = _createOrderEntityFromResponse(response);
+  //       await _ordersCubit?.addLocalOrder(orderEntity);
 
-        emit(
-          CreatePurchaseSuccess(response: response, orderEntity: orderEntity),
-        );
-      } else {
-        emit(CreatePurchaseError(errorMessage: response.message));
-      }
-    } catch (e) {
-      emit(
-        CreatePurchaseError(
-          errorMessage: 'خطأ في إنشاء الطلب: ${e.toString()}',
-        ),
-      );
-    }
-  }
+  //       emit(
+  //         CreatePurchaseSuccess(response: response, orderEntity: orderEntity),
+  //       );
+  //     } else {
+  //       emit(CreatePurchaseError(errorMessage: response.message));
+  //     }
+  //   } catch (e) {
+  //     emit(
+  //       CreatePurchaseError(
+  //         errorMessage: 'خطأ في إنشاء الطلب: ${e.toString()}',
+  //       ),
+  //     );
+  //   }
+  // }
 
   UserOrderEntity _createOrderEntityFromResponse(
     CreatePurchaseResponse response,

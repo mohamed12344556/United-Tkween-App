@@ -214,7 +214,7 @@ class AppRouter {
                   child: OrderSummaryPage(
                     cartItems: args['cartItems'] as List<CartItemModel>,
                     subtotal: args['subtotal'] as int,
-                    shippingCost: args['shippingCost'] as int,
+                    // shippingCost: args['shippingCost'] as int,
                     totalAmount: args['totalAmount'] as int,
                     // Remove the hardcoded tapPaymentUrl - it will be handled dynamically
                   ),

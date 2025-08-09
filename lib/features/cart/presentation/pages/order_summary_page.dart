@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:united_formation_app/features/cart/presentation/logic/purchase_cubit.dart';
 import 'package:united_formation_app/features/cart/presentation/logic/purchase_state.dart';
 
@@ -15,14 +16,14 @@ import 'tap_payment_screen.dart';
 class OrderSummaryPage extends StatefulWidget {
   final List<CartItemModel> cartItems;
   final int subtotal;
-  final int shippingCost;
+  // final int shippingCost;
   final int totalAmount;
 
   const OrderSummaryPage({
     super.key,
     required this.cartItems,
     required this.subtotal,
-    required this.shippingCost,
+    // required this.shippingCost,
     required this.totalAmount,
   });
 
@@ -33,6 +34,7 @@ class OrderSummaryPage extends StatefulWidget {
 class _OrderSummaryPageState extends State<OrderSummaryPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
@@ -63,8 +65,11 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
               if (state is CreatePurchaseSuccess) {
                 if (state.response.paymentUrl != null) {
                   // يمكن إضافة منطق ما بعد اكتمال الدفع هنا
-                  log('Payment URL: ${state.response.paymentUrl}'); 
-                  _navigateToPayment(state.response.paymentUrl!);
+                  log('Payment URL: ${state.response.paymentUrl}');
+                  _navigateToPayment(
+                    // state.response.paymentUrl!
+                    'https://tkweenstore.com/cart.php',
+                  );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -95,7 +100,8 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 BlocBuilder<ProfileCubit, ProfileState>(
                   builder: (context, state) {
                     if (state.isLoading) {
-                      return _buildLoadingForm();
+                      // return _buildLoadingForm();
+                      return _buildCustomerForm(isLoading: state.isLoading);
                     } else if (state.isError) {
                       return Center(
                         child: Text(
@@ -104,7 +110,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                         ),
                       );
                     } else {
-                      return _buildCustomerForm();
+                      return _buildCustomerForm(isLoading: state.isLoading);
                     }
                   },
                 ),
@@ -119,7 +125,11 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 const SizedBox(height: 40),
 
                 // Submit Button
-                _buildSubmitButton(),
+                BlocBuilder<ProfileCubit, ProfileState>(
+                  builder: (context, state) {
+                    return _buildSubmitButton(isLoading: state.isLoading);
+                  },
+                ),
               ],
             ),
           ),
@@ -131,6 +141,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
   @override
   void dispose() {
     _nameController.dispose();
+    _emailController.dispose();
     _phoneController.dispose();
     _addressController.dispose();
     super.dispose();
@@ -142,64 +153,78 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     _loadUserProfile();
   }
 
-  Widget _buildCustomerForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'تفاصيل العميل',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+  Widget _buildCustomerForm({required bool isLoading}) {
+    return Skeletonizer(
+      enabled: isLoading,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'تفاصيل العميل',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              AppTextField(
-                controller: _nameController,
-                hintText: 'الاسم الكامل',
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'الرجاء إدخال الاسم الكامل';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              AppTextField(
-                controller: _phoneController,
-                hintText: 'رقم الهاتف',
-                keyboardType: TextInputType.phone,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'الرجاء إدخال رقم الهاتف';
-                  }
-                  if (value.trim().length < 10) {
-                    return 'رقم الهاتف يجب أن يكون على الأقل 10 أرقام';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              AppTextField(
-                controller: _addressController,
-                hintText: 'العنوان',
-                maxLines: 2,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'الرجاء إدخال العنوان';
-                  }
-                  return null;
-                },
-              ),
-            ],
+          const SizedBox(height: 10),
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                AppTextField(
+                  controller: _nameController,
+                  hintText: 'الاسم الكامل',
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'الرجاء إدخال الاسم الكامل';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                AppTextField(
+                  controller: _emailController,
+                  hintText: 'البريد الإلكتروني',
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'الرجاء إدخال البريد الإلكتروني';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                AppTextField(
+                  controller: _phoneController,
+                  hintText: 'رقم الهاتف',
+                  keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'الرجاء إدخال رقم الهاتف';
+                    }
+                    if (value.trim().length < 10) {
+                      return 'رقم الهاتف يجب أن يكون على الأقل 10 أرقام';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                AppTextField(
+                  controller: _addressController,
+                  hintText: 'العنوان',
+                  maxLines: 2,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'الرجاء إدخال العنوان';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -313,8 +338,8 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
           child: Column(
             children: [
               _buildSummaryRow('المجموع الفرعي', 'ريال ${widget.subtotal}'),
-              const SizedBox(height: 8),
-              _buildSummaryRow('تكلفة الشحن', 'ريال ${widget.shippingCost}'),
+              // const SizedBox(height: 8),
+              // _buildSummaryRow('تكلفة الشحن', 'ريال ${widget.shippingCost}'),
               const SizedBox(height: 12),
               Divider(color: Colors.grey.shade200),
               const SizedBox(height: 12),
@@ -330,18 +355,20 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     );
   }
 
-  Widget _buildSubmitButton() {
+  Widget _buildSubmitButton({required bool isLoading}) {
     return Align(
       alignment: Alignment.center,
       child: BlocBuilder<CreatePurchaseCubit, CreatePurchaseState>(
         builder: (context, state) {
           return ElevatedButton(
             onPressed:
-                state is CreatePurchaseLoading ? null : _createPurchaseOrder,
+                state is CreatePurchaseLoading || isLoading
+                    ? null
+                    : _createPurchaseOrder,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 90),
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
+              backgroundColor: isLoading ? Colors.grey : AppColors.primary,
+              foregroundColor: isLoading ? Colors.grey : Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -400,29 +427,29 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     final profileCubit = context.read<ProfileCubit>();
     final profile = profileCubit.state.profile;
 
-    if (widget.cartItems.length == 1) {
-      // Single book purchase
-      await purchaseCubit.createSingleBookPurchase(
-        bookId: widget.cartItems.first.bookId,
-        fullName: _nameController.text.trim(),
-        email: profile?.email ?? 'default@example.com',
-        phone: _phoneController.text.trim(),
-        address: _addressController.text.trim(),
-      );
-    } else {
-      // Multiple books purchase
-      final bookIds = widget.cartItems.map((item) => item.bookId).toList();
-      final quantities = widget.cartItems.map((item) => item.quantity).toList();
+    // Single book purchase
+    await purchaseCubit.createSingleBookPurchase(
+      bookId: widget.cartItems.first.bookId,
+      fullName: _nameController.text.trim(),
+      email: profile?.email ?? 'default@example.com',
+      phone: _phoneController.text.trim(),
+      address: _addressController.text.trim(),
+    );
+    // if (widget.cartItems.length == 1) {
+    // } else {
+    //   // Multiple books purchase
+    //   final bookIds = widget.cartItems.map((item) => item.bookId).toList();
+    //   final quantities = widget.cartItems.map((item) => item.quantity).toList();
 
-      await purchaseCubit.createMultipleBooksPurchase(
-        bookIds: bookIds,
-        quantities: quantities,
-        fullName: _nameController.text.trim(),
-        email: profile?.email ?? 'default@example.com',
-        phone: _phoneController.text.trim(),
-        address: _addressController.text.trim(),
-      );
-    }
+    //   await purchaseCubit.createMultipleBooksPurchase(
+    //     bookIds: bookIds,
+    //     quantities: quantities,
+    //     fullName: _nameController.text.trim(),
+    //     email: profile?.email ?? 'default@example.com',
+    //     phone: _phoneController.text.trim(),
+    //     address: _addressController.text.trim(),
+    //   );
+    // }
   }
 
   Future<void> _loadUserProfile() async {
@@ -432,25 +459,80 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     final profile = profileCubit.state.profile;
     if (profile != null) {
       _nameController.text = profile.fullName ?? '';
+      _emailController.text = profile.email ?? '';
       _phoneController.text = profile.phoneNumber1 ?? '';
       _addressController.text = profile.address ?? '';
     }
   }
 
+  // void _navigateToPayment(String paymentUrl) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder:
+  //           (context) => TapPaymentScreen(
+  //             tapPaymentUrl: paymentUrl,
+  //             onPaymentComplete: () {
+  //               // يمكن إضافة منطق ما بعد اكتمال الدفع هنا
+  //               Navigator.of(context).popUntil((route) => route.isFirst);
+  //               ScaffoldMessenger.of(context).showSnackBar(
+  //                 const SnackBar(
+  //                   content: Text('تم إنشاء الطلب بنجاح!'),
+  //                   backgroundColor: Colors.green,
+  //                 ),
+  //               );
+  //             },
+  //           ),
+  //     ),
+  //   );
+  // }
+
   void _navigateToPayment(String paymentUrl) {
+    // تحويل بيانات السلة إلى الصيغة المطلوبة للموقع
+    List<Map<String, dynamic>> cartData =
+        widget.cartItems.map((item) {
+          return {
+            "id": item.bookId,
+            "title": item.bookName,
+            "image": item.imageUrl,
+            "price": item.unitPrice,
+            "quantity": item.quantity,
+          };
+        }).toList();
+
+    // تحضير بيانات العميل
+    Map<String, String> customerData = {
+      "full_name": _nameController.text.trim(),
+      "email": _emailController.text.trim(),
+      "phone": _phoneController.text.trim(),
+      "address": _addressController.text.trim(),
+    };
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder:
             (context) => TapPaymentScreen(
               tapPaymentUrl: paymentUrl,
+              cartData: cartData, // تمرير بيانات السلة
+              customerData: customerData, // تمرير بيانات العميل
               onPaymentComplete: () {
-                // يمكن إضافة منطق ما بعد اكتمال الدفع هنا
+                // منطق ما بعد اكتمال الدفع
                 Navigator.of(context).popUntil((route) => route.isFirst);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('تم إنشاء الطلب بنجاح!'),
                     backgroundColor: Colors.green,
+                  ),
+                );
+              },
+              onPaymentCancel: () {
+                // منطق إلغاء الدفع
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('تم إلغاء عملية الدفع'),
+                    backgroundColor: Colors.orange,
                   ),
                 );
               },
