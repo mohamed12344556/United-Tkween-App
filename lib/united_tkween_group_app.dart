@@ -74,7 +74,9 @@ class _UnitedFormationAppState extends State<UnitedFormationApp> {
             splitScreenMode: true,
             child: MaterialApp(
               navigatorKey: NavigationService.navigatorKey,
-              theme: AppTheme.dark,
+              theme: AppTheme.light,
+              darkTheme: AppTheme.dark,
+              themeMode: state,
               debugShowCheckedModeBanner: false,
               localizationsDelegates: const [
                 S.delegate,
