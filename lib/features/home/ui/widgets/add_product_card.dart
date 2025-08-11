@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../../generated/l10n.dart';
 
 class AddProductCard extends StatelessWidget {
-  const AddProductCard({
-    super.key,
-  });
+  const AddProductCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +21,10 @@ class AddProductCard extends StatelessWidget {
           color: Colors.blueGrey[50],
           borderRadius: BorderRadius.circular(10),
         ),
-        child: const Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.add_shopping_cart,
-              size: 50,
-              color: Colors.blue,
-            ),
+            Icon(Icons.add_shopping_cart, size: 50, color: Colors.blue),
             // Lottie.asset(
             //   'assets/images/add_to_cart_2.json',
             //   // width: 100,
@@ -38,11 +33,8 @@ class AddProductCard extends StatelessWidget {
             // ),
             SizedBox(height: 10),
             Text(
-              'Add Product',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.blue,
-              ),
+              S.of(context).addProduct,
+              style: TextStyle(fontSize: 16, color: Colors.blue),
             ),
           ],
         ),

@@ -426,6 +426,7 @@ import '../../../../core/core.dart';
 import '../cubits/support/support_cubit.dart';
 import '../cubits/support/support_state.dart';
 import '../widgets/support_message_input.dart';
+import '../../../../generated/l10n.dart';
 
 class SupportView extends StatefulWidget {
   const SupportView({super.key});
@@ -439,13 +440,13 @@ class _SupportViewState extends State<SupportView>
   final TextEditingController _messageController = TextEditingController();
   final FocusNode _messageFocusNode = FocusNode();
   final List<Map<String, dynamic>> _supportOptions = [
-    {'title': 'استفسار عن منتج', 'icon': Icons.help_outline},
-    {'title': 'مشكلة في الطلب', 'icon': Icons.error_outline},
-    {'title': 'اقتراح', 'icon': Icons.lightbulb_outline},
-    {'title': 'شكوى', 'icon': Icons.report_outlined},
-    {'title': 'أخرى', 'icon': Icons.more_horiz},
+    {'title': S.current.product_inquiry, 'icon': Icons.help_outline},
+    {'title': S.current.order_issue, 'icon': Icons.error_outline},
+    {'title': S.current.suggestion, 'icon': Icons.lightbulb_outline},
+    {'title': S.current.complaint, 'icon': Icons.report_outlined},
+    {'title': S.current.other, 'icon': Icons.more_horiz},
   ];
-  String _selectedOption = 'استفسار عن منتج';
+  String _selectedOption = S.current.product_inquiry;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -546,7 +547,7 @@ class _SupportViewState extends State<SupportView>
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(
-          'مركز الدعم',
+          S.of(context).support_center,
           style: TextStyle(
             color: isDarkMode ? Colors.white : Colors.black,
             fontWeight: FontWeight.bold,
@@ -576,7 +577,7 @@ class _SupportViewState extends State<SupportView>
     }
 
     if (state.isError) {
-      _showErrorMessage(state.errorMessage ?? 'خطأ في إرسال الرسالة');
+      _showErrorMessage(state.errorMessage ?? S.of(context).error_send);
     }
   }
 
@@ -585,7 +586,7 @@ class _SupportViewState extends State<SupportView>
       SnackBar(
         content: Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
-          child: const Row(
+          child: Row(
             children: [
               Icon(Icons.check_circle, color: Colors.white, size: 24),
               SizedBox(width: 12),
@@ -595,14 +596,14 @@ class _SupportViewState extends State<SupportView>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'تم بنجاح! ✅',
+                      S.of(context).success_title,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
                     Text(
-                      'سيتم الرد عليك في أقرب وقت',
+                      S.of(context).success_desc,
                       style: TextStyle(fontSize: 12, color: Colors.white70),
                     ),
                   ],
@@ -688,7 +689,7 @@ class _SupportViewState extends State<SupportView>
           ),
           const SizedBox(height: 20),
           Text(
-            '👋 أهلاً بك في مركز الدعم',
+            S.of(context).welcome_support,
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -697,7 +698,7 @@ class _SupportViewState extends State<SupportView>
           ),
           const SizedBox(height: 12),
           Text(
-            'نحن هنا لمساعدتك في أي استفسار أو مشكلة\nفريقنا جاهز للرد عليك على مدار الساعة',
+            S.of(context).support_desc,
             style: TextStyle(
               fontSize: 16,
               color: isDarkMode ? Colors.grey[300] : Colors.grey[600],
@@ -717,7 +718,7 @@ class _SupportViewState extends State<SupportView>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '🚀 إجراءات سريعة',
+            S.of(context).quick_actions,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -730,8 +731,8 @@ class _SupportViewState extends State<SupportView>
               Expanded(
                 child: _buildQuickActionCard(
                   icon: Icons.chat_bubble_outline,
-                  title: 'الدردشة المباشرة',
-                  subtitle: 'متاح الآن',
+                  title: S.of(context).live_chat,
+                  subtitle: S.of(context).available_now,
                   onTap: () {
                     // Navigate to live chat
                   },
@@ -742,7 +743,7 @@ class _SupportViewState extends State<SupportView>
               Expanded(
                 child: _buildQuickActionCard(
                   icon: Icons.phone,
-                  title: 'اتصال مباشر',
+                  title: S.of(context).direct_call,
                   subtitle: '19999',
                   onTap: () {
                     // Make phone call
@@ -808,7 +809,7 @@ class _SupportViewState extends State<SupportView>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '📋 نوع الاستفسار',
+            S.of(context).inquiry_type,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -923,7 +924,7 @@ class _SupportViewState extends State<SupportView>
           Row(
             children: [
               Text(
-                '✍️ اكتب رسالتك',
+                S.of(context).write_message,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -989,7 +990,7 @@ class _SupportViewState extends State<SupportView>
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'كن مفصلاً قدر الإمكان حتى نتمكن من مساعدتك بأفضل طريقة ممكنة',
+                    S.of(context).tip_message,
                     style: TextStyle(
                       color: isDarkMode ? Colors.blue[300] : Colors.blue[700],
                       fontSize: 13,
@@ -1036,9 +1037,8 @@ class _SupportViewState extends State<SupportView>
                 FocusScope.of(context).unfocus();
                 context.read<SupportCubit>().sendMessage();
               },
-              hintText:
-                  'اكتب استفسارك هنا بالتفصيل... نحن هنا لمساعدتك 😊\n\nمثال: "لديّ مشكلة في تسجيل الدخول، تظهر لي رسالة خطأ عند إدخال رقم الهاتف..."',
-              sendButtonText: 'إرسال الرسالة',
+              hintText: S.of(context).message_hint,
+              sendButtonText: S.of(context).send_message,
             ),
           ),
 
@@ -1067,7 +1067,7 @@ class _SupportViewState extends State<SupportView>
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    '⏱️ متوسط وقت الرد: 2-4 ساعات في أيام العمل',
+                    S.of(context).response_time,
                     style: TextStyle(
                       color: isDarkMode ? Colors.green[300] : Colors.green[700],
                       fontSize: 13,
@@ -1094,9 +1094,9 @@ class _SupportViewState extends State<SupportView>
               size: 24,
             ),
             const SizedBox(width: 12),
-            const Expanded(
+            Expanded(
               child: Text(
-                'يرجى كتابة رسالتك قبل الإرسال',
+                S.of(context).empty_message_warning,
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
             ),

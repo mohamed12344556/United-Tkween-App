@@ -178,6 +178,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/core.dart';
+import '../../../../generated/l10n.dart';
 
 class AddressCardWidget extends StatelessWidget {
   final String? address;
@@ -208,7 +209,7 @@ class AddressCardWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'العنوان',
+                  S.of(context).address,
                   style: TextStyle(
                     color: AppColors.text,
                     fontSize: 18.sp,
@@ -219,7 +220,7 @@ class AddressCardWidget extends StatelessWidget {
                   icon: Icon(Icons.copy, color: AppColors.primary, size: 18.r),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: address!)).then((_) {
-                      context.showSuccessSnackBar('تم نسخ العنوان');
+                      context.showSuccessSnackBar(S.of(context).address_copied);
                     });
                   },
                   splashRadius: 20.r,
@@ -245,7 +246,7 @@ class AddressCardWidget extends StatelessWidget {
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Text(
-                    address == "Default Address" ? "Not Entered" : address!,
+                    address == "Default Address" ? S.of(context).not_entered : address!,
                     style: TextStyle(color: AppColors.text, fontSize: 16.sp),
                   ),
                 ),

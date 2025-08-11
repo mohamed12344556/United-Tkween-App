@@ -91,6 +91,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/core.dart';
+import '../../../../generated/l10n.dart';
 import '../../ui/cubits/profile/profile_cubit.dart';
 import '../../ui/cubits/profile/profile_state.dart';
 
@@ -247,7 +248,7 @@ class _BuildUserInfoHeaderState extends State<BuildUserInfoHeader> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "حدث خطأ",
+                 S.of(context).error,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -256,7 +257,7 @@ class _BuildUserInfoHeaderState extends State<BuildUserInfoHeader> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  errorMessage ?? "خطأ في تحميل بيانات المستخدم",
+                  errorMessage ?? S.of(context).user_load_error,
                   style: TextStyle(color: Colors.red[300], fontSize: 12),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -271,8 +272,8 @@ class _BuildUserInfoHeaderState extends State<BuildUserInfoHeader> {
               }
             },
             icon: Icon(Icons.refresh, size: 16, color: AppColors.secondary),
-            label: const Text(
-              "إعادة المحاولة",
+            label:  Text(
+              S.of(context).retry,
               style: TextStyle(
                 color: AppColors.secondary,
                 fontWeight: FontWeight.bold,
@@ -329,8 +330,8 @@ class _BuildUserInfoHeaderState extends State<BuildUserInfoHeader> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "المستخدم",
+                 Text(
+                  S.of(context).defaultUser,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -357,8 +358,8 @@ class _BuildUserInfoHeaderState extends State<BuildUserInfoHeader> {
               });
             },
             icon: Icon(Icons.edit, size: 16, color: AppColors.secondary),
-            label: const Text(
-              "تعديل",
+            label: Text(
+              S.of(context).edit ,
               style: TextStyle(
                 color: AppColors.secondary,
                 fontWeight: FontWeight.bold,
@@ -439,8 +440,8 @@ class _BuildUserInfoHeaderState extends State<BuildUserInfoHeader> {
             onPressed:
                 () => widget.context.navigateToNamed(Routes.editProfileView),
             icon: Icon(Icons.edit, size: 16, color: AppColors.secondary),
-            label: const Text(
-              "تعديل",
+            label: Text(
+              S.of(context).edit,
               style: TextStyle(
                 color: AppColors.secondary,
                 fontWeight: FontWeight.bold,

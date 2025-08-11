@@ -178,6 +178,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:united_formation_app/core/core.dart';
+import '../../../../generated/l10n.dart';
 import '../../data/book_model.dart';
 import 'products_grid_view_banner.dart';
 
@@ -316,7 +317,7 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                '${widget.book.getFormattedPdfPrice} ر.س',
+                                '${widget.book.getFormattedPdfPrice} ${S.of(context).currency}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -341,7 +342,7 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                '${widget.book.getFormattedPrice} ر.س',
+                                '${widget.book.getFormattedPrice} ${S.of(context).currency}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,

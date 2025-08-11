@@ -289,6 +289,7 @@ import 'package:united_formation_app/features/home/data/book_model.dart';
 import 'package:united_formation_app/features/home/ui/cubit/home_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/profile/profile_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/profile/profile_state.dart';
+import '../../../../generated/l10n.dart';
 import '../widgets/home_products_grid_view.dart';
 import '../widgets/home_widgets/categories_listview.dart';
 
@@ -496,7 +497,7 @@ class _HomePageState extends State<HomePage>
             fontWeight: FontWeight.normal,
           ),
           decoration: InputDecoration(
-            hintText: 'البحث عن كتاب...',
+            hintText: S.of(context).searchBook,
             prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
             suffixIcon:
                 searchController.text.isNotEmpty
@@ -542,7 +543,7 @@ class _HomePageState extends State<HomePage>
             child: Column(
               children: [
                 Text(
-                  "خطأ في تحميل الفئات، يرجى المحاولة مرة أخرى",
+                  S.of(context).fetchCategoriesError,
                   style: TextStyle(color: Colors.black87),
                 ),
                 const SizedBox(height: 10),
@@ -552,7 +553,7 @@ class _HomePageState extends State<HomePage>
                     backgroundColor: WidgetStateProperty.all(AppColors.primary),
                     foregroundColor: WidgetStateProperty.all(Colors.white),
                   ),
-                  child: const Text("إعادة المحاولة"),
+                  child: Text(S.of(context).retry),
                 ),
               ],
             ),
@@ -570,8 +571,8 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _buildPopularHeader() {
-    return const Text(
-      "Popular",
+    return Text(
+      S.of(context).popular,
       style: TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.bold,
@@ -667,9 +668,9 @@ class _HomePageState extends State<HomePage>
           final books = state.books;
 
           if (books.isEmpty) {
-            return const Center(
+            return Center(
               child: Text(
-                "لا توجد كتب في هذه الفئة",
+                S.of(context).noBooksInCategory,
                 style: TextStyle(color: Colors.black87),
               ),
             );
@@ -688,12 +689,12 @@ class _HomePageState extends State<HomePage>
                   Icon(Icons.search_off, size: 50, color: Colors.grey),
                   SizedBox(height: 16),
                   Text(
-                    "لا توجد نتائج تطابق \"${searchController.text}\"",
+                    "${S.of(context).noSearchResults}\"${searchController.text}\"",
                     style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "حاول استخدام كلمات أخرى أو تحقق من الهجاء",
+                    S.of(context).noSearchResultsDesc,
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
                   ),
                 ],
@@ -706,8 +707,8 @@ class _HomePageState extends State<HomePage>
           return Center(
             child: Column(
               children: [
-                const Text(
-                  "خطأ، يرجى المحاولة مرة أخرى",
+                Text(
+                  S.of(context).fetchItemsError,
                   style: TextStyle(color: Colors.black87),
                 ),
                 const SizedBox(height: 10),
@@ -717,7 +718,7 @@ class _HomePageState extends State<HomePage>
                     backgroundColor: WidgetStateProperty.all(AppColors.primary),
                     foregroundColor: WidgetStateProperty.all(Colors.white),
                   ),
-                  child: const Text("إعادة المحاولة"),
+                  child:  Text(S.of(context).retry),
                 ),
               ],
             ),
@@ -747,7 +748,7 @@ class _HomePageState extends State<HomePage>
             child: Text(
               state.isSuccess && state.profile != null
                   ? state.profile!.fullName
-                  : 'مستخدم تكوين',
+                  : S.of(context).tkweenUser,
               style: TextStyle(color: AppColors.text),
             ),
           );

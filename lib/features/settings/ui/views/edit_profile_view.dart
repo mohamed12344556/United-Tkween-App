@@ -410,6 +410,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/core.dart';
+import '../../../../generated/l10n.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../cubits/edit_profile/edit_profile_cubit.dart';
 import '../cubits/edit_profile/edit_profile_state.dart';
@@ -469,7 +470,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: AppColors.text),
         title: Text(
-          'تعديل الملف الشخصي',
+          S.of(context).editProfileTitle,
           style: TextStyle(
             color: AppColors.text,
             fontWeight: FontWeight.bold,
@@ -489,7 +490,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             // إشعار المستخدم بنجاح التحديث
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: const Text('تم تحديث الملف الشخصي بنجاح'),
+                content: Text(S.of(context).updateSuccess),
                 backgroundColor: AppColors.success,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
@@ -508,7 +509,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  state.errorMessage ?? 'خطأ في تحديث الملف الشخصي',
+                  state.errorMessage ?? S.of(context).updateError,
                 ),
                 backgroundColor: AppColors.error,
                 behavior: SnackBarBehavior.floating,
@@ -558,7 +559,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           Icon(Icons.error_outline, size: 60.r, color: AppColors.error),
           SizedBox(height: 16.h),
           Text(
-            'خطأ في تحميل الملف الشخصي',
+            S.of(context).loadError,
             style: TextStyle(color: AppColors.text, fontSize: 16.sp),
             textAlign: TextAlign.center,
           ),
@@ -568,7 +569,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             child: ElevatedButton.icon(
               onPressed: () => context.read<EditProfileCubit>().loadProfile(),
               icon: Icon(Icons.refresh, size: 16.r),
-              label: Text('إعادة المحاولة', style: TextStyle(fontSize: 14.sp)),
+              label: Text(S.of(context).retry, style: TextStyle(fontSize: 14.sp)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
@@ -592,7 +593,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         children: [
           Center(
             child: ProfileAvatar(
-              fullName: "المستخدم",
+              fullName: S.of(context).defaultUser,
               radius: 60.r,
               backgroundColor: AppColors.primary.withOpacity(0.1),
               textColor: AppColors.primary,
@@ -601,14 +602,14 @@ class _EditProfileViewState extends State<EditProfileView> {
 
           SizedBox(height: 32.h),
           _buildTextField(
-            label: 'الاسم الكامل',
+            label: S.of(context).fullName,
             controller: TextEditingController(),
             prefixIcon: Icons.person,
           ),
 
           SizedBox(height: 16.h),
           _buildTextField(
-            label: 'البريد الإلكتروني',
+            label: S.of(context).email,
             controller: TextEditingController(),
             prefixIcon: Icons.email,
             keyboardType: TextInputType.emailAddress,
@@ -626,7 +627,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           // ],
           SizedBox(height: 16.h),
           _buildTextField(
-            label: 'رقم الهاتف 1',
+            label: '${S.of(context).phone} 1',
             controller: TextEditingController(),
             prefixIcon: Icons.phone,
             keyboardType: TextInputType.phone,
@@ -644,7 +645,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           // ],
           SizedBox(height: 16.h),
           _buildTextField(
-            label: 'العنوان',
+            label: S.of(context).address,
             controller: TextEditingController(),
             prefixIcon: Icons.location_on,
             maxLines: 3,
@@ -671,7 +672,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                 ),
                 child: Text(
-                  'حفظ التغييرات',
+                  S.of(context).saveChanges,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
@@ -708,12 +709,12 @@ class _EditProfileViewState extends State<EditProfileView> {
 
             // حقل الاسم الكامل
             _buildTextField(
-              label: 'الاسم الكامل',
+              label:   S.of(context).fullName,
               controller: _fullNameController,
               prefixIcon: Icons.person,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'الرجاء إدخال الاسم الكامل';
+                  return S.of(context).enterFullName;
                 }
                 return null;
               },
@@ -723,14 +724,14 @@ class _EditProfileViewState extends State<EditProfileView> {
 
             // حقل البريد الإلكتروني
             _buildTextField(
-              label: 'البريد الإلكتروني',
+              label: S.of(context).email,
               controller: _emailController,
               prefixIcon: Icons.email,
               keyboardType: TextInputType.emailAddress,
               readOnly: true,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'الرجاء إدخال البريد الإلكتروني';
+                  return S.of(context).enterEmail;
                 }
                 return null;
               },
@@ -765,7 +766,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               keyboardType: TextInputType.phone,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'الرجاء إدخال رقم الهاتف';
+                  return S.of(context).enterPhone;
                 }
                 return null;
               },
@@ -784,7 +785,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             //   SizedBox(height: 32.h),
             // ],
             _buildTextField(
-              label: 'العنوان',
+              label: S.of(context).address,
               controller:
                   _addressController.text == "Default Address"
                       ? TextEditingController(text: "Not Entered Yet")
@@ -822,7 +823,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                           ),
                         )
                         : Text(
-                          'حفظ التغييرات',
+                          S.of(context).saveChanges,
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
@@ -870,7 +871,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                   ? Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                     child: Text(
-                      '(اختياري)',
+                      S.of(context).optional,
                       style: TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 12.sp,

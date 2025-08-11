@@ -139,6 +139,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/core.dart';
+import '../../../../generated/l10n.dart';
 
 class ContactInfoCardWidget extends StatelessWidget {
   final String email;
@@ -168,7 +169,7 @@ class ContactInfoCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'معلومات الاتصال',
+              S.of(context).contactInfo,
               style: TextStyle(
                 color: AppColors.text,
                 fontSize: 18.sp,
@@ -180,7 +181,7 @@ class ContactInfoCardWidget extends StatelessWidget {
             // عنصر البريد الإلكتروني
             _buildContactItem(
               icon: Icons.email,
-              title: 'البريد الإلكتروني',
+              title: S.of(context).email,
               value: email,
               context: context,
             ),
@@ -190,9 +191,9 @@ class ContactInfoCardWidget extends StatelessWidget {
             if (phoneNumber1 != null && phoneNumber1!.isNotEmpty)
               _buildContactItem(
                 icon: Icons.phone,
-                title: 'رقم الهاتف ',
+                title: S.of(context).phone,
                 value:
-                    phoneNumber1 == "1111111" ? "Not Entered" : phoneNumber1!,
+                    phoneNumber1 == "1111111" ? S.of(context).not_entered : phoneNumber1!,
                 context: context,
                 canCopy: true,
                 canCall: true,
@@ -202,7 +203,7 @@ class ContactInfoCardWidget extends StatelessWidget {
             if (phoneNumber2 != null && phoneNumber2!.isNotEmpty)
               _buildContactItem(
                 icon: Icons.phone_android,
-                title: 'رقم الهاتف 2',
+                title: '${S.of(context).phone} 2',
                 value: phoneNumber2!,
                 context: context,
                 canCopy: true,
@@ -260,7 +261,7 @@ class ContactInfoCardWidget extends StatelessWidget {
               icon: Icon(Icons.copy, color: AppColors.primary, size: 18.r),
               onPressed: () {
                 Clipboard.setData(ClipboardData(text: value)).then((_) {
-                  context.showSuccessSnackBar('تم نسخ $title');
+                  context.showSuccessSnackBar('${S.of(context).address_copied} $title');
                 });
               },
               splashRadius: 20.r,

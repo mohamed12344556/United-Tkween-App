@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:united_formation_app/generated/l10n.dart';
 import '../../../../core/core.dart';
 import 'stat_card_widget.dart';
 
@@ -31,7 +32,7 @@ class OrderStatsWidget extends StatelessWidget {
       child: Row(
         children: [
           StatCardWidget(
-            title: 'إجمالي الطلبات',
+            title: S.of(context).total_orders,
             value: totalOrders.toString(),
             icon: Icons.shopping_bag,
             color: AppColors.primary,
@@ -39,7 +40,7 @@ class OrderStatsWidget extends StatelessWidget {
           ),
           SizedBox(width: context.isTablet ? 16.w : 12.w), 
           StatCardWidget(
-            title: 'قيد التوصيل',
+            title: S.of(context).pending_orders,
             value: pendingOrders.toString(),
             icon: Icons.local_shipping,
             color: Colors.orange,  // استخدام اللون البرتقالي كما كان
@@ -47,7 +48,7 @@ class OrderStatsWidget extends StatelessWidget {
           ),
           SizedBox(width: context.isTablet ? 16.w : 12.w),
           StatCardWidget(
-            title: 'تم التوصيل',
+            title: S.of(context).delivered_orders,
             value: deliveredOrders.toString(),
             icon: Icons.check_circle,
             color: AppColors.success,
@@ -65,7 +66,7 @@ class OrderStatsWidget extends StatelessWidget {
       child: Column(
         children: [
           StatCardWidget(
-            title: 'إجمالي الطلبات',
+            title: S.of(context).total_orders,
             value: totalOrders.toString(),
             icon: Icons.shopping_bag,
             color: AppColors.primary,
@@ -74,7 +75,7 @@ class OrderStatsWidget extends StatelessWidget {
           ),
           SizedBox(height: context.isTablet ? 16.h : 12.h),
           StatCardWidget(
-            title: 'قيد التوصيل',
+            title: S.of(context).pending_orders,
             value: pendingOrders.toString(),
             icon: Icons.local_shipping,
             color: Colors.orange,  // استخدام اللون البرتقالي كما كان
@@ -83,7 +84,7 @@ class OrderStatsWidget extends StatelessWidget {
           ),
           SizedBox(height: context.isTablet ? 16.h : 12.h),
           StatCardWidget(
-            title: 'تم التوصيل',
+            title: S.of(context).delivered_orders,
             value: deliveredOrders.toString(),
             icon: Icons.check_circle,
             color: AppColors.success,

@@ -51,6 +51,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:united_formation_app/generated/l10n.dart';
 import '../../../../core/core.dart';
 
 class EditProfileButtonWidget extends StatelessWidget {
@@ -68,7 +69,7 @@ class EditProfileButtonWidget extends StatelessWidget {
         onPressed: onPressed,
         icon: Icon(Icons.edit, color: AppColors.unselectedChip, size: 20.r),
         label: Text(
-          'تعديل الملف الشخصي',
+          S.of(context).editProfileTitle,
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.bold,

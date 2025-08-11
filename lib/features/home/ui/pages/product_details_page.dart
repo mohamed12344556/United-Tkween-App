@@ -466,6 +466,7 @@ import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/core/helper/format_double_number.dart';
 import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
+import '../../../../generated/l10n.dart';
 import '../../../cart/data/models/cart_model.dart';
 import '../../data/book_model.dart';
 
@@ -1030,8 +1031,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     AppButton(
                       text:
                           _isGuest
-                              ? "تسجيل الدخول للإضافة للسلة"
-                              : "Add to cart",
+                              ? S.of(context).loginToCart
+                              : S.of(context).addToCart,
                       onPressed: _addToCart,
                       height: 55,
                       backgroundColor: AppColors.primary,
@@ -1074,7 +1075,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               SizedBox(width: 12),
                               Expanded(
                                 child: Text(
-                                  "أنت في وضع الضيف. سجل الدخول للوصول إلى جميع ميزات التطبيق.",
+                                  S.of(context).guestModeDesc,
                                   style: TextStyle(
                                     color: AppColors.text,
                                     fontSize: 14,

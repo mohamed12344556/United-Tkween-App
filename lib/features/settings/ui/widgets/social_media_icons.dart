@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/profile_social_icon.dart';
 
 import '../../../../core/core.dart';
+import '../../../../generated/l10n.dart';
 
 class SocialMediaIcons extends StatelessWidget {
   const SocialMediaIcons({super.key});
@@ -37,7 +38,7 @@ class SocialMediaIcons extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'تابعنا على وسائل التواصل',
+            S.of(context).followUs,
             style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
           ),
           const SizedBox(height: 12),

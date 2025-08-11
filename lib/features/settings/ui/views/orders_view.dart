@@ -494,6 +494,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/empty_state_widget.dart';
 
 import '../../../../core/core.dart';
+import '../../../../generated/l10n.dart';
 import '../../domain/entities/user_order_entity.dart';
 import '../cubits/orders/orders_cubit.dart';
 import '../cubits/orders/orders_state.dart';
@@ -550,7 +551,7 @@ class _OrdersViewState extends State<OrdersView> {
       centerTitle: true,
       scrolledUnderElevation: 0,
       title: Text(
-        'مشترياتي',
+        S.of(context).my_orders,
         style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
@@ -596,7 +597,7 @@ class _OrdersViewState extends State<OrdersView> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                state.errorMessage ?? 'حدث خطأ أثناء تحميل الطلبات',
+                state.errorMessage ?? S.of(context).error_loading_orders,
               ),
               backgroundColor: Colors.red,
             ),
@@ -661,7 +662,7 @@ class _OrdersViewState extends State<OrdersView> {
             children: [
               SizedBox(height: 16.h),
               Text(
-                'ملخص الطلبات',
+                S.of(context).orderSummary,
                 style: TextStyle(
                   color: AppColors.text,
                   fontWeight: FontWeight.bold,
@@ -721,7 +722,7 @@ class _OrdersViewState extends State<OrdersView> {
                   ),
                   SizedBox(height: 16.h),
                   Text(
-                    'لا توجد طلبات تطابق الفلتر المحدد',
+                    S.of(context).noOrdersMatchingFilter,
                     style: TextStyle(color: AppColors.text, fontSize: 16.sp),
                     textAlign: TextAlign.center,
                   ),
@@ -732,7 +733,7 @@ class _OrdersViewState extends State<OrdersView> {
                     },
                     icon: Icon(Icons.filter_list_off, size: 18.r),
                     label: Text(
-                      'إزالة الفلتر',
+                      S.of(context).removeFilter,
                       style: TextStyle(fontSize: 14.sp),
                     ),
                     style: TextButton.styleFrom(
@@ -791,7 +792,7 @@ class _OrdersViewState extends State<OrdersView> {
           ),
           SizedBox(height: 16.h), // مسافة متجاوبة
           Text(
-            state.errorMessage ?? 'خطأ في تحميل المشتريات',
+            state.errorMessage ?? S.of(context).ordersGeneralError,
             style: TextStyle(
               color: Colors.white,
               fontSize: context.isTablet ? 18.sp : 16.sp, // حجم خط متجاوب
@@ -825,7 +826,7 @@ class _OrdersViewState extends State<OrdersView> {
                 size: context.isTablet ? 20.r : 16.r, // حجم متجاوب للأيقونة
               ),
               label: Text(
-                'إعادة المحاولة',
+                S.of(context).retry,
                 style: TextStyle(
                   fontSize: context.isTablet ? 16.sp : 14.sp, // حجم خط متجاوب
                 ),
@@ -850,9 +851,9 @@ class _OrdersViewState extends State<OrdersView> {
   Widget _buildEmptyState() {
     return EmptyStateWidget(
       icon: Icons.shopping_cart_outlined,
-      title: 'لا توجد مشتريات حالياً',
-      message: 'ابدأ بالتسوق واستمتع بمنتجاتنا المميزة',
-      buttonText: 'تسوق الآن',
+      title: S.of(context).noPurchases,
+      message: S.of(context).startShoppingMessage,
+      buttonText: S.of(context).shopNow,
       onButtonPressed: () {
         context.pushNamedAndRemoveUntil(
           Routes.hostView,
@@ -888,7 +889,7 @@ class _OrdersViewState extends State<OrdersView> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'تصفية الطلبات',
+                      S.of(context).filterOrders,
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
@@ -900,7 +901,7 @@ class _OrdersViewState extends State<OrdersView> {
                     // خيارات التصفية
                     _buildFilterOption(
                       context,
-                      title: 'جميع الطلبات',
+                      title: S.of(context).allOrders,
                       isSelected: state.filterStatus == null,
                       onTap: () {
                         context.read<OrdersCubit>().clearFilter();
@@ -909,7 +910,7 @@ class _OrdersViewState extends State<OrdersView> {
                     ),
                     _buildFilterOption(
                       context,
-                      title: 'قيد المعالجة',
+                      title: S.of(context).processingOrders,
                       isSelected: state.filterStatus == OrderStatus.processing,
                       onTap: () {
                         context.read<OrdersCubit>().setFilter(
@@ -921,7 +922,7 @@ class _OrdersViewState extends State<OrdersView> {
 
                     _buildFilterOption(
                       context,
-                      title: 'تم الشحن',
+                      title: S.of(context).shippedOrders,
                       isSelected: state.filterStatus == OrderStatus.shipped,
                       onTap: () {
                         context.read<OrdersCubit>().setFilter(
@@ -933,7 +934,7 @@ class _OrdersViewState extends State<OrdersView> {
 
                     _buildFilterOption(
                       context,
-                      title: 'تم التسليم',
+                      title: S.of(context).deliveredOrders,
                       isSelected: state.filterStatus == OrderStatus.delivered,
                       onTap: () {
                         context.read<OrdersCubit>().setFilter(
@@ -945,7 +946,7 @@ class _OrdersViewState extends State<OrdersView> {
 
                     _buildFilterOption(
                       context,
-                      title: 'ملغي',
+                      title: S.of(context).cancelledOrders,
                       isSelected: state.filterStatus == OrderStatus.cancelled,
                       onTap: () {
                         context.read<OrdersCubit>().setFilter(

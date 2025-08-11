@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/delete_account/delete_account_state.dart';
 import '../../../../../../core/core.dart';
+import '../../../../generated/l10n.dart';
 import '../cubits/delete_account/delete_account_cubit.dart';
 
 /// حوار تأكيد حذف الحساب
@@ -21,7 +22,7 @@ class DeleteAccountDialog extends StatelessWidget {
             // عرض رسالة نجاح
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: const Text('تم حذف الحساب بنجاح'),
+                content:  Text(S.of(context).delete_account  ),
                 backgroundColor: AppColors.success,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
@@ -62,8 +63,8 @@ class DeleteAccountDialog extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            title: const Text(
-              'حذف الحساب',
+            title:  Text(
+              S.of(context).delete_account,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -73,8 +74,8 @@ class DeleteAccountDialog extends StatelessWidget {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'هل أنت متأكد من حذف حسابك؟\nهذا الإجراء لا يمكن التراجع عنه وسيتم حذف جميع بياناتك.',
+                Text(
+                  S.of(context).delete_account_content,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white70),
                 ),
@@ -85,7 +86,7 @@ class DeleteAccountDialog extends StatelessWidget {
                       const CircularProgressIndicator(color: AppColors.primary),
                       const SizedBox(height: 12),
                       Text(
-                        'جارٍ حذف الحساب...',
+                        S.of(context).deleting_account,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey[400], fontSize: 14),
                       ),
@@ -108,7 +109,7 @@ class DeleteAccountDialog extends StatelessWidget {
                                   vertical: 12,
                                 ),
                               ),
-                              child: const Text('إلغاء'),
+                              child:  Text(S.of(context).cancel),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -127,7 +128,7 @@ class DeleteAccountDialog extends StatelessWidget {
                                   vertical: 12,
                                 ),
                               ),
-                              child: const Text('حذف الحساب'),
+                              child:  Text(S.of(context).delete_account),
                               onPressed: () {
                                 context
                                     .read<DeleteAccountCubit>()

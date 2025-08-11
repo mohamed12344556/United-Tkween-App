@@ -316,6 +316,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
 import '../../../../core/core.dart';
+import '../../../../generated/l10n.dart';
 import '../../../auth/data/services/guest_mode_manager.dart';
 import '../cubits/profile/profile_cubit.dart';
 import '../cubits/profile/profile_state.dart';
@@ -387,7 +388,7 @@ class _ProfileViewState extends State<ProfileView> {
       // تأخير قصير لضمان تحميل البيانات بعد العودة مباشرة
       Future.delayed(const Duration(milliseconds: 300), () {
         context.showSuccessSnackBar(
-          'تم تحديث الملف الشخصي بنجاح بالرجاء الانتظار',
+          S.of(context).profileUpdatedWait,
         );
         context.read<ProfileCubit>().loadProfile();
       });
@@ -411,7 +412,7 @@ class _ProfileViewState extends State<ProfileView> {
             if (state.isProfileUpdated) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: const Text('تم تحديث الملف الشخصي بنجاح'),
+                  content: Text(S.of(context).profileUpdated),
                   backgroundColor: AppColors.success,
                   behavior: SnackBarBehavior.floating,
                   shape: RoundedRectangleBorder(
@@ -453,7 +454,7 @@ class _ProfileViewState extends State<ProfileView> {
       iconTheme: IconThemeData(color: AppColors.text),
       scrolledUnderElevation: 0,
       title: Text(
-        'الملف الشخصي',
+        S.of(context).profileTitle,
         style: TextStyle(
           color: AppColors.text,
           fontWeight: FontWeight.bold,
@@ -503,7 +504,7 @@ class _ProfileViewState extends State<ProfileView> {
           Icon(Icons.error_outline, size: 60.r, color: AppColors.error),
           SizedBox(height: 16.h),
           Text(
-            'خطأ في تحميل الملف الشخصي',
+            S.of(context).profileLoadError,
             style: TextStyle(color: AppColors.text, fontSize: 16.sp),
             textAlign: TextAlign.center,
           ),
@@ -513,7 +514,7 @@ class _ProfileViewState extends State<ProfileView> {
             child: ElevatedButton.icon(
               onPressed: _refreshProfile,
               icon: Icon(Icons.refresh, size: 16.r),
-              label: Text('إعادة المحاولة', style: TextStyle(fontSize: 14.sp)),
+              label: Text(S.of(context).profileLoadError, style: TextStyle(fontSize: 14.sp)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
@@ -538,7 +539,7 @@ class _ProfileViewState extends State<ProfileView> {
           // رأس الملف الشخصي مع بيانات افتراضية
           ProfileHeaderWidget(
             // profileImageUrl: null,
-            fullName: "المستخدم",
+            fullName: S.of(context).defaultUserName,
             email: "",
             textColor: AppColors.text,
             backgroundColor: AppColors.primary.withOpacity(0.1),

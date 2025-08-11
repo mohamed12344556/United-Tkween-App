@@ -11,6 +11,7 @@ import '../../../../core/core.dart';
 import '../../../settings/ui/cubits/profile/profile_cubit.dart';
 import '../../../settings/ui/cubits/profile/profile_state.dart';
 import '../../data/models/cart_model.dart';
+import '../../../../generated/l10n.dart';
 import 'tap_payment_screen.dart';
 
 class OrderSummaryPage extends StatefulWidget {
@@ -43,8 +44,8 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          'تفاصيل الطلب',
+        title: Text(
+          S.of(context).orderDetails,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -105,7 +106,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                     } else if (state.isError) {
                       return Center(
                         child: Text(
-                          state.errorMessage ?? 'حدث خطأ ما',
+                          state.errorMessage ?? S.of(context).errorOccurred,
                           style: const TextStyle(color: Colors.red),
                         ),
                       );
@@ -159,8 +160,8 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'تفاصيل العميل',
+          Text(
+            S.of(context).customerDetails,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -174,10 +175,10 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
               children: [
                 AppTextField(
                   controller: _nameController,
-                  hintText: 'الاسم الكامل',
+                  hintText: S.of(context).fullName,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'الرجاء إدخال الاسم الكامل';
+                      return S.of(context).enterFullName;
                     }
                     return null;
                   },
@@ -185,10 +186,10 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 const SizedBox(height: 10),
                 AppTextField(
                   controller: _emailController,
-                  hintText: 'البريد الإلكتروني',
+                  hintText: S.of(context).email,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'الرجاء إدخال البريد الإلكتروني';
+                      return S.of(context).enterEmail;
                     }
                     return null;
                   },
@@ -196,14 +197,14 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 const SizedBox(height: 10),
                 AppTextField(
                   controller: _phoneController,
-                  hintText: 'رقم الهاتف',
+                  hintText: S.of(context).phone,
                   keyboardType: TextInputType.phone,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'الرجاء إدخال رقم الهاتف';
+                      return S.of(context).enterPhone;
                     }
                     if (value.trim().length < 10) {
-                      return 'رقم الهاتف يجب أن يكون على الأقل 10 أرقام';
+                      return S.of(context).invalidPhoneLength;
                     }
                     return null;
                   },
@@ -211,11 +212,11 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 const SizedBox(height: 10),
                 AppTextField(
                   controller: _addressController,
-                  hintText: 'العنوان',
+                  hintText: S.of(context).address,
                   maxLines: 2,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'الرجاء إدخال العنوان';
+                      return S.of(context).enterAddress;
                     }
                     return null;
                   },
@@ -251,8 +252,8 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const Text(
-          ':تفاصيل الطلب',
+        Text(
+          S.of(context).orderSummary,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -289,11 +290,11 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              'الكمية: ${item.quantity}',
+                              '${S.of(context).quantity}: ${item.quantity}',
                               style: const TextStyle(fontSize: 14),
                             ),
                             Text(
-                              'السعر: ريال ${item.unitPrice}',
+                              '${S.of(context).price}: ${item.unitPrice}',
                               style: const TextStyle(fontSize: 14),
                             ),
                           ],
@@ -337,15 +338,18 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              _buildSummaryRow('المجموع الفرعي', 'ريال ${widget.subtotal}'),
+              _buildSummaryRow(
+                S.of(context).subtotal,
+                '${S.of(context).price} ${widget.subtotal}',
+              ),
               // const SizedBox(height: 8),
               // _buildSummaryRow('تكلفة الشحن', 'ريال ${widget.shippingCost}'),
               const SizedBox(height: 12),
               Divider(color: Colors.grey.shade200),
               const SizedBox(height: 12),
               _buildSummaryRow(
-                'إجمالي المبلغ',
-                'ريال ${widget.totalAmount}',
+                S.of(context).totalAmount,
+                '${S.of(context).price} ${widget.totalAmount}',
                 isTotal: true,
               ),
             ],
@@ -383,9 +387,9 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                         strokeWidth: 2,
                       ),
                     )
-                    : const Text(
-                      'إتمام الطلب',
-                      style: TextStyle(
+                    : Text(
+                      S.of(context).placeOrder,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -520,8 +524,8 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 // منطق ما بعد اكتمال الدفع
                 Navigator.of(context).popUntil((route) => route.isFirst);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('تم إنشاء الطلب بنجاح!'),
+                  SnackBar(
+                    content: Text(S.of(context).orderCreatedSuccess),
                     backgroundColor: Colors.green,
                   ),
                 );
@@ -530,8 +534,8 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 // منطق إلغاء الدفع
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('تم إلغاء عملية الدفع'),
+                  SnackBar(
+                    content: Text(S.of(context).orderPaymentCancelled),
                     backgroundColor: Colors.orange,
                   ),
                 );

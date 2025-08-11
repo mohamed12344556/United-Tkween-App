@@ -1233,6 +1233,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../../core/core.dart';
+import '../../../../generated/l10n.dart';
 
 class TapPaymentScreen extends StatefulWidget {
   final String tapPaymentUrl;
@@ -1265,7 +1266,7 @@ class _TapPaymentScreenState extends State<TapPaymentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "إتمام الدفع",
+          S.of(context).payment_title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: isDarkMode ? Colors.white : AppColors.primary,
@@ -1317,7 +1318,7 @@ class _TapPaymentScreenState extends State<TapPaymentScreen> {
                       });
                       _refreshWebView();
                     },
-                    child: const Text('إعادة المحاولة'),
+                    child: Text(S.of(context).retry_button),
                   ),
                 ],
               ),
@@ -1326,14 +1327,14 @@ class _TapPaymentScreenState extends State<TapPaymentScreen> {
             WebViewWidget(controller: _controller),
 
           if (_isLoading)
-            const Center(
+            Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 16),
                   Text(
-                    'جاري تحميل صفحة الدفع...',
+                    S.of(context).loading_payment,
                     style: TextStyle(fontSize: 16),
                   ),
                 ],
@@ -1451,7 +1452,7 @@ class _TapPaymentScreenState extends State<TapPaymentScreen> {
                 setState(() {
                   _isLoading = false;
                   _errorMessage =
-                      'خطأ في تحميل صفحة الدفع: ${error.description}';
+                      '${S.of(context).payment_error}   ${error.description}';
                 });
               },
               onNavigationRequest: (NavigationRequest request) {
@@ -1732,7 +1733,7 @@ class _TapPaymentScreenState extends State<TapPaymentScreen> {
 
                 // عنوان
                 Text(
-                  '🔄 تحديث الصفحة',
+                  S.of(context).refresh_title,
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -1743,7 +1744,7 @@ class _TapPaymentScreenState extends State<TapPaymentScreen> {
 
                 // وصف
                 Text(
-                  'لضمان تحميل جميع البيانات بشكل صحيح\nيُنصح بتحديث صفحة الدفع',
+                  S.of(context).refresh_description,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -1789,7 +1790,7 @@ class _TapPaymentScreenState extends State<TapPaymentScreen> {
                           // عرض رسالة تأكيد لطيفة
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: const Row(
+                              content: Row(
                                 children: [
                                   Icon(
                                     Icons.check_circle,
@@ -1797,7 +1798,7 @@ class _TapPaymentScreenState extends State<TapPaymentScreen> {
                                     size: 20,
                                   ),
                                   SizedBox(width: 8),
-                                  Text('جاري تحديث الصفحة...'),
+                                  Text(S.of(context).refreshing_page),
                                 ],
                               ),
                               backgroundColor: Colors.green,
@@ -1818,13 +1819,13 @@ class _TapPaymentScreenState extends State<TapPaymentScreen> {
                           ),
                           elevation: 2,
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.refresh, size: 18),
                             SizedBox(width: 6),
                             Text(
-                              'تحديث الآن',
+                              S.of(context).refresh_now,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -1849,14 +1850,14 @@ class _TapPaymentScreenState extends State<TapPaymentScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('تأكيد الخروج'),
-          content: const Text('هل تريد إلغاء عملية الدفع والعودة؟'),
+          title: Text(S.of(context).exit_title),
+          content: Text(S.of(context).exit_message),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close dialog
               },
-              child: const Text('لا'),
+              child: Text(S.of(context).no),
             ),
             TextButton(
               onPressed: () async {
@@ -1868,7 +1869,7 @@ class _TapPaymentScreenState extends State<TapPaymentScreen> {
                 widget.onPaymentCancel?.call();
                 Navigator.of(context).pop(); // Close payment screen
               },
-              child: const Text('نعم'),
+              child: Text(S.of(context).yes),
             ),
           ],
         );

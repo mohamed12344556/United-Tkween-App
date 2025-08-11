@@ -268,6 +268,7 @@ import 'package:united_formation_app/constants.dart';
 import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
 import 'package:united_formation_app/features/settings/ui/cubits/profile/profile_cubit.dart';
 import 'package:united_formation_app/features/settings/ui/widgets/social_media_icons.dart';
+import '../../../../generated/l10n.dart';
 import '../widgets/profile_menu_item.dart';
 import '../../../../core/core.dart';
 
@@ -322,7 +323,7 @@ class _SettingsViewState extends State<SettingsView>
           centerTitle: true,
           scrolledUnderElevation: 0,
           title: Text(
-            'مجموعة تكوين المتحدة',
+            S.of(context).app_title,
             style: TextStyle(
               color: AppColors.text,
               fontWeight: FontWeight.bold,
@@ -369,7 +370,7 @@ class _SettingsViewState extends State<SettingsView>
                 _buildAnimatedMenuItem(
                   index: 3,
                   child: ProfileMenuItem(
-                    title: "اداره النظام",
+                    title: S.of(context).admin_panel,
                     icon: Icons.settings,
                     onTap: () {
                       context.navigateToNamed(Routes.adminOrdersView);
@@ -384,12 +385,12 @@ class _SettingsViewState extends State<SettingsView>
             shrinkWrap: true,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             children: [
-              _buildSectionTitle('الحساب'),
+              _buildSectionTitle(S.of(context).account_section),
 
               _buildAnimatedMenuItem(
                 index: 0,
                 child: ProfileMenuItem(
-                  title: 'الملف الشخصي',
+                  title: S.of(context).profile,
                   icon: Icons.person,
                   iconColor: AppColors.primary,
                   backgroundColor: AppColors.lightGrey,
@@ -432,7 +433,7 @@ class _SettingsViewState extends State<SettingsView>
               _buildAnimatedMenuItem(
                 index: 1,
                 child: ProfileMenuItem(
-                  title: 'مشترياتي',
+                  title: S.of(context).my_purchases,
                   icon: Icons.shopping_cart,
                   iconColor: AppColors.primary,
                   backgroundColor: AppColors.lightGrey,
@@ -447,7 +448,7 @@ class _SettingsViewState extends State<SettingsView>
               _buildAnimatedMenuItem(
                 index: 2,
                 child: ProfileMenuItem(
-                  title: 'مكتبتي',
+                  title: S.of(context).my_library,
                   icon: Icons.book,
                   iconColor: AppColors.primary,
                   backgroundColor: AppColors.lightGrey,
@@ -461,12 +462,12 @@ class _SettingsViewState extends State<SettingsView>
               Divider(color: Colors.grey[200]),
 
               const SizedBox(height: 16),
-              _buildSectionTitle('الدعم'),
+              _buildSectionTitle(S.of(context).support_section),
 
               _buildAnimatedMenuItem(
                 index: 3,
                 child: ProfileMenuItem(
-                  title: 'دعم المكتبة',
+                  title: S.of(context).store_support,
                   icon: Icons.headset_mic,
                   iconColor: AppColors.primary,
                   backgroundColor: AppColors.lightGrey,
@@ -480,7 +481,7 @@ class _SettingsViewState extends State<SettingsView>
               _buildAnimatedMenuItem(
                 index: 4,
                 child: ProfileMenuItem(
-                  title: "المكتبة الرئيسية",
+                  title: S.of(context).main_library,
                   icon: Icons.store,
                   iconColor: AppColors.primary,
                   backgroundColor: AppColors.lightGrey,
@@ -498,7 +499,7 @@ class _SettingsViewState extends State<SettingsView>
               _buildAnimatedMenuItem(
                 index: 5,
                 child: ProfileMenuItem(
-                  title: 'تسجيل الخروج',
+                  title: S.of(context).logout,
                   icon: Icons.logout,
                   iconColor: Colors.white,
                   backgroundColor: AppColors.primary,
@@ -516,7 +517,7 @@ class _SettingsViewState extends State<SettingsView>
                 _buildAnimatedMenuItem(
                   index: 6,
                   child: ProfileMenuItem(
-                    title: 'حذف الحساب',
+                    title: S.of(context).delete_account,
                     icon: Icons.delete_forever,
                     iconColor: Colors.white,
                     backgroundColor: AppColors.error,

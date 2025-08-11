@@ -167,20 +167,14 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/features/home/data/book_model.dart';
+
+import '../../../../generated/l10n.dart';
 
 class FavoritesView extends StatefulWidget {
   const FavoritesView({super.key});
@@ -207,11 +201,8 @@ class _FavoritesViewState extends State<FavoritesView> {
       appBar: AppBar(
         leading: SizedBox(),
         title: Text(
-          'المفضلة',
-          style: TextStyle(
-            color: AppColors.text,
-            fontWeight: FontWeight.bold,
-          ),
+          S.of(context).favoritesTitle,
+          style: TextStyle(color: AppColors.text, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
@@ -229,7 +220,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'لا يوجد كتب مفضلة حتى الآن',
+                      S.of(context).favoritesEmptyTitle,
                       style: TextStyle(
                         fontSize: 18,
                         color: AppColors.text,
@@ -238,7 +229,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'أضف الكتب التي تحبها إلى المفضلة',
+                      S.of(context).favoritesEmptySubtitle,
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.textSecondary,
@@ -292,9 +283,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
                                       image: NetworkImage(
-                                        products[index]
-                                            .imageUrl
-                                            .asFullImageUrl,
+                                        products[index].imageUrl.asFullImageUrl,
                                       ),
                                       fit: BoxFit.cover,
                                     ),
@@ -307,7 +296,9 @@ class _FavoritesViewState extends State<FavoritesView> {
                           Expanded(
                             flex: 2,
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12.0),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12.0,
+                              ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,7 +315,9 @@ class _FavoritesViewState extends State<FavoritesView> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    products[index].getLocalizedCategory(context),
+                                    products[index].getLocalizedCategory(
+                                      context,
+                                    ),
                                     style: TextStyle(
                                       color: AppColors.textSecondary,
                                       fontSize: 14,
@@ -342,7 +335,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                                     .getFormattedPdfPrice !=
                                                 0)
                                               Text(
-                                                "PDF: ${products[index].getFormattedPdfPrice} ر.س",
+                                                "PDF: ${products[index].getFormattedPdfPrice} ${S.of(context).currency}",
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
@@ -356,7 +349,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                                     .getFormattedPrice !=
                                                 0)
                                               Text(
-                                                "Paper: ${products[index].getFormattedPrice} ر.س",
+                                                "Paper: ${products[index].getFormattedPrice} ${S.of(context).currency}",
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(

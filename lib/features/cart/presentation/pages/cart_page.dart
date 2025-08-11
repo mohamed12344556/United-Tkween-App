@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/core.dart';
 import '../../data/models/cart_model.dart';
+import '../../../../generated/l10n.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -40,14 +41,11 @@ class _CartPageState extends State<CartPage> {
         leading: const SizedBox(),
         elevation: 0,
         title: Text(
-          "Shopping Cart",
+          S.of(context).shoppingCart,
           style: TextStyle(color: AppColors.text, fontWeight: FontWeight.bold),
         ),
       ),
-      body:
-          _isGuest
-              ? _buildGuestModeView() // عرض واجهة المستخدم للضيف
-              : _buildCartView(cartItems), // عرض واجهة المستخدم للمسجلين
+      body: _isGuest ? _buildGuestModeView() : _buildCartView(cartItems),
     );
   }
 
@@ -104,8 +102,8 @@ class _CartPageState extends State<CartPage> {
 
     if (cartItems.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('السلة فارغة. لا يمكن إتمام عملية الشراء.'),
+        SnackBar(
+          content: Text(S.of(context).emptyCartError),
           backgroundColor: Colors.red,
         ),
       );
@@ -137,7 +135,9 @@ class _CartPageState extends State<CartPage> {
     if (_isGuest) {
       if (mounted) {
         // عرض مربع حوار القيود إذا كان في وضع الضيف
-        await context.checkGuestRestriction(featureName: "الطلب عبر واتساب");
+        await context.checkGuestRestriction(
+          featureName: S.of(context).whatsappOrder,
+        );
       }
       return;
     }
@@ -158,18 +158,20 @@ class _CartPageState extends State<CartPage> {
 
     // Format cart items for WhatsApp message
     String message = "📚 *طلب جديد* 📚\n\n";
-    message += "*تفاصيل الطلب:*\n";
+    message += "*${S.of(context).orderDetails}:*\n";
 
     for (int i = 0; i < cartItems.length; i++) {
       final item = cartItems[i];
       message += "${i + 1}. ${item.bookName} (${item.type})\n";
       message +=
-          "   السعر:  ر.س${item.unitPrice.toStringAsFixed(2)} × ${item.quantity} =  ر.س${(item.unitPrice * item.quantity).toStringAsFixed(2)}\n";
+          "   ${S.of(context).price}:  ${S.of(context).currency}${item.unitPrice.toStringAsFixed(2)} × ${item.quantity} =  ${S.of(context).currency}${(item.unitPrice * item.quantity).toStringAsFixed(2)}\n";
     }
 
-    message += "\n*المجموع الفرعي:*  ر.س${subtotal.toStringAsFixed(2)}\n";
-    // message += "*تكلفة الشحن:*  ر.س${shippingCost.toStringAsFixed(2)}\n";
-    message += "*إجمالي المبلغ:*  ر.س${totalAmount.toStringAsFixed(2)}\n";
+    message +=
+        "\n*${S.of(context).subtotal}:*  ${S.of(context).currency}${subtotal.toStringAsFixed(2)}\n";
+    // message += "*تكلفة الشحن:*  ${S.of(context).currency}${shippingCost.toStringAsFixed(2)}\n";
+    message +=
+        "*${S.of(context).totalAmount}:*  ${S.of(context).currency}${totalAmount.toStringAsFixed(2)}\n";
 
     // Encode the message for URL
     final encodedMessage = Uri.encodeComponent(message);
@@ -186,8 +188,8 @@ class _CartPageState extends State<CartPage> {
       await launch(whatsappUrl);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('لا يمكن فتح WhatsApp. يرجى التأكد من تثبيت التطبيق.'),
+        SnackBar(
+          content: Text(S.of(context).whatsappNotInstalled),
           backgroundColor: Colors.red,
         ),
       );
@@ -223,7 +225,7 @@ class _CartPageState extends State<CartPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'السلة فارغة',
+                      S.of(context).emptyCart,
                       style: TextStyle(
                         color: AppColors.text,
                         fontSize: 18,
@@ -232,7 +234,7 @@ class _CartPageState extends State<CartPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'ابدأ التسوق لإضافة منتجات إلى سلتك',
+                      S.of(context).startShopping,
                       style: TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 14,
@@ -246,7 +248,7 @@ class _CartPageState extends State<CartPage> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '${cartItems.length} Items',
+                      '${cartItems.length} ${S.of(context).itemsCount}',
                       style: TextStyle(
                         color: AppColors.text,
                         fontSize: 18,
@@ -314,7 +316,7 @@ class _CartPageState extends State<CartPage> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      ' ر.س${item.unitPrice}',
+                                      ' ${S.of(context).currency}${item.unitPrice}',
                                       style: TextStyle(
                                         color: AppColors.primary,
                                         fontSize: 16,
@@ -403,14 +405,14 @@ class _CartPageState extends State<CartPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Subtotal',
+                              S.of(context).subtotal,
                               style: TextStyle(
                                 color: AppColors.textSecondary,
                                 fontSize: 16,
                               ),
                             ),
                             Text(
-                              'ر.س $subtotal',
+                              '${S.of(context).currency} $subtotal',
                               style: TextStyle(
                                 color: AppColors.text,
                                 fontSize: 16,
@@ -431,7 +433,7 @@ class _CartPageState extends State<CartPage> {
                         //       ),
                         //     ),
                         //     Text(
-                        //       'ر.س $shippingCost',
+                        //       '${S.of(context).currency} $shippingCost',
                         //       style: TextStyle(
                         //         color: AppColors.text,
                         //         fontSize: 16,
@@ -447,7 +449,7 @@ class _CartPageState extends State<CartPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Total amount',
+                              S.of(context).totalAmount,
                               style: TextStyle(
                                 color: AppColors.text,
                                 fontSize: 18,
@@ -455,7 +457,7 @@ class _CartPageState extends State<CartPage> {
                               ),
                             ),
                             Text(
-                              'ر.س $totalAmount',
+                              '${S.of(context).currency} $totalAmount',
                               style: TextStyle(
                                 color: AppColors.primary,
                                 fontSize: 18,
@@ -479,8 +481,8 @@ class _CartPageState extends State<CartPage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'Proceed to Checkout',
+                    child: Text(
+                      S.of(context).proceedToCheckout,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -520,7 +522,7 @@ class _CartPageState extends State<CartPage> {
             ),
             const SizedBox(height: 24),
             Text(
-              'وضع الضيف',
+              S.of(context).guestMode,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -530,14 +532,13 @@ class _CartPageState extends State<CartPage> {
             ),
             const SizedBox(height: 16),
             Text(
-              'السلة وميزات الشراء متاحة فقط للمستخدمين المسجلين.',
+              S.of(context).guestModeMessage,
               style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
             ElevatedButton.icon(
               onPressed: () {
-                // إعادة تعيين وضع الضيف والانتقال إلى صفحة تسجيل الدخول
                 GuestModeManager.resetGuestMode().then((_) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     Routes.loginView,
@@ -547,7 +548,7 @@ class _CartPageState extends State<CartPage> {
                 });
               },
               icon: const Icon(Icons.login, color: Colors.white),
-              label: const Text('تسجيل الدخول للوصول للسلة'),
+              label: Text(S.of(context).loginToAccessCart),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
@@ -566,7 +567,7 @@ class _CartPageState extends State<CartPage> {
                 ).pushNamedAndRemoveUntil(Routes.hostView, (route) => false);
               },
               child: Text(
-                'العودة للتصفح',
+                S.of(context).returnToBrowse,
                 style: TextStyle(color: AppColors.primary),
               ),
             ),
