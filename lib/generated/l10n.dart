@@ -2314,6 +2314,51 @@ class S {
       args: [],
     );
   }
+
+  /// `Update Available!`
+  String get updateAvailableTitle {
+    return Intl.message(
+      'Update Available!',
+      name: 'updateAvailableTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A new version of the app is available. Update now to enjoy the latest features and improvements.`
+  String get updateAvailableDescription {
+    return Intl.message(
+      'A new version of the app is available. Update now to enjoy the latest features and improvements.',
+      name: 'updateAvailableDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Now`
+  String get updateNow {
+    return Intl.message('Update Now', name: 'updateNow', desc: '', args: []);
+  }
+
+  /// `Unable to open the store!`
+  String get storeOpenError {
+    return Intl.message(
+      'Unable to open the store!',
+      name: 'storeOpenError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occurred while opening the store`
+  String get storeOpenException {
+    return Intl.message(
+      'An error occurred while opening the store',
+      name: 'storeOpenException',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

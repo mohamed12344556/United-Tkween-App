@@ -273,7 +273,10 @@
   "pending_orders": "قيد التوصيل",
   "delivered_orders": "تم التوصيل",
   "delete_account_content":"هل أنت متأكد من حذف حسابك؟\nهذا الإجراء لا يمكن التراجع عنه وسيتم حذف جميع بياناتك.",
-  "deleting_account":"جارٍ حذف الحساب..."
-
-
+  "deleting_account":"جارٍ حذف الحساب...",
+  "updateAvailableTitle": "تحديث متاح!",
+  "updateAvailableDescription": "متاح نسخة جديدة من التطبيق. قم بالتحديث للاستمتاع بأحدث الميزات والتحسينات",
+  "updateNow": "تحديث الآن",
+  "storeOpenError": "تعذر فتح المتجر!",
+  "storeOpenException": "حدث خطأ أثناء فتح المتجر"
 }

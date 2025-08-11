@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../generated/l10n.dart';
 import '../core.dart';
 
 class AppVersionManager {
@@ -29,7 +30,7 @@ class AppVersionManager {
       final playStoreVersion = upgrader.currentAppStoreVersion;
       // final playStoreVersion = "1.0.4";
       final currentVersion = upgrader.currentInstalledVersion;
-      // final currentVersion = "1.0.4";
+      // final currentVersion = "1.0.3";
       log('App version: $currentVersion | Store version: $playStoreVersion');
 
       if (currentVersion == null) return false;
@@ -78,12 +79,12 @@ class AppVersionManager {
       if (await canLaunchUrl(url)) {
         return await launchUrl(url, mode: LaunchMode.externalApplication);
       } else {
-        context.showErrorSnackBar('تعذر فتح المتجر!');
+        context.showErrorSnackBar(S.of(context).storeOpenError);
         return false;
       }
     } catch (e) {
       log('Error launching store: $e');
-      context.showErrorSnackBar('حدث خطأ أثناء فتح المتجر');
+      context.showErrorSnackBar(S.of(context).storeOpenException);
       return false;
     }
   }
@@ -126,7 +127,8 @@ class UpdatePopup extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '! تحديث متاح',
+              S.of(context).updateAvailableTitle,
+
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -135,12 +137,12 @@ class UpdatePopup extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'متاح نسخة جديدة من التطبيق. قم بالتحديث للاستمتاع بأحدث الميزات والتحسينات',
+              S.of(context).updateAvailableDescription,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white70, fontSize: 16),
             ),
             const SizedBox(height: 24),
-            AppButton(onPressed: onUpdatePressed, text: 'تحديث الآن'),
+            AppButton(onPressed: onUpdatePressed, text: S.of(context).updateNow),
           ],
         ),
       ),

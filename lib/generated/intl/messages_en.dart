@@ -452,6 +452,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Start shopping and enjoy our premium products",
     ),
     "status": MessageLookupByLibrary.simpleMessage("Status"),
+    "storeOpenError": MessageLookupByLibrary.simpleMessage(
+      "Unable to open the store!",
+    ),
+    "storeOpenException": MessageLookupByLibrary.simpleMessage(
+      "An error occurred while opening the store",
+    ),
     "store_support": MessageLookupByLibrary.simpleMessage("Library Support"),
     "subtotal": MessageLookupByLibrary.simpleMessage("Subtotal"),
     "success": MessageLookupByLibrary.simpleMessage("Success"),
@@ -477,9 +483,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "unexpectedError": MessageLookupByLibrary.simpleMessage(
       "Unexpected error: ",
     ),
+    "updateAvailableDescription": MessageLookupByLibrary.simpleMessage(
+      "A new version of the app is available. Update now to enjoy the latest features and improvements.",
+    ),
+    "updateAvailableTitle": MessageLookupByLibrary.simpleMessage(
+      "Update Available!",
+    ),
     "updateError": MessageLookupByLibrary.simpleMessage(
       "Error updating profile",
     ),
+    "updateNow": MessageLookupByLibrary.simpleMessage("Update Now"),
     "updateSuccess": MessageLookupByLibrary.simpleMessage(
       "Profile updated successfully",
     ),

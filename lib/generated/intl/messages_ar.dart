@@ -460,6 +460,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "ابدأ بالتسوق واستمتع بمنتجاتنا المميزة",
     ),
     "status": MessageLookupByLibrary.simpleMessage("الحالة"),
+    "storeOpenError": MessageLookupByLibrary.simpleMessage("تعذر فتح المتجر!"),
+    "storeOpenException": MessageLookupByLibrary.simpleMessage(
+      "حدث خطأ أثناء فتح المتجر",
+    ),
     "store_support": MessageLookupByLibrary.simpleMessage("دعم المكتبة"),
     "subtotal": MessageLookupByLibrary.simpleMessage("المجموع الفرعي"),
     "success": MessageLookupByLibrary.simpleMessage("نجاح"),
@@ -483,9 +487,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "total_orders": MessageLookupByLibrary.simpleMessage("إجمالي الطلبات"),
     "ui_design": MessageLookupByLibrary.simpleMessage("تصميم واجهة المستخدم"),
     "unexpectedError": MessageLookupByLibrary.simpleMessage("خطأ غير متوقع: "),
+    "updateAvailableDescription": MessageLookupByLibrary.simpleMessage(
+      "متاح نسخة جديدة من التطبيق. قم بالتحديث للاستمتاع بأحدث الميزات والتحسينات",
+    ),
+    "updateAvailableTitle": MessageLookupByLibrary.simpleMessage("تحديث متاح!"),
     "updateError": MessageLookupByLibrary.simpleMessage(
       "خطأ في تحديث الملف الشخصي",
     ),
+    "updateNow": MessageLookupByLibrary.simpleMessage("تحديث الآن"),
     "updateSuccess": MessageLookupByLibrary.simpleMessage(
       "تم تحديث الملف الشخصي بنجاح",
     ),

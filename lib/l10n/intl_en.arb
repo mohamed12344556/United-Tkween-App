@@ -274,5 +274,10 @@
   "pending_orders": "Pending Orders",
   "delivered_orders": "Delivered Orders",
   "delete_account_content": "Are you sure you want to delete your account? This action is irreversible.",
-  "deleting_account": "Deleting account..."
+  "deleting_account": "Deleting account...",
+  "updateAvailableTitle": "Update Available!",
+  "updateAvailableDescription": "A new version of the app is available. Update now to enjoy the latest features and improvements.",
+  "updateNow": "Update Now",
+  "storeOpenError": "Unable to open the store!",
+  "storeOpenException": "An error occurred while opening the store"
 }
