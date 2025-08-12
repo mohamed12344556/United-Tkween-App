@@ -248,7 +248,7 @@ class _CartPageState extends State<CartPage> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '${cartItems.length} ${S.of(context).itemsCount}',
+                      '${cartItems.length} ${context.isArabic ? "عناصر" : "items"}',
                       style: TextStyle(
                         color: AppColors.text,
                         fontSize: 18,
