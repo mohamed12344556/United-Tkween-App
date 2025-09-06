@@ -262,6 +262,8 @@ class _CartPageState extends State<CartPage> {
                       itemCount: cartItems.length,
                       itemBuilder: (context, index) {
                         final item = cartItems[index];
+                        final bookTypeArabic =
+                            item.type.convertBookTypeToArabic();
                         return Container(
                           margin: const EdgeInsets.only(bottom: 12),
                           padding: const EdgeInsets.all(12),
@@ -308,7 +310,7 @@ class _CartPageState extends State<CartPage> {
                                       ),
                                     ),
                                     Text(
-                                      item.type,
+                                      bookTypeArabic,
                                       style: TextStyle(
                                         color: AppColors.textSecondary,
                                         fontSize: 14,

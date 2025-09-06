@@ -335,7 +335,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                                     .getFormattedPdfPrice !=
                                                 0)
                                               Text(
-                                                "PDF: ${products[index].getFormattedPdfPrice} ${S.of(context).currency}",
+                                                "الكتروني: ${products[index].getFormattedPdfPrice} ${S.of(context).currency}",
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
@@ -349,7 +349,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                                                     .getFormattedPrice !=
                                                 0)
                                               Text(
-                                                "Paper: ${products[index].getFormattedPrice} ${S.of(context).currency}",
+                                                "ورقي: ${products[index].getFormattedPrice} ${S.of(context).currency}",
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(

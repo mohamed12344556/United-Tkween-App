@@ -461,7 +461,9 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/core/helper/format_double_number.dart';
 import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
@@ -482,13 +484,44 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   late String selectedType;
   bool _isGuest = false;
-  bool _isDescriptionExpanded = false; // حالة لتوسيع وتقليص الوصف
+  bool _isDescriptionExpanded = false;
+  bool _shouldShowReadMore = false;
 
   @override
   void initState() {
     super.initState();
     selectedType = (widget.book.getFormattedPdfPrice == 0) ? "paper" : "PDF";
     _checkGuestStatus();
+
+    // تحديد ما إذا كان النص طويلاً بما فيه الكفاية لإظهار "عرض المزيد"
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkDescriptionLength();
+    });
+  }
+
+  void _checkDescriptionLength() {
+    if (widget.book.description.isEmpty) return;
+
+    // حساب عدد الأسطر المطلوبة للنص
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: widget.book.description,
+        style: TextStyle(fontSize: 14, height: 1.5),
+      ),
+      textDirection: TextDirection.rtl,
+      maxLines: null,
+    );
+
+    // استخدام عرض الشاشة مع تقليل المساحة للحواف
+    final maxWidth = MediaQuery.of(context).size.width - 32;
+    textPainter.layout(maxWidth: maxWidth);
+
+    // حساب عدد الأسطر الفعلية
+    final numberOfLines = textPainter.computeLineMetrics().length;
+
+    setState(() {
+      _shouldShowReadMore = numberOfLines > 3;
+    });
   }
 
   // التحقق من حالة الضيف
@@ -499,6 +532,149 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         _isGuest = isGuest;
       });
     }
+  }
+
+  // دالة إنشاء رابط المنتج
+  String _generateProductLink() {
+    // يمكنك تخصيص الرابط حسب بنية موقعك
+    return 'https://tkweenstore.com/product/${widget.book.id}';
+  }
+
+  // دالة نسخ الرابط
+  Future<void> _copyProductLink() async {
+    final productLink = _generateProductLink();
+    await Clipboard.setData(ClipboardData(text: productLink));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'تم نسخ رابط المنتج',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: AppColors.primary,
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  // دالة مشاركة المنتج
+  Future<void> _shareProduct() async {
+    final productLink = _generateProductLink();
+    final shareText = '''
+شاهد هذا الكتاب الرائع: ${widget.book.title}
+
+${widget.book.description.isNotEmpty ? '${widget.book.description.length > 100 ? "${widget.book.description.substring(0, 100)}..." : widget.book.description}\n\n' : ''}السعر: ${getSelectedPrice()} ر.س
+
+الرابط: $productLink
+
+تطبيق تكوين للكتب - اكتشف عالم من المعرفة
+''';
+
+    await Share.share(shareText, subject: 'كتاب ${widget.book.title}');
+  }
+
+  // دالة إظهار خيارات المشاركة
+  void _showShareOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // مؤشر السحب
+              Container(
+                width: 40,
+                height: 4,
+                margin: EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+
+              Text(
+                'مشاركة المنتج',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.text,
+                ),
+              ),
+
+              SizedBox(height: 20),
+
+              // خيار نسخ الرابط
+              ListTile(
+                leading: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.copy, color: AppColors.primary),
+                ),
+                title: Text(
+                  'نسخ الرابط',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.text,
+                  ),
+                ),
+                subtitle: Text(
+                  'نسخ رابط المنتج إلى الحافظة',
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _copyProductLink();
+                },
+              ),
+
+              Divider(),
+
+              // خيار المشاركة
+              ListTile(
+                leading: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.share, color: AppColors.primary),
+                ),
+                title: Text(
+                  'مشاركة',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.text,
+                  ),
+                ),
+                subtitle: Text(
+                  'مشاركة المنتج مع الآخرين',
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _shareProduct();
+                },
+              ),
+
+              SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   int quantity = 1;
@@ -684,7 +860,26 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             ),
                           ),
                         ),
-                        // إضافة زر المفضلة مع التحقق من وضع الضيف
+
+                        // إضافة زر المشاركة
+                        GestureDetector(
+                          onTap: _showShareOptions,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            margin: const EdgeInsets.only(left: 8),
+                            decoration: BoxDecoration(
+                              color: AppColors.lightGrey,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.share,
+                              color: AppColors.primary,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+
+                        // زر المفضلة الموجود
                         GestureDetector(
                           onTap: _addToFavorites,
                           child: Container(
@@ -720,65 +915,68 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             ),
                           ),
                           SizedBox(height: 8),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                _isDescriptionExpanded =
-                                    !_isDescriptionExpanded;
-                              });
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                AnimatedCrossFade(
-                                  firstChild: Text(
-                                    widget.book.description,
-                                    style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 14,
-                                      height: 1.5,
-                                    ),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  secondChild: Text(
-                                    widget.book.description,
-                                    style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 14,
-                                      height: 1.5,
-                                    ),
-                                  ),
-                                  crossFadeState:
-                                      _isDescriptionExpanded
-                                          ? CrossFadeState.showSecond
-                                          : CrossFadeState.showFirst,
-                                  duration: Duration(milliseconds: 300),
-                                ),
-                                SizedBox(height: 8),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      _isDescriptionExpanded
-                                          ? "عرض أقل"
-                                          : "عرض المزيد",
-                                      style: TextStyle(
-                                        color: AppColors.primary,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Icon(
-                                      _isDescriptionExpanded
-                                          ? Icons.keyboard_arrow_up
-                                          : Icons.keyboard_arrow_down,
-                                      color: AppColors.primary,
-                                    ),
-                                  ],
-                                ),
-                              ],
+
+                          // النص مع إمكانية التوسيع
+                          AnimatedCrossFade(
+                            firstChild: Text(
+                              widget.book.description,
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 14,
+                                height: 1.5,
+                              ),
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
                             ),
+                            secondChild: Text(
+                              widget.book.description,
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 14,
+                                height: 1.5,
+                              ),
+                            ),
+                            crossFadeState:
+                                _isDescriptionExpanded
+                                    ? CrossFadeState.showSecond
+                                    : CrossFadeState.showFirst,
+                            duration: Duration(milliseconds: 300),
                           ),
+
+                          // زر "عرض المزيد" يظهر فقط إذا كان النص طويلاً
+                          if (_shouldShowReadMore) ...[
+                            SizedBox(height: 8),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _isDescriptionExpanded =
+                                      !_isDescriptionExpanded;
+                                });
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _isDescriptionExpanded
+                                        ? "عرض أقل"
+                                        : "عرض المزيد",
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Icon(
+                                    _isDescriptionExpanded
+                                        ? Icons.keyboard_arrow_up
+                                        : Icons.keyboard_arrow_down,
+                                    color: AppColors.primary,
+                                    size: 18,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+
                           Divider(height: 24, color: Colors.grey.shade300),
                         ],
                       ),
@@ -787,7 +985,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     SizedBox(height: 16),
 
                     Text(
-                      "Category",
+                      "القسم",
                       style: TextStyle(
                         color: AppColors.text,
                         fontSize: 18,
@@ -847,7 +1045,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
-                                    type,
+                                    type.convertBookTypeToArabic(),
                                     style: TextStyle(
                                       color:
                                           isSelected
@@ -938,81 +1136,81 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     //   ),
                     // ],
                     Text(
-                      "Price: ${getSelectedPrice()} ر.س",
+                      "السعر: ${getSelectedPrice()} ر.س",
                       style: TextStyle(
                         color: AppColors.text,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 16),
 
-                    Row(
-                      children: [
-                        Text(
-                          "Total: ${formatNumber(totalPrice)} ر.س",
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Spacer(),
-                        if (0 > 1) ...[
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (quantity > 1) {
-                                    setState(() => quantity--);
-                                  }
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: AppColors.primary,
-                                  ),
-                                  child: Icon(
-                                    Icons.remove,
-                                    color: Colors.white,
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                ),
-                                child: Text(
-                                  "$quantity",
-                                  style: TextStyle(
-                                    color: AppColors.text,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () => setState(() => quantity++),
-                                child: Container(
-                                  padding: EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: AppColors.primary,
-                                  ),
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ],
-                    ),
+                    // SizedBox(height: 16),
 
+                    // Row(
+                    //   children: [
+                    //     Text(
+                    //       "الإجمالي: ${formatNumber(totalPrice)} ر.س",
+                    //       style: TextStyle(
+                    //         color: AppColors.primary,
+                    //         fontSize: 20,
+                    //         fontWeight: FontWeight.bold,
+                    //       ),
+                    //     ),
+                    //     Spacer(),
+                    //     if (0 > 1) ...[
+                    //       Row(
+                    //         children: [
+                    //           GestureDetector(
+                    //             onTap: () {
+                    //               if (quantity > 1) {
+                    //                 setState(() => quantity--);
+                    //               }
+                    //             },
+                    //             child: Container(
+                    //               padding: EdgeInsets.all(4),
+                    //               decoration: BoxDecoration(
+                    //                 borderRadius: BorderRadius.circular(4),
+                    //                 color: AppColors.primary,
+                    //               ),
+                    //               child: Icon(
+                    //                 Icons.remove,
+                    //                 color: Colors.white,
+                    //                 size: 16,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //               horizontal: 10,
+                    //             ),
+                    //             child: Text(
+                    //               "$quantity",
+                    //               style: TextStyle(
+                    //                 color: AppColors.text,
+                    //                 fontSize: 20,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           GestureDetector(
+                    //             onTap: () => setState(() => quantity++),
+                    //             child: Container(
+                    //               padding: EdgeInsets.all(4),
+                    //               decoration: BoxDecoration(
+                    //                 borderRadius: BorderRadius.circular(4),
+                    //                 color: AppColors.primary,
+                    //               ),
+                    //               child: Icon(
+                    //                 Icons.add,
+                    //                 color: Colors.white,
+                    //                 size: 16,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ],
+                    // ),
                     SizedBox(height: 30),
 
                     // تعديل زر إضافة للسلة مع إظهار ملاحظة في وضع الضيف

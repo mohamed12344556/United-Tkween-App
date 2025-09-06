@@ -84,6 +84,7 @@ class _UnitedFormationAppState extends State<UnitedFormationApp> {
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
+              locale: const Locale('ar'),
               supportedLocales: S.delegate.supportedLocales,
               initialRoute: getInitialRoute(),
               onGenerateRoute: widget.appRouter.generateRoute,

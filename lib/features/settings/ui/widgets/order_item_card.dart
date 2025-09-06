@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
@@ -458,8 +460,9 @@ class OrderItemCard extends StatelessWidget {
 
           if (order.description != null) ...[
             SizedBox(height: isResponsive ? 8.h : 8),
+
             Text(
-              order.description!,
+              order.description!.convertBookTypeToArabic(),
               style: TextStyle(
                 fontSize: descriptionFontSize,
                 color: AppColors.text.withOpacity(0.7),

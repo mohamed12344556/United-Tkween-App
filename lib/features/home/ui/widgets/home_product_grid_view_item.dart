@@ -308,7 +308,7 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                           Row(
                             children: [
                               Text(
-                                'PDF: ',
+                                'الكتروني: ',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -333,7 +333,7 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                           Row(
                             children: [
                               Text(
-                                'Paper: ',
+                                'ورقي: ',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,

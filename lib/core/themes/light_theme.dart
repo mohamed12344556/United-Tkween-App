@@ -111,7 +111,7 @@ final ThemeData lightTheme = ThemeData(
     trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
   ),
   // Bottom App Bar:
-  bottomAppBarTheme: const BottomAppBarTheme(
+  bottomAppBarTheme: const BottomAppBarThemeData(
     color: Colors.white,
     elevation: 8,
     shadowColor: Colors.black12,

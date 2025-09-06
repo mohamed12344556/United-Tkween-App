@@ -356,6 +356,25 @@ extension NullOrEmpty on String? {
   bool isNullOrEmpty() => this == null || this == "";
 }
 
+extension ConvertBookTypeToArabic on String? {
+  String convertBookTypeToArabic() {
+    switch (this) {
+      case 'Pdf':
+      case 'PDF':
+        return 'الكتروني';
+      case 'Paper':
+      case 'paper':
+        return 'ورقي';
+      case 'طلب من التطبيق - PDF':
+        return 'طلب من التطبيق الكتروني';
+      case 'طلب من التطبيق - Paper':
+        return 'طلب من التطبيق الورقي';
+      default:
+        return this!;
+    }
+  }
+}
+
 extension ListExtension<T> on List<T>? {
   bool isNullOrEmpty() => this == null || this!.isEmpty;
 }
