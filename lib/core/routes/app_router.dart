@@ -44,7 +44,7 @@ import '../../features/settings/ui/cubits/support/support_cubit.dart';
 import '../../features/settings/ui/views/edit_profile_view.dart';
 import '../../features/settings/ui/views/support_view.dart';
 import '../../features/splash/splash_screen.dart';
-import '../app_links.dart';
+import '../app_links/app_links.dart';
 import 'routes.dart';
 
 final sl = GetIt.instance;
@@ -216,8 +216,9 @@ class AppRouter {
         return MaterialPageRoute(
           settings: settings,
           builder:
-              (_) =>
-                  ConnectionWrapper(child: ProductDetailsPage(book: bookModel)),
+              (_) => ConnectionWrapper(
+                child: ProductDetailsPage(bookId: bookModel.id),
+              ),
         );
 
       case Routes.cartView:

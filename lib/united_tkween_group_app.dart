@@ -136,6 +136,8 @@ import 'core/themes/cubit/theme_cubit.dart';
 import 'generated/l10n.dart';
 import 'dart:async';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class UnitedFormationApp extends StatefulWidget {
   final AppRouter appRouter;
 
@@ -172,19 +174,19 @@ class _UnitedFormationAppState extends State<UnitedFormationApp> {
     }
   }
 
-  String getInitialRoute() {
-    final isLoggedIn = Prefs.getData(key: StorageKeys.isLoggedIn);
-    log("------------------------$isLoggedIn----------------------");
-
-    if (isLoggedIn == true) {
-      log("------------------------User is logged in----------------------");
-      final token = Prefs.getData(key: StorageKeys.accessToken);
-      DioFactory.setTokenIntoHeader(token);
-      return Routes.hostView;
-    } else {
-      return Routes.loginView;
-    }
-  }
+  // String getInitialRoute() {
+  //   final isLoggedIn = Prefs.getData(key: StorageKeys.isLoggedIn);
+  //   log("------------------------$isLoggedIn----------------------");
+  //
+  //   if (isLoggedIn == true) {
+  //     log("------------------------User is logged in----------------------");
+  //     final token = Prefs.getData(key: StorageKeys.accessToken);
+  //     DioFactory.setTokenIntoHeader(token);
+  //     return Routes.hostView;
+  //   } else {
+  //     return Routes.loginView;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

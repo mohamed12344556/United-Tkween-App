@@ -2,12 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:united_formation_app/features/home/data/book_model.dart';
 import 'package:united_formation_app/features/home/ui/pages/host_screen.dart';
 import 'package:united_formation_app/features/auth/ui/pages/login_page.dart';
+import '../../core/api/dio_factory.dart';
 import '../../core/api/dio_services.dart';
-import '../../core/app_links.dart';
-import '../../core/routes/routes.dart';
+import '../../core/app_links/app_links.dart';
+import '../../core/app_links/deep_link_manager.dart';
+import '../../core/utilities/storage_keys.dart';
 import '../../core/widgets/connection_wrapper.dart';
 import '../auth/ui/cubits/login/login_cubit.dart';
 import '../home/ui/pages/product_details_page.dart';
@@ -34,9 +35,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _handleNavigation() async {
-    final isAlreadyLogin = Prefs.getData(key: Constants.isAlreadyLogin);
-    final userToken = Prefs.getData(key: Constants.userToken) as String?;
-
+    final isAlreadyLogin = Prefs.getData(key: StorageKeys.isLoggedIn);
+    final userToken = Prefs.getData(key: StorageKeys.accessToken) as String?;
+    DioFactory.setTokenIntoHeader(userToken ?? "");
     final isLoggedIn =
         isAlreadyLogin == true && userToken != null && userToken.isNotEmpty;
 
@@ -79,24 +80,12 @@ class _SplashScreenState extends State<SplashScreen> {
                   //     ),
                   //   ),
                   // ),
-                  (_) => ProductDetailsPage(
-                    book: BookModel(
-                      id: productId,
-                      title: 'Flutter Mastery Guide',
-                      imageUrl:
-                          'https://tkweenstore.com/images/flutter_book.jpg',
-                      price: "299.0",
-                      pdfPrice: "149.0",
-                      bookType: 'Programming',
-                      category: Category(
-                        nameAr: "مصر ام الدنيا",
-                        nameEn: "Egypt",
-                      ),
-                    ),
-                  ),
+                  (_) => ProductDetailsPage(bookId: productId),
             ),
           );
         } else {
+          DeepLinkManager.setPendingChallenge(productId);
+
           // ❌ Not logged in → go to Login using same AppRouter style
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
@@ -222,13 +211,6 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ],
         ),
-
-        // Option 3: Use Lottie animation
-        // Add lottie: ^2.7.0 to pubspec.yaml
-        // child: Lottie.asset(
-        //   'assets/animations/splash.json',
-        //   fit: BoxFit.cover,
-        // ),
       ),
     );
   }

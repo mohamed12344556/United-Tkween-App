@@ -34,3 +34,20 @@ final class HomeCategoriesFailureState extends HomeState {
 
   HomeCategoriesFailureState(this.errorMessage);
 }
+
+// Loading State
+class BookDetailsLoadingState extends HomeState {}
+
+// Success State
+class BookDetailsSuccessState extends HomeState {
+  final BookModel book;
+
+  BookDetailsSuccessState({required this.book});
+}
+
+// Failure State
+class BookDetailsFailureState extends HomeState {
+  final String errorMessage;
+
+  BookDetailsFailureState(this.errorMessage);
+}
