@@ -43,14 +43,44 @@ import '../../features/settings/ui/cubits/profile/profile_cubit.dart';
 import '../../features/settings/ui/cubits/support/support_cubit.dart';
 import '../../features/settings/ui/views/edit_profile_view.dart';
 import '../../features/settings/ui/views/support_view.dart';
+import '../../features/splash/splash_screen.dart';
+import '../app_links.dart';
 import 'routes.dart';
 
 final sl = GetIt.instance;
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
+    final name = settings.name;
     final arguments = settings.arguments;
+
+    // Log navigation for debugging
+    print('🚀 Navigating to: $name with args: $arguments');
+
+    // Handle Deep Links FIRST
+    if (name != null && AppLinksHandler.isDeepLink(name)) {
+      final productId = AppLinksHandler.extractProductId(name);
+
+      if (productId != null) {
+        // Return splash screen that will handle the deep link
+        return MaterialPageRoute(
+          builder: (_) => SplashScreen(initialLink: name),
+        );
+      } else {
+        // Invalid deep link, redirect to splash
+        return MaterialPageRoute(
+          builder: (_) => SplashScreen(initialLink: null),
+        );
+      }
+    }
+
     switch (settings.name) {
+      case Routes.splashView:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => SplashScreen(initialLink: null),
+        );
+
       case Routes.loginView:
         return MaterialPageRoute(
           settings: settings,

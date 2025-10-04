@@ -1,4 +1,5 @@
 class Routes {
+  static const String splashView = "/splash-view";
   static const String homeView = "/home";
 
   // Profile routes
