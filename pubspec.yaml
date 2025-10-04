@@ -8,6 +8,7 @@ environment:
   sdk: ^3.7.0
 
 dependencies:
+  app_links: ^6.4.1
   benefit_pay_flutter: ^1.0.1
   cached_network_image: ^3.4.1
   card_flutter: ^1.0.15

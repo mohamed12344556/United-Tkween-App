@@ -45,6 +45,20 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Deep Link Intent Filter for Product Sharing -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="tkweenstore.com" />
+            </intent-filter>
+            <!-- Custom scheme deep links -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tkween" />
+            </intent-filter>
         </activity>
         
     <activity android:name="com.facebook.FacebookActivity"
@@ -67,6 +81,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data 
+            android:name="flutter_deeplinking_enabled"
+            android:value="true" />
         
         <!-- Added to disable Impeller -->
         <meta-data 

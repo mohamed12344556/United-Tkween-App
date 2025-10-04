@@ -10,6 +10,7 @@ import 'package:united_formation_app/features/settings/data/datasources/hive_mod
 import 'core/api/dio_services.dart';
 import 'core/core.dart';
 import 'core/routes/app_router.dart';
+import 'core/services/deep_link_service.dart';
 import 'features/auth/ui/pages/user_model.dart';
 import 'features/cart/data/models/cart_model.dart';
 import 'features/home/data/book_model.dart';
@@ -69,6 +70,10 @@ Future<void> main() async {
   // final bool hasValidSession = await TokenManager.hasValidTokens();
   // log('Main - AppState.isLoggedIn: ${AppState.isLoggedIn}');
   await ScreenUtil.ensureScreenSize();
+
+  // Initialize Deep Link Service
+  await DeepLinkService.initialize();
+
   runApp(
     UnitedFormationApp(
       appRouter: AppRouter(),
@@ -87,42 +92,3 @@ Future<void> main() async {
 
 // email: m7@gmail.com
 // password: 123456789@mA
-
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:flutter/material.dart';
-//
-// // في الويدجت الخاص بك
-// Widget buildCategoryItem(Map<String, dynamic> category) {
-//   // تحويل سلسلة الأيقونة إلى IconData المناسب
-//   IconData getIconData(String iconString) {
-//     // إزالة "fas " من بداية السلسلة
-//     String iconName = iconString.replaceAll('fas fa-', '');
-//
-//     // تحديد الأيقونة بناءً على الاسم
-//     switch (iconName) {
-//       case 'utensils':
-//         return FontAwesomeIcons.utensils;
-//     // أضف المزيد من الحالات للأيقونات الأخرى
-//       default:
-//         return FontAwesomeIcons.book; // أيقونة افتراضية
-//     }
-//   }
-//
-//   return Card(
-//     child: ListTile(
-//       leading: FaIcon(
-//         getIconData(category['icon']),
-//         color: Colors.orange,
-//         size: 24,
-//       ),
-//       title: Text(
-//         Localizations.localeOf(context).languageCode == 'ar'
-//             ? category['name_ar']
-//             : category['name_en'],
-//       ),
-//       onTap: () {
-//         // التنقل إلى صفحة الفئة أو أي إجراء آخر
-//       },
-//     ),
-//   );
-// }

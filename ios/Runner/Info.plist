@@ -65,7 +65,27 @@
 					<string>fb2039511746475921</string>
 				</array>
 			</dict>
+			<dict>
+				<key>CFBundleURLName</key>
+				<string>tkween.app.deeplink</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>tkween</string>
+				</array>
+			</dict>
+			<dict>
+				<key>CFBundleURLName</key>
+				<string>tkweenstore.com</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>https</string>
+				</array>
+			</dict>
 		</array>
+
+		<key>FlutterDeepLinkingEnabled</key>
+		<true/>
+
 		<key>FacebookAppID</key>
 		<string>2039511746475921</string>
 		<key>FacebookClientToken</key>

@@ -468,6 +468,7 @@ import 'package:united_formation_app/core/core.dart';
 import 'package:united_formation_app/core/helper/format_double_number.dart';
 import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
+import '../../../../core/services/deep_link_service.dart';
 import '../../../../generated/l10n.dart';
 import '../../../cart/data/models/cart_model.dart';
 import '../../data/book_model.dart';
@@ -536,8 +537,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
   // دالة إنشاء رابط المنتج
   String _generateProductLink() {
-    // يمكنك تخصيص الرابط حسب بنية موقعك
-    return 'https://tkweenstore.com/product/${widget.book.id}';
+    // استخدام deep link بدلاً من HTTP link
+    return DeepLinkService.generateProductLink(
+      widget.book.id.toString(),
+      productName: widget.book.title,
+    );
   }
 
   // دالة نسخ الرابط
