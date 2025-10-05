@@ -236,6 +236,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/core/core.dart';
+import 'package:united_formation_app/features/home/ui/pages/product_details_page.dart';
+import '../../../../core/app_links/deep_link_manager.dart';
+import '../../../../united_tkween_group_app.dart';
+import '../../../home/ui/pages/host_screen.dart';
 import '../../data/services/guest_mode_manager.dart';
 import '../cubits/login/login_cubit.dart';
 import '../widgets/auth_header.dart';
@@ -266,7 +270,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // تسجيل الدخول كضيف
   Future<void> _loginAsGuest() async {
     if (_isGuestLoginLoading) return;
 
@@ -325,21 +328,29 @@ class _LoginPageState extends State<LoginPage> {
     final isDark = context.isDarkMode;
 
     return BlocConsumer<LoginCubit, LoginState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is LoginSuccess) {
-          if (mounted) {
-            context.showSuccessSnackBar(context.localeS.login_successful);
-            Future.microtask(() {
-              if (mounted) {
-                Navigator.of(
-                  context,
-                ).pushNamedAndRemoveUntil(Routes.hostView, (route) => false);
-              }
-            });
-          }
-        } else if (state is LoginError) {
-          if (mounted) {
-            context.showErrorSnackBar(state.errorMessage.errorMessage!);
+          print("✅ Login successful, checking pending deep link...");
+
+          final pendingId = DeepLinkManager.consumePendingChallenge();
+          print("📦 Consumed pending ID after login: $pendingId");
+
+          if (pendingId != null) {
+            print("🚀 Opening product from deep link after login...");
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => HostPage()),
+              (route) => false,
+            );
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => ProductDetailsPage(bookId: pendingId),
+              ),
+            );
+          } else {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => HostPage()),
+              (route) => false,
+            );
           }
         }
       },

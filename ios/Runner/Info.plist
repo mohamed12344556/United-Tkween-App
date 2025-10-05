@@ -102,5 +102,12 @@
 			<string>sms</string>
 			<string>tel</string>
 		</array>
+
+			<!-- Universal Links (App Links) -->
+        	<key>com.apple.developer.associated-domains</key>
+        	<array>
+        		<string>applinks:tkweenstore.com</string>
+        		<string>applinks:www.tkweenstore.com</string>
+        	</array>
 	</dict>
 </plist>

@@ -177,6 +177,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:united_formation_app/core/core.dart';
 import '../../../../generated/l10n.dart';
 import '../../data/book_model.dart';
@@ -263,6 +264,45 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                       isFavorite ? Icons.favorite : Icons.favorite_border,
                       color: AppColors.primary,
                       size: 20,
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      final link =
+                          "https://tkweenstore.com/product/${widget.book.id}";
+                      var locale = S.of(context);
+
+                      SharePlus.instance.share(
+                        ShareParams(
+                          text: link,
+                          // subject: subject,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(4),
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.share,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
