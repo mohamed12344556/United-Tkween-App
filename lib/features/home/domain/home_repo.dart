@@ -6,4 +6,5 @@ import '../data/categories_model.dart';
 abstract class HomeRepo {
   Future<Either<Failure, List<BookModel>>> getHomeBooks();
   Future<Either<Failure, List<CategoryModel>>> getBooksCategories();
+  Future<Either<Failure, BookModel>> getBookById(String bookId);
 }

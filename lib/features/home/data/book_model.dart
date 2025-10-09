@@ -9,17 +9,16 @@ class BooksResponse {
   final String status;
   final List<BookModel> books;
 
-  BooksResponse({
-    required this.status,
-    required this.books,
-  });
+  BooksResponse({required this.status, required this.books});
 
   factory BooksResponse.fromJson(Map<String, dynamic> json) {
     return BooksResponse(
       status: json['status'] ?? '',
-      books: (json['books'] as List<dynamic>?)
-          ?.map((book) => BookModel.fromJson(book))
-          .toList() ?? [],
+      books:
+          (json['books'] as List<dynamic>?)
+              ?.map((book) => BookModel.fromJson(book))
+              .toList() ??
+          [],
     );
   }
 
@@ -53,7 +52,7 @@ class BookModel extends HiveObject {
 
   @HiveField(6)
   final Category category;
-  
+
   @HiveField(7)
   final String description;
 
@@ -106,6 +105,7 @@ class BookModel extends HiveObject {
     };
   }
 }
+
 @HiveType(typeId: 2)
 class Category extends HiveObject {
   @HiveField(0)
@@ -114,10 +114,7 @@ class Category extends HiveObject {
   @HiveField(1)
   final String nameEn;
 
-  Category({
-    required this.nameAr,
-    required this.nameEn,
-  });
+  Category({required this.nameAr, required this.nameEn});
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
@@ -127,9 +124,6 @@ class Category extends HiveObject {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'name_ar': nameAr,
-      'name_en': nameEn,
-    };
+    return {'name_ar': nameAr, 'name_en': nameEn};
   }
 }

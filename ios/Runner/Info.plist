@@ -1,113 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-	<dict>
-		<key>CFBundleDevelopmentRegion</key>
-		<string>$(DEVELOPMENT_LANGUAGE)</string>
-		<key>CFBundleDisplayName</key>
-		<string>Tkween</string>
-		<key>CFBundleExecutable</key>
-		<string>$(EXECUTABLE_NAME)</string>
-		<key>CFBundleIdentifier</key>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-		<key>CFBundleInfoDictionaryVersion</key>
-		<string>6.0</string>
-		<key>CFBundleName</key>
-		<string>Tkween</string>
-		<key>CFBundlePackageType</key>
-		<string>APPL</string>
-		<key>CFBundleShortVersionString</key>
-		<string>$(FLUTTER_BUILD_NAME)</string>
-		<key>CFBundleSignature</key>
-		<string>????</string>
-		<key>CFBundleVersion</key>
-		<string>$(FLUTTER_BUILD_NUMBER)</string>
-		<key>LSRequiresIPhoneOS</key>
-		<true/>
-		<key>UILaunchStoryboardName</key>
-		<string>LaunchScreen</string>
-		<key>UIMainStoryboardFile</key>
-		<string>Main</string>
-		<key>UISupportedInterfaceOrientations</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-			<string>UIInterfaceOrientationLandscapeLeft</string>
-			<string>UIInterfaceOrientationLandscapeRight</string>
-		</array>
-		<key>UISupportedInterfaceOrientations~ipad</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-			<string>UIInterfaceOrientationPortraitUpsideDown</string>
-			<string>UIInterfaceOrientationLandscapeLeft</string>
-			<string>UIInterfaceOrientationLandscapeRight</string>
-		</array>
-		<key>CADisableMinimumFrameDurationOnPhone</key>
-		<true/>
-		<key>UIApplicationSupportsIndirectInputEvents</key>
-		<true/>
-		<key>CFBundleLocalizations</key>
-		<array>
-			<string>en</string>
-			<string>ar</string>
-		</array>
-		<!-- إضافة أذونات الوصول إلى الكاميرا والمعرض -->
-		<key>NSCameraUsageDescription</key>
-		<string>نحتاج إلى الوصول إلى الكاميرا لالتقاط الصور والفيديوهات.</string>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>نحتاج إلى الوصول إلى المعرض لعرض الصور والفيديوهات.</string>
-		<key>UIStatusBarHidden</key>
-		<false/>
-		<key>CFBundleURLTypes</key>
-		<array>
-			<dict>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>fb2039511746475921</string>
-				</array>
-			</dict>
-			<dict>
-				<key>CFBundleURLName</key>
-				<string>tkween.app.deeplink</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>tkween</string>
-				</array>
-			</dict>
-			<dict>
-				<key>CFBundleURLName</key>
-				<string>tkweenstore.com</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>https</string>
-				</array>
-			</dict>
-		</array>
+    <dict>
+        <key>CFBundleDevelopmentRegion</key>
+        <string>$(DEVELOPMENT_LANGUAGE)</string>
+        <key>CFBundleDisplayName</key>
+        <string>Tkween</string>
+        <key>CFBundleExecutable</key>
+        <string>$(EXECUTABLE_NAME)</string>
+        <key>CFBundleIdentifier</key>
+        <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+        <key>CFBundleInfoDictionaryVersion</key>
+        <string>6.0</string>
+        <key>CFBundleName</key>
+        <string>Tkween</string>
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+        <key>CFBundleShortVersionString</key>
+        <string>$(FLUTTER_BUILD_NAME)</string>
+        <key>CFBundleSignature</key>
+        <string>????</string>
+        <key>CFBundleVersion</key>
+        <string>$(FLUTTER_BUILD_NUMBER)</string>
+        <key>LSRequiresIPhoneOS</key>
+        <true/>
+        <key>UILaunchStoryboardName</key>
+        <string>LaunchScreen</string>
+        <key>UIMainStoryboardFile</key>
+        <string>Main</string>
+        <key>UISupportedInterfaceOrientations</key>
+        <array>
+            <string>UIInterfaceOrientationPortrait</string>
+            <string>UIInterfaceOrientationLandscapeLeft</string>
+            <string>UIInterfaceOrientationLandscapeRight</string>
+        </array>
+        <key>UISupportedInterfaceOrientations~ipad</key>
+        <array>
+            <string>UIInterfaceOrientationPortrait</string>
+            <string>UIInterfaceOrientationPortraitUpsideDown</string>
+            <string>UIInterfaceOrientationLandscapeLeft</string>
+            <string>UIInterfaceOrientationLandscapeRight</string>
+        </array>
+        <key>CADisableMinimumFrameDurationOnPhone</key>
+        <true/>
+        <key>UIApplicationSupportsIndirectInputEvents</key>
+        <true/>
+        <key>CFBundleLocalizations</key>
+        <array>
+            <string>en</string>
+            <string>ar</string>
+        </array>
 
-		<key>FlutterDeepLinkingEnabled</key>
-		<true/>
+        <!-- Camera and Photo Library Permissions -->
+        <key>NSCameraUsageDescription</key>
+        <string>نحتاج إلى الوصول إلى الكاميرا لالتقاط الصور والفيديوهات.</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>نحتاج إلى الوصول إلى المعرض لعرض الصور والفيديوهات.</string>
 
-		<key>FacebookAppID</key>
-		<string>2039511746475921</string>
-		<key>FacebookClientToken</key>
-		<string>37dfc9867a3ef87cf98f81b9520ec4e5</string>
-		<key>FacebookDisplayName</key>
-		<string>United Tkween Group</string>
-		<key>LSApplicationQueriesSchemes</key>
-		<array>
-			<string>fbapi</string>
-			<string>fb-messenger-share-api</string>
-		</array>
-		<key>LSApplicationQueriesSchemes</key>
-		<array>
-			<string>sms</string>
-			<string>tel</string>
-		</array>
+        <key>UIStatusBarHidden</key>
+        <false/>
 
-			<!-- Universal Links (App Links) -->
-        	<key>com.apple.developer.associated-domains</key>
-        	<array>
-        		<string>applinks:tkweenstore.com</string>
-        		<string>applinks:www.tkweenstore.com</string>
-        	</array>
-	</dict>
+        <!-- URL Types for Deep Linking -->
+        <key>CFBundleURLTypes</key>
+        <array>
+            <!-- Facebook URL Scheme -->
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>fb2039511746475921</string>
+                </array>
+            </dict>
+            <!-- Custom Deep Link Scheme: tkween://book -->
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleURLName</key>
+                <string>com.tkween.deeplink</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>tkween</string>
+                </array>
+            </dict>
+        </array>
+
+        <!-- Flutter Deep Linking -->
+        <key>FlutterDeepLinkingEnabled</key>
+        <true/>
+
+        <!-- Facebook Configuration -->
+        <key>FacebookAppID</key>
+        <string>2039511746475921</string>
+        <key>FacebookClientToken</key>
+        <string>37dfc9867a3ef87cf98f81b9520ec4e5</string>
+        <key>FacebookDisplayName</key>
+        <string>United Tkween Group</string>
+
+        <!-- Query Schemes (FIXED: Merged duplicate keys) -->
+        <key>LSApplicationQueriesSchemes</key>
+        <array>
+            <string>fbapi</string>
+            <string>fb-messenger-share-api</string>
+            <string>sms</string>
+            <string>tel</string>
+        </array>
+
+        <!-- Universal Links (App Links) -->
+        <key>com.apple.developer.associated-domains</key>
+        <array>
+            <string>applinks:tkweenstore.com</string>
+            <string>applinks:www.tkweenstore.com</string>
+        </array>
+    </dict>
 </plist>

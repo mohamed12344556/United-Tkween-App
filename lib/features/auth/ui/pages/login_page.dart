@@ -236,6 +236,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/core/core.dart';
+import 'package:united_formation_app/features/home/ui/cubit/home_cubit.dart';
 import 'package:united_formation_app/features/home/ui/pages/product_details_page.dart';
 import '../../../../core/app_links/deep_link_manager.dart';
 import '../../../../united_tkween_group_app.dart';
@@ -338,7 +339,13 @@ class _LoginPageState extends State<LoginPage> {
           if (pendingId != null) {
             print("🚀 Opening product from deep link after login...");
             Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (_) => HostPage()),
+              MaterialPageRoute(
+                builder:
+                    (_) => BlocProvider(
+                      create: (context) => sl<HomeCubit>(),
+                      child: HostPage(),
+                    ),
+              ),
               (route) => false,
             );
             Navigator.of(context).push(

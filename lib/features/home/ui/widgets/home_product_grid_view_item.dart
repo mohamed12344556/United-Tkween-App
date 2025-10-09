@@ -179,6 +179,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:united_formation_app/core/core.dart';
+import '../../../../core/app_links/app_links.dart';
 import '../../../../generated/l10n.dart';
 import '../../data/book_model.dart';
 import 'products_grid_view_banner.dart';
@@ -273,16 +274,13 @@ class _HomeProductsGridViewItemState extends State<HomeProductsGridViewItem> {
                   top: 0,
                   child: GestureDetector(
                     onTap: () {
-                      final link =
-                          "https://tkweenstore.com/product/${widget.book.id}";
-                      var locale = S.of(context);
-
-                      SharePlus.instance.share(
-                        ShareParams(
-                          text: link,
-                          // subject: subject,
-                        ),
+                      final link = AppLinksHandler.generateProductLink(
+                        widget.book.id.toString(),
                       );
+
+                      // final link =
+                      // 'https://tkweenstore.com/api/get_book.php/${widget.book.id}';
+                      Share.share(link);
                     },
                     child: Container(
                       padding: EdgeInsets.all(4),

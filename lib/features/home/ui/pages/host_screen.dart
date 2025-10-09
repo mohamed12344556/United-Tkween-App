@@ -9,14 +9,14 @@
 // import 'home_page.dart';
 // import 'package:united_formation_app/features/cart/presentation/pages/cart_page.dart';
 
-// class HostPage extends StatefulWidget {
-//   const HostPage({super.key});
+// class HostPageContent extends StatefulWidget {
+//   const HostPageContent({super.key});
 
 //   @override
-//   State<HostPage> createState() => _HostPageState();
+//   State<HostPageContent> createState() => _HostPageContentState();
 // }
 
-// class _HostPageState extends State<HostPage> {
+// class _HostPageContentState extends State<HostPageContent> {
 //   int _selectedIndex = 0;
 //   bool _isGuest = false;
 
@@ -145,22 +145,37 @@
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:united_formation_app/features/auth/data/services/guest_mode_manager.dart';
 import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
 import 'package:united_formation_app/features/favorites/presentation/views/favorites_view.dart';
 import 'package:united_formation_app/features/settings/ui/views/settings_view.dart';
+import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/themes/app_colors.dart';
+import '../cubit/home_cubit.dart';
 import 'home_page.dart';
 import 'package:united_formation_app/features/cart/presentation/pages/cart_page.dart';
 
-class HostPage extends StatefulWidget {
+class HostPage extends StatelessWidget {
   const HostPage({super.key});
 
   @override
-  State<HostPage> createState() => _HostPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: sl<HomeCubit>()..getHomeBooks(),
+      child: HostPageContent(),
+    );
+  }
 }
 
-class _HostPageState extends State<HostPage> {
+class HostPageContent extends StatefulWidget {
+  const HostPageContent({super.key});
+
+  @override
+  State<HostPageContent> createState() => _HostPageContentState();
+}
+
+class _HostPageContentState extends State<HostPageContent> {
   int _selectedIndex = 0;
   bool _isGuest = false;
 

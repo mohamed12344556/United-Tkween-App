@@ -51,3 +51,18 @@ class BookDetailsFailureState extends HomeState {
 
   BookDetailsFailureState(this.errorMessage);
 }
+
+// Add these to your home_state.dart file
+class BookDetailLoadingState extends HomeState {}
+
+class BookDetailSuccessState extends HomeState {
+  final BookModel book;
+
+  BookDetailSuccessState(this.book);
+}
+
+class BookDetailFailureState extends HomeState {
+  final String errorMessage;
+
+  BookDetailFailureState(this.errorMessage);
+}

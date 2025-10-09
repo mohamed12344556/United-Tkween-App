@@ -1,10 +1,13 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:united_formation_app/core/utilities/app_version_manager.dart';
+import 'package:united_formation_app/features/home/domain/home_repo_impl.dart';
+import 'package:united_formation_app/features/home/ui/cubit/home_cubit.dart';
 import 'core/api/dio_services.dart';
 import 'core/core.dart';
 import 'core/routes/app_router.dart';
@@ -190,8 +193,15 @@ class _UnitedFormationAppState extends State<UnitedFormationApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ThemeCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => ThemeCubit()),
+        // BlocProvider(
+        //   create:
+        //       (context) =>
+        //           HomeCubit(homeRepo: HomeRepoImpl(dioService: DioService())),
+        // ),
+      ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, state) {
           return ScreenUtilInit(
