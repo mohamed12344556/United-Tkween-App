@@ -1,113 +1,192 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-	<dict>
-		<key>CFBundleDevelopmentRegion</key>
-		<string>$(DEVELOPMENT_LANGUAGE)</string>
-		<key>CFBundleDisplayName</key>
-		<string>Tkween</string>
-		<key>CFBundleExecutable</key>
-		<string>$(EXECUTABLE_NAME)</string>
-		<key>CFBundleIdentifier</key>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-		<key>CFBundleInfoDictionaryVersion</key>
-		<string>6.0</string>
-		<key>CFBundleName</key>
-		<string>Tkween</string>
-		<key>CFBundlePackageType</key>
-		<string>APPL</string>
-		<key>CFBundleShortVersionString</key>
-		<string>$(FLUTTER_BUILD_NAME)</string>
-		<key>CFBundleSignature</key>
-		<string>????</string>
-		<key>CFBundleVersion</key>
-		<string>$(FLUTTER_BUILD_NUMBER)</string>
-		<key>LSRequiresIPhoneOS</key>
-		<true/>
-		<key>UILaunchStoryboardName</key>
-		<string>LaunchScreen</string>
-		<key>UIMainStoryboardFile</key>
-		<string>Main</string>
-		<key>UISupportedInterfaceOrientations</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-			<string>UIInterfaceOrientationLandscapeLeft</string>
-			<string>UIInterfaceOrientationLandscapeRight</string>
-		</array>
-		<key>UISupportedInterfaceOrientations~ipad</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-			<string>UIInterfaceOrientationPortraitUpsideDown</string>
-			<string>UIInterfaceOrientationLandscapeLeft</string>
-			<string>UIInterfaceOrientationLandscapeRight</string>
-		</array>
-		<key>CADisableMinimumFrameDurationOnPhone</key>
-		<true/>
-		<key>UIApplicationSupportsIndirectInputEvents</key>
-		<true/>
-		<key>CFBundleLocalizations</key>
-		<array>
-			<string>en</string>
-			<string>ar</string>
-		</array>
-		<!-- إضافة أذونات الوصول إلى الكاميرا والمعرض -->
-		<key>NSCameraUsageDescription</key>
-		<string>نحتاج إلى الوصول إلى الكاميرا لالتقاط الصور والفيديوهات.</string>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>نحتاج إلى الوصول إلى المعرض لعرض الصور والفيديوهات.</string>
-		<key>UIStatusBarHidden</key>
-		<false/>
-		<key>CFBundleURLTypes</key>
-		<array>
-			<dict>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>fb2039511746475921</string>
-				</array>
-			</dict>
-			<dict>
-				<key>CFBundleURLName</key>
-				<string>tkween.app.deeplink</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>tkween</string>
-				</array>
-			</dict>
-			<dict>
-				<key>CFBundleURLName</key>
-				<string>tkweenstore.com</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>https</string>
-				</array>
-			</dict>
-		</array>
-
-		<key>FlutterDeepLinkingEnabled</key>
-		<true/>
-
-		<key>FacebookAppID</key>
-		<string>2039511746475921</string>
-		<key>FacebookClientToken</key>
-		<string>37dfc9867a3ef87cf98f81b9520ec4e5</string>
-		<key>FacebookDisplayName</key>
-		<string>United Tkween Group</string>
-		<key>LSApplicationQueriesSchemes</key>
-		<array>
-			<string>fbapi</string>
-			<string>fb-messenger-share-api</string>
-		</array>
-		<key>LSApplicationQueriesSchemes</key>
-		<array>
-			<string>sms</string>
-			<string>tel</string>
-		</array>
-
-			<!-- Universal Links (App Links) -->
-        	<key>com.apple.developer.associated-domains</key>
-        	<array>
-        		<string>applinks:tkweenstore.com</string>
-        		<string>applinks:www.tkweenstore.com</string>
-        	</array>
-	</dict>
+<dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Tkween</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ar</string>
+	</array>
+	<key>CFBundleName</key>
+	<string>Tkween</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<!-- URL Schemes: Enable deep linking and app integration
+		 These URL schemes allow the Tkween app to:
+		 - Handle deep links from external sources
+		 - Support social media authentication (Facebook)
+		 - Enable product sharing and referral links
+		 - Process payment callbacks and redirects
+		 - Support universal links for seamless user experience -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<!-- Facebook App Integration: Enables Facebook login and sharing
+			 This scheme allows the app to:
+			 - Authenticate users through Facebook login
+			 - Share products and content on Facebook
+			 - Handle Facebook SDK callbacks
+			 - Enable social media integration features -->
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb2039511746475921</string>
+			</array>
+		</dict>
+		<!-- Custom App Scheme: Enables direct app-to-app communication
+			 This scheme allows the app to:
+			 - Handle custom deep links (tkween://)
+			 - Process product sharing links
+			 - Enable direct navigation to specific app sections
+			 - Support QR code scanning and NFC interactions -->
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>tkween.app.deeplink</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>tkween</string>
+			</array>
+		</dict>
+		<!-- HTTPS Universal Links: Enables web-to-app deep linking
+			 This scheme allows the app to:
+			 - Handle universal links from tkweenstore.com
+			 - Process product page links from web browsers
+			 - Enable seamless transition from web to app
+			 - Support marketing campaigns and email links -->
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>tkweenstore.com</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>https</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<!-- Facebook SDK Configuration: Enables social media integration
+		 These settings allow the Tkween app to:
+		 - Authenticate users through Facebook login
+		 - Share products and content on Facebook
+		 - Enable social media marketing features
+		 - Provide seamless social authentication
+		 - Support Facebook analytics and insights -->
+	<key>FacebookAppID</key>
+	<string>2039511746475921</string>
+	<key>FacebookClientToken</key>
+	<string>37dfc9867a3ef87cf98f81b9520ec4e5</string>
+	<key>FacebookDisplayName</key>
+	<string>United Tkween Group</string>
+	<!-- Flutter Deep Linking: Enables advanced navigation and routing
+		 This setting allows the Tkween app to:
+		 - Handle complex deep link routing
+		 - Support dynamic navigation based on URLs
+		 - Enable advanced app state management
+		 - Provide seamless user experience across app sections -->
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
+	<!-- Application Query Schemes: Enable communication with other apps
+		 These schemes allow the Tkween app to:
+		 - Detect and interact with SMS apps for:
+		   * SMS-based authentication and verification
+		   * Sharing product links via SMS
+		   * Customer support via SMS
+		   * Order confirmation and updates via SMS
+		 - Detect and interact with phone apps for:
+		   * Click-to-call functionality for customer support
+		   * Direct calling to sellers and support
+		   * Phone number sharing and contact features
+		   * Emergency contact and support calls -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>sms</string>
+		<string>tel</string>
+	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>نحتاج إلى الوصول إلى الكاميرا لالتقاط الصور والفيديوهات للمنتجات، وتوثيق الطلبات، وتقديم الدعم الفني، ومشاركة المحتوى المرئي مع العملاء والبائعين في منصة تكوين.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>نحتاج إلى الوصول إلى المعرض لاختيار وعرض الصور والفيديوهات للمنتجات، وتحميل المحتوى المرئي، ومشاركة الصور مع العملاء، وإدارة معرض المنتجات في منصة تكوين.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<!-- Background Modes: Enable app functionality when not actively in use
+		 fetch: Allows the app to fetch data in the background for:
+		 - Syncing product updates and inventory changes
+		 - Updating user cart and wishlist data
+		 - Refreshing order status and delivery updates
+		 - Downloading product images and content
+		 - Syncing user preferences and settings
+		 
+		 remote-notification: Enables push notifications for:
+		 - Order status updates and delivery notifications
+		 - New product alerts and promotional offers
+		 - Chat messages from sellers and support
+		 - Price drop alerts for saved items
+		 - System updates and maintenance notifications -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<!-- Supported Interface Orientations: Define app display orientations
+		 iPhone orientations allow the Tkween app to:
+		 - Display in portrait mode for optimal product browsing
+		 - Support landscape mode for better product image viewing
+		 - Enable flexible user experience based on device orientation
+		 - Provide comfortable viewing angles for all users
+		 
+		 iPad orientations provide additional flexibility for:
+		 - Portrait and upside-down portrait for tablet users
+		 - Landscape orientations for enhanced product comparison
+		 - Better utilization of larger screen real estate
+		 - Improved user experience on tablet devices -->
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<!-- Associated Domains: Enable Universal Links for seamless web-to-app experience
+		 These domains allow the Tkween app to:
+		 - Handle deep links from tkweenstore.com website
+		 - Process product page links from web browsers
+		 - Enable seamless transition from web to mobile app
+		 - Support marketing campaigns and email links
+		 - Provide consistent user experience across platforms
+		 - Enable social media sharing with automatic app opening -->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:tkweenstore.com</string>
+		<string>applinks:www.tkweenstore.com</string>
+	</array>
+</dict>
 </plist>
