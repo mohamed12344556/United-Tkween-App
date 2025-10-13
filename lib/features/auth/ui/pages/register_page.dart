@@ -436,19 +436,26 @@ class RegisterViewContent extends StatelessWidget {
       },
     );
   }
-
-  Future signInWithGoogle() async {
-    final googleUser = await GoogleSignInApi.login();
-    if (googleUser != null) {
-      log('Google Sign In Success: $googleUser');
-    } else {
-      log('Google Sign In Failed');
-    }
-  }
 }
+//   Future<void> signInWithGoogle() async {
+//     try {
+//       final GoogleSignIn googleSignIn = GoogleSignIn();
+//       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-class GoogleSignInApi {
-  static final googleSignIn = GoogleSignIn(scopes: ['email']);
-  static Future<GoogleSignInAccount?> login() => googleSignIn.signIn();
-  static Future logout() => googleSignIn.disconnect();
-}
+//       if (googleUser != null) {
+//         log('Google Sign In Success: $googleUser');
+//       } else {
+//         log('Google Sign In Failed');
+//       }
+//     } catch (e) {
+//       log('Google Sign In Error: $e');
+//     }
+//   }
+// }
+
+// class GoogleSignInApi {
+//   static final googleSignIn = GoogleSignIn(); // بدون parameters
+
+//   static Future<GoogleSignInAccount?> login() => googleSignIn.signIn();
+//   static Future<GoogleSignInAccount?> logout() => googleSignIn.disconnect();
+// }
