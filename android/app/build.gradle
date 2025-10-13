@@ -6,8 +6,8 @@ plugins {
 }
 
 android {
-    namespace = "com.example.united_formation_app"
-    compileSdk = flutter.compileSdkVersion
+    namespace = "com.tkweenstore.tkween_app"
+    compileSdk = 36
     ndkVersion = "29.0.14206865"
 
     compileOptions {
