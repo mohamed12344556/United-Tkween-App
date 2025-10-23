@@ -26,7 +26,7 @@ Future<void> main() async {
   if (!Hive.isAdapterRegistered(1)) {
     Hive.registerAdapter(UserModelAdapter());
   }
-
+  
   if (!Hive.isAdapterRegistered(10)) {
     Hive.registerAdapter(ProfileHiveModelAdapter());
   }
