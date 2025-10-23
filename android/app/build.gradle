@@ -6,17 +6,17 @@ plugins {
 }
 
 android {
-    namespace = "com.tkweenstore.tkween_app"
-    compileSdk = 36
+    namespace = "com.example.united_formation_app"
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = "29.0.14206865"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17 // ✅ غيرت من 11
-        targetCompatibility = JavaVersion.VERSION_17 // ✅ غيرت من 11
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString() // ✅ غيرت من 11
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     defaultConfig {
