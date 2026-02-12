@@ -448,7 +448,7 @@ class _LoginPageState extends State<LoginPage> {
                     // إضافة زر تصفح كضيف
                     AppButton(
                       text: context.localeS.browse_as_guest,
-                      backgroundColor: AppColors.buttonColor,
+                      backgroundColor: AppColors.darkSecondary,
                       textColor: Colors.white,
                       isLoading: _isGuestLoginLoading,
                       icon: Icons.person_outline,

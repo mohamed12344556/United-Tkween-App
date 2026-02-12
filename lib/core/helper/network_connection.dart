@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 abstract class NetworkInfo {
@@ -14,8 +15,10 @@ class NetworkInfoImpl implements NetworkInfo {
   @override
   Future<bool> get isConnected async {
     final result = await connectivity.checkConnectivity();
-    if (result == ConnectivityResult.none) return false;
-
-    return checker.hasConnection;
+    debugPrint('🌐 Connectivity result: $result');
+    if (result.contains(ConnectivityResult.none) && result.length == 1) {
+      return false;
+    }
+    return true;
   }
 }

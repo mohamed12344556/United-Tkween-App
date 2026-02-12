@@ -43,6 +43,7 @@ class _ConnectionWrapperState extends State<ConnectionWrapper> {
     });
 
     final connected = await _networkInfo.isConnected;
+    debugPrint('🌐 Connection check result: $connected');
 
     if (mounted) {
       setState(() {

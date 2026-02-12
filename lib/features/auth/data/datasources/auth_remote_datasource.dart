@@ -51,6 +51,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       } else {
         return response;
       }
+    } on DioException catch (e) {
+      debugPrint('❌ Login error: $e');
+
+      // Parse the actual error message from the response body
+      if (e.response?.statusCode == 401) {
+        try {
+          final errorData = e.response?.data;
+          if (errorData is Map<String, dynamic>) {
+            final errorMessage = errorData['message'] ?? 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+            throw Exception(errorMessage);
+          }
+        } catch (_) {
+          throw Exception('البريد الإلكتروني أو كلمة المرور غير صحيحة');
+        }
+      }
+
+      throw Exception('فشل تسجيل الدخول: ${e.message}');
     } catch (e) {
       debugPrint('❌ Login error: $e');
       throw Exception('فشل تسجيل الدخول: $e');
