@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import '../../../domain/entities/library_item_entity.dart';
 
 part 'library_hive_model.g.dart';

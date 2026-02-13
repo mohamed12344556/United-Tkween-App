@@ -1,7 +1,7 @@
 // import 'dart:io';
 
 // import 'package:flutter/material.dart';
-// import 'package:hive/hive.dart';
+// import 'package:hive_ce/hive.dart';
 // import 'package:united_formation_app/core/core.dart';
 // import 'package:united_formation_app/core/utilities/extensions.dart';
 // import '../../../../core/routes/routes.dart';
@@ -176,7 +176,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:united_formation_app/core/core.dart';
 import '../../../../generated/l10n.dart';

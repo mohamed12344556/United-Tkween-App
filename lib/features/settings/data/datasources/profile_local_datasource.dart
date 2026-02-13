@@ -1,7 +1,7 @@
 // lib/features/settings/data/datasources/profile_local_datasource.dart
 
 import 'package:dartz/dartz.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:united_formation_app/features/settings/data/datasources/hive_models/library_hive_model.dart';
 import 'package:united_formation_app/features/settings/data/datasources/hive_models/order_hive_model.dart';
 import 'package:united_formation_app/features/settings/data/datasources/hive_models/profile_hive_model.dart';

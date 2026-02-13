@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import '../core.dart';
 import '../helper/network_connection.dart';
@@ -18,14 +18,14 @@ class _ConnectionWrapperState extends State<ConnectionWrapper> {
   bool hasConnection = true;
   bool isCheckingConnection = false;
   late final Connectivity _connectivity;
-  late final InternetConnectionChecker _connectionChecker;
+  late final InternetConnection _connectionChecker;
   late final NetworkInfoImpl _networkInfo;
 
   @override
   void initState() {
     super.initState();
     _connectivity = Connectivity();
-    _connectionChecker = InternetConnectionChecker.createInstance();
+    _connectionChecker = InternetConnection();
     _networkInfo = NetworkInfoImpl(_connectivity, _connectionChecker);
 
     // التحقق من الاتصال عند بدء التطبيق

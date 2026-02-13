@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import '../../../data/datasources/hive_models/order_hive_model.dart';
 import '../../../domain/entities/user_order_entity.dart';
 import '../../../domain/usecases/get_user_orders_usecase.dart';

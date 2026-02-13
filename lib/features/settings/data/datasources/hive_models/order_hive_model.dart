@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import '../../../domain/entities/user_order_entity.dart';
 
 part 'order_hive_model.g.dart';

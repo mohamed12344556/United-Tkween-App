@@ -3,7 +3,14 @@
     "allow": [
       "Bash(cd:*)",
       "Bash(dart run build_runner build:*)",
-      "Bash(flutter analyze:*)"
+      "Bash(flutter analyze:*)",
+      "Bash(flutter pub get:*)",
+      "WebFetch(domain:pub.dev)",
+      "Bash(powershell -Command \"Get-ChildItem -Path lib -Recurse -Filter ''*.dart'' | ForEach-Object { \\(Get-Content $_FullName -Raw\\) -replace \"\"import ''package:hive/hive.dart'';\"\", \"\"import ''package:hive_ce/hive.dart'';\"\" -replace \"\"import ''package:hive_flutter/hive_flutter.dart'';\"\", \"\"import ''package:hive_ce_flutter/hive_flutter.dart'';\"\" | Set-Content $_FullName -NoNewline }\")",
+      "Bash(powershell -Command:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File fix_imports.ps1:*)",
+      "Bash(del \"c:\\\\Users\\\\amaz8\\\\OneDrive\\\\Documents\\\\Flutter Projects\\\\United-Tkween-App\\\\United-Tkween-App\\\\fix_imports.ps1\")",
+      "Bash(git add:*)"
     ]
   }
 }

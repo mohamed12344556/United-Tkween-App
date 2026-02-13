@@ -1,7 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:united_formation_app/core/api/dio_services.dart';
 import 'package:united_formation_app/features/admin/data/repos/admin_repository_impl.dart';
 import 'package:united_formation_app/features/admin/domain/repos/admin_repository.dart';
@@ -54,8 +54,8 @@ Future<void> setupGetIt() async {
   sl.registerLazySingleton<ApiService>(() => ApiService(dio));
 
   //? External
-  sl.registerLazySingleton<InternetConnectionChecker>(
-    () => InternetConnectionChecker.createInstance(),
+  sl.registerLazySingleton<InternetConnection>(
+    () => InternetConnection(),
   );
   sl.registerLazySingleton<Connectivity>(() => Connectivity());
 

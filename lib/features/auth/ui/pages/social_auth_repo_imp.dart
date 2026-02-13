@@ -8,7 +8,7 @@
 // import 'package:google_sign_in/google_sign_in.dart';
 // import 'dart:math' as math;
 // import 'package:crypto/crypto.dart';
-// import 'package:hive/hive.dart';
+// import 'package:hive_ce/hive.dart';
 // import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 // import 'package:united_formation_app/core/api/dio_services.dart';
 // import 'package:united_formation_app/core/api/dio_services_failures.dart';

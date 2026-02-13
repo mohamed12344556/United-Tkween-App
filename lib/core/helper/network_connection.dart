@@ -1,6 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 abstract class NetworkInfo {
   Future<bool> get isConnected;
@@ -8,7 +8,7 @@ abstract class NetworkInfo {
 
 class NetworkInfoImpl implements NetworkInfo {
   final Connectivity connectivity;
-  final InternetConnectionChecker checker;
+  final InternetConnection checker;
 
   NetworkInfoImpl(this.connectivity, this.checker);
 

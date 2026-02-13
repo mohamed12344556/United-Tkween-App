@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:united_formation_app/core/core.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:flutter/material.dart';
 
 part 'book_model.g.dart';
