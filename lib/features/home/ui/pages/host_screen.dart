@@ -149,6 +149,7 @@ import 'package:united_formation_app/features/auth/data/services/guest_mode_mana
 import 'package:united_formation_app/features/auth/ui/widgets/guest_restriction_dialog.dart';
 import 'package:united_formation_app/features/favorites/presentation/views/favorites_view.dart';
 import 'package:united_formation_app/features/settings/ui/views/settings_view.dart';
+import '../../../../core/core.dart';
 import '../../../../core/themes/app_colors.dart';
 import 'home_page.dart';
 import 'package:united_formation_app/features/cart/presentation/pages/cart_page.dart';
@@ -210,12 +211,67 @@ class _HostPageState extends State<HostPage> {
     });
   }
 
+  Future<bool> _onWillPop() async {
+    if (_selectedIndex != 0) {
+      setState(() {
+        _selectedIndex = 0;
+      });
+      return false;
+    }
+
+    final shouldExit = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title:  Text(
+          context.isArabic? 'هل تريد الخروج من التطبيق؟' : 'Are you sure you want to exit the app?',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content:  Text(
+          context.isArabic? 'هل تريد الخروج من التطبيق؟' : 'هل تريد الخروج من التطبيق؟',
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child:  Text( context.isArabic? 'لا' : 'No', style: TextStyle(fontSize: 16)),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child:  Text(
+              context.isArabic? 'نعم' : 'Yes',
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+    return shouldExit ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_selectedIndex],
-      backgroundColor: AppColors.background,
-      bottomNavigationBar: Padding(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
+        body: _pages[_selectedIndex],
+        backgroundColor: AppColors.background,
+        bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(30),
@@ -248,6 +304,7 @@ class _HostPageState extends State<HostPage> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

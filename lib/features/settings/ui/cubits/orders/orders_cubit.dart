@@ -47,8 +47,8 @@ class OrdersCubit extends Cubit<OrdersState> {
         );
       }
 
-      // تحميل البيانات من الخادم (اختياري)
-      // await loadOrders();
+      // تحميل البيانات من الخادم
+      await loadOrders();
     } catch (e) {
       emit(
         state.copyWith(

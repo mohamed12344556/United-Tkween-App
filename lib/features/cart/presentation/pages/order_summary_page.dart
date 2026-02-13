@@ -65,16 +65,18 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
             listener: (context, state) {
               if (state is CreatePurchaseSuccess) {
                 if (state.response.paymentUrl != null) {
-                  // يمكن إضافة منطق ما بعد اكتمال الدفع هنا
                   log('Payment URL: ${state.response.paymentUrl}');
                   _navigateToPayment(
-                    // state.response.paymentUrl!
                     'https://tkweenstore.com/cart.php',
                   );
                 } else {
+                  final priceInfo = state.response.priceDetails;
+                  final totalText = priceInfo != null
+                      ? ' - الإجمالي: ${priceInfo.total.toStringAsFixed(2)} ر.س'
+                      : '';
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('تم إنشاء الطلب بنجاح!'),
+                    SnackBar(
+                      content: Text('تم إنشاء الطلب بنجاح!$totalText'),
                       backgroundColor: Colors.green,
                     ),
                   );
@@ -321,39 +323,103 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
 
         const SizedBox(height: 24),
 
-        // Order summary
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300, width: 1),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade100,
-                blurRadius: 5,
-                offset: const Offset(0, 2),
+        // Order summary - shows tax/shipping after purchase response
+        BlocBuilder<CreatePurchaseCubit, CreatePurchaseState>(
+          builder: (context, state) {
+            // After successful purchase, show actual price details from API
+            if (state is CreatePurchaseSuccess &&
+                state.response.priceDetails != null) {
+              final pd = state.response.priceDetails!;
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade300, width: 1),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade100,
+                      blurRadius: 5,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    _buildSummaryRow(
+                      S.of(context).subtotal,
+                      '${S.of(context).price} ${pd.subtotal.toStringAsFixed(2)}',
+                    ),
+                    if (pd.taxAmount > 0) ...[
+                      const SizedBox(height: 8),
+                      _buildSummaryRow(
+                        'الضريبة',
+                        '${S.of(context).price} ${pd.taxAmount.toStringAsFixed(2)}',
+                      ),
+                    ],
+                    if (pd.shippingCost > 0) ...[
+                      const SizedBox(height: 8),
+                      _buildSummaryRow(
+                        'تكلفة الشحن',
+                        '${S.of(context).price} ${pd.shippingCost.toStringAsFixed(2)}',
+                      ),
+                    ],
+                    const SizedBox(height: 12),
+                    Divider(color: Colors.grey.shade200),
+                    const SizedBox(height: 12),
+                    _buildSummaryRow(
+                      S.of(context).totalAmount,
+                      '${S.of(context).price} ${pd.total.toStringAsFixed(2)}',
+                      isTotal: true,
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            // Default: show cart subtotal/total before purchase
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade100,
+                    blurRadius: 5,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
-            ],
-          ),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              _buildSummaryRow(
-                S.of(context).subtotal,
-                '${S.of(context).price} ${widget.subtotal}',
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  _buildSummaryRow(
+                    S.of(context).subtotal,
+                    '${S.of(context).price} ${widget.subtotal}',
+                  ),
+                  const SizedBox(height: 8),
+                  _buildSummaryRow(
+                    'الضريبة',
+                    'تُحسب عند الطلب',
+                  ),
+                  const SizedBox(height: 8),
+                  _buildSummaryRow(
+                    'تكلفة الشحن',
+                    'تُحسب عند الطلب',
+                  ),
+                  const SizedBox(height: 12),
+                  Divider(color: Colors.grey.shade200),
+                  const SizedBox(height: 12),
+                  _buildSummaryRow(
+                    S.of(context).totalAmount,
+                    '${S.of(context).price} ${widget.totalAmount}+',
+                    isTotal: true,
+                  ),
+                ],
               ),
-              // const SizedBox(height: 8),
-              // _buildSummaryRow('تكلفة الشحن', 'ريال ${widget.shippingCost}'),
-              const SizedBox(height: 12),
-              Divider(color: Colors.grey.shade200),
-              const SizedBox(height: 12),
-              _buildSummaryRow(
-                S.of(context).totalAmount,
-                '${S.of(context).price} ${widget.totalAmount}',
-                isTotal: true,
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ],
     );

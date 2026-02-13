@@ -24,13 +24,20 @@ class OrderHiveModelAdapter extends TypeAdapter<OrderHiveModel> {
       statusString: fields[4] as String,
       price: fields[5] as double,
       imageUrl: fields[6] as String?,
+      chargeId: fields[7] as String?,
+      booksJson: fields[8] as String?,
+      customerJson: fields[9] as String?,
+      paymentJson: fields[10] as String?,
+      priceSummaryJson: fields[11] as String?,
+      shippingJson: fields[12] as String?,
+      shippingAddress: fields[13] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, OrderHiveModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -44,7 +51,21 @@ class OrderHiveModelAdapter extends TypeAdapter<OrderHiveModel> {
       ..writeByte(5)
       ..write(obj.price)
       ..writeByte(6)
-      ..write(obj.imageUrl);
+      ..write(obj.imageUrl)
+      ..writeByte(7)
+      ..write(obj.chargeId)
+      ..writeByte(8)
+      ..write(obj.booksJson)
+      ..writeByte(9)
+      ..write(obj.customerJson)
+      ..writeByte(10)
+      ..write(obj.paymentJson)
+      ..writeByte(11)
+      ..write(obj.priceSummaryJson)
+      ..writeByte(12)
+      ..write(obj.shippingJson)
+      ..writeByte(13)
+      ..write(obj.shippingAddress);
   }
 
   @override

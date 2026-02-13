@@ -1,6 +1,6 @@
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:united_formation_app/features/settings/domain/entities/library_item_entity.dart';
 import 'package:united_formation_app/features/settings/domain/entities/user_order_entity.dart';
 import '../datasources/profile_local_datasource.dart';
@@ -13,17 +13,18 @@ import '../../../../core/core.dart';
 class ProfileRepositoryImpl implements ProfileRepository {
   final ProfileRemoteDataSource remoteDataSource;
   final ProfileLocalDataSource localDataSource;
-  final InternetConnectionChecker connectionChecker;
+  final Connectivity connectivity;
 
   ProfileRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
-    required this.connectionChecker,
+    required this.connectivity,
   });
 
   // تحقق من توفر الإنترنت
   Future<bool> _isConnected() async {
-    return await connectionChecker.hasConnection;
+    final result = await connectivity.checkConnectivity();
+    return !(result.contains(ConnectivityResult.none) && result.length == 1);
   }
 
   @override
@@ -188,9 +189,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
             });
           },
           (orders) async {
+            // تحويل إلى entities
+            final entities = orders.map((o) => o.toEntity()).toList();
             // تخزين البيانات في التخزين المحلي
-            await localDataSource.cacheOrders(orders);
-            return Right(orders);
+            await localDataSource.cacheOrders(entities);
+            return Right(entities);
           },
         );
       } else {
@@ -224,7 +227,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
         return remoteResult.fold(
           (error) => Left(error),
-          (orderDetails) => Right(orderDetails),
+          (orderDetails) => Right(orderDetails.toEntity()),
         );
       } else {
         // في حالة عدم وجود إنترنت، محاولة البحث في المشتريات المخزنة

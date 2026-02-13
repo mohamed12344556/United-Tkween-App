@@ -1,98 +1,152 @@
-import 'package:json_annotation/json_annotation.dart';
-
 import '../../domain/entities/user_order_entity.dart';
 
-part 'user_order_model.g.dart';
-
-@JsonSerializable()
-class UserOrderModel extends UserOrderEntity {
-  @override
-  @JsonKey(name: 'id')
+class UserOrderModel {
   final String id;
-  
-  @override
-  @JsonKey(name: 'title')
-  final String title;
-  
-  @override
-  @JsonKey(name: 'description')
-  final String? description;
-  
-  @override
-  @JsonKey(name: 'orderDate')
-  final DateTime orderDate;
-  
-  @JsonKey(name: 'status')
+  final String? chargeId;
   final String statusString;
-  
-  @override
-  @JsonKey(name: 'price')
-  final double price;
-  
-  @override
-  @JsonKey(name: 'imageUrl')
-  final String? imageUrl;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final List<OrderBookItem> books;
+  final OrderCustomer? customer;
+  final OrderPayment? payment;
+  final OrderPriceSummary? priceSummary;
+  final OrderShipping? shipping;
+  final String? shippingAddress;
 
   UserOrderModel({
     required this.id,
-    required this.title,
-    this.description,
-    required this.orderDate,
+    this.chargeId,
     required this.statusString,
-    required this.price,
-    this.imageUrl,
-  }) : super(
-          id: id,
-          title: title,
-          description: description,
-          orderDate: orderDate,
-          status: _mapStringToStatus(statusString),
-          price: price,
-          imageUrl: imageUrl,
-        );
+    required this.createdAt,
+    this.updatedAt,
+    this.books = const [],
+    this.customer,
+    this.payment,
+    this.priceSummary,
+    this.shipping,
+    this.shippingAddress,
+  });
 
-  factory UserOrderModel.fromJson(Map<String, dynamic> json) =>
-      _$UserOrderModelFromJson(json);
+  /// Parse from get_orders.php API response
+  factory UserOrderModel.fromApiJson(Map<String, dynamic> json) {
+    // Parse books
+    final booksData = json['books'] as List<dynamic>? ?? [];
+    final books = booksData.map((book) {
+      return OrderBookItem(
+        bookId: book['book_id']?.toString() ?? '',
+        title: book['title'] ?? '',
+        unitPrice: (book['unit_price'] ?? 0).toDouble(),
+        quantity: book['quantity'] ?? 1,
+        total: (book['total'] ?? 0).toDouble(),
+      );
+    }).toList();
 
-  Map<String, dynamic> toJson() => _$UserOrderModelToJson(this);
+    // Parse customer
+    OrderCustomer? customer;
+    if (json['customer'] != null) {
+      final c = json['customer'];
+      customer = OrderCustomer(
+        name: c['name'] ?? '',
+        email: c['email'] ?? '',
+        phone: c['phone'] ?? '',
+        address: c['address'] ?? '',
+      );
+    }
 
-  factory UserOrderModel.fromEntity(UserOrderEntity entity) {
+    // Parse payment
+    OrderPayment? payment;
+    if (json['payment'] != null) {
+      final p = json['payment'];
+      payment = OrderPayment(
+        method: p['method'] ?? '',
+        lastFour: p['last_four'],
+        tapChargeId: p['tap_charge_id'],
+      );
+    }
+
+    // Parse price_summary
+    OrderPriceSummary? priceSummary;
+    if (json['price_summary'] != null) {
+      final ps = json['price_summary'];
+      priceSummary = OrderPriceSummary(
+        subtotal: (ps['subtotal'] ?? 0).toDouble(),
+        taxAmount: (ps['tax_amount'] ?? 0).toDouble(),
+        shippingCost: (ps['shipping_cost'] ?? 0).toDouble(),
+        total: (ps['total'] ?? 0).toDouble(),
+      );
+    }
+
+    // Parse shipping
+    OrderShipping? shipping;
+    if (json['shipping'] != null) {
+      final s = json['shipping'];
+      shipping = OrderShipping(
+        methodName: s['method_name'] ?? '',
+        cost: (s['cost'] ?? 0).toDouble(),
+      );
+    }
+
     return UserOrderModel(
-      id: entity.id,
-      title: entity.title,
-      description: entity.description,
-      orderDate: entity.orderDate,
-      statusString: _mapStatusToString(entity.status),
-      price: entity.price,
-      imageUrl: entity.imageUrl,
+      id: json['order_id']?.toString() ?? '',
+      chargeId: json['charge_id'],
+      statusString: json['status'] ?? 'INITIATED',
+      createdAt:
+          DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(json['updated_at'] ?? ''),
+      books: books,
+      customer: customer,
+      payment: payment,
+      priceSummary: priceSummary,
+      shipping: shipping,
+      shippingAddress: json['shipping_address'],
     );
   }
 
   UserOrderEntity toEntity() {
+    // Build title from books
+    String title;
+    if (books.isEmpty) {
+      title = 'طلب #$id';
+    } else if (books.length == 1) {
+      title = books.first.title;
+    } else {
+      title = '${books.first.title} +${books.length - 1}';
+    }
+
     return UserOrderEntity(
       id: id,
+      chargeId: chargeId,
       title: title,
-      description: description,
-      orderDate: orderDate,
+      description: null,
+      orderDate: createdAt,
       status: _mapStringToStatus(statusString),
-      price: price,
-      imageUrl: imageUrl,
+      price: priceSummary?.total ?? 0.0,
+      imageUrl: null,
+      books: books,
+      customer: customer,
+      payment: payment,
+      priceSummary: priceSummary,
+      shipping: shipping,
+      shippingAddress: shippingAddress,
     );
   }
 
   static OrderStatus _mapStringToStatus(String statusString) {
-    switch (statusString.toLowerCase()) {
-      case 'processing':
+    switch (statusString.toUpperCase()) {
+      case 'INITIATED':
+      case 'PROCESSING':
       case 'قيد المعالجة':
         return OrderStatus.processing;
-      case 'shipped':
+      case 'SHIPPED':
       case 'تم الشحن':
       case 'في الطريق':
         return OrderStatus.shipped;
-      case 'delivered':
+      case 'DELIVERED':
+      case 'CAPTURED':
       case 'تم التوصيل':
         return OrderStatus.delivered;
-      case 'cancelled':
+      case 'CANCELLED':
+      case 'FAILED':
       case 'ملغي':
         return OrderStatus.cancelled;
       default:
@@ -100,16 +154,16 @@ class UserOrderModel extends UserOrderEntity {
     }
   }
 
-  static String _mapStatusToString(OrderStatus status) {
+  static String mapStatusToString(OrderStatus status) {
     switch (status) {
       case OrderStatus.processing:
-        return 'processing';
+        return 'PROCESSING';
       case OrderStatus.shipped:
-        return 'shipped';
+        return 'SHIPPED';
       case OrderStatus.delivered:
-        return 'delivered';
+        return 'DELIVERED';
       case OrderStatus.cancelled:
-        return 'cancelled';
+        return 'CANCELLED';
     }
   }
 }

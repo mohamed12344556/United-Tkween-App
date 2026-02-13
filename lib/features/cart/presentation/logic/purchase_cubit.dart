@@ -100,16 +100,71 @@ class CreatePurchaseCubit extends Cubit<CreatePurchaseState> {
   UserOrderEntity _createOrderEntityFromResponse(
     CreatePurchaseResponse response,
   ) {
+    // Build price summary from response
+    OrderPriceSummary? priceSummary;
+    if (response.priceDetails != null) {
+      priceSummary = OrderPriceSummary(
+        subtotal: response.priceDetails!.subtotal,
+        taxAmount: response.priceDetails!.taxAmount,
+        shippingCost: response.priceDetails!.shippingCost,
+        total: response.priceDetails!.total,
+      );
+    }
+
+    // Build customer from response
+    OrderCustomer? customer;
+    if (response.customerDetails != null) {
+      customer = OrderCustomer(
+        name: response.customerDetails!.name,
+        email: response.customerDetails!.email,
+        phone: response.customerDetails!.phone,
+        address: response.customerDetails!.address ?? '',
+      );
+    }
+
+    // Build payment from response
+    OrderPayment? payment;
+    if (response.paymentMethod != null) {
+      payment = OrderPayment(method: response.paymentMethod!);
+    }
+
+    // Build shipping from response
+    OrderShipping? shipping;
+    if (response.appliedShipping != null) {
+      shipping = OrderShipping(
+        methodName: response.appliedShipping!.name,
+        cost: response.appliedShipping!.cost,
+      );
+    }
+
+    // Build book item
+    final books = <OrderBookItem>[];
+    if (response.bookTitle != null) {
+      books.add(OrderBookItem(
+        bookId: response.orderId?.toString() ?? '',
+        title: response.bookTitle!,
+        unitPrice: response.priceDetails?.subtotal ?? 0,
+        quantity: 1,
+        total: response.priceDetails?.subtotal ?? 0,
+      ));
+    }
+
     return UserOrderEntity(
       id:
           response.orderId?.toString() ??
           DateTime.now().millisecondsSinceEpoch.toString(),
+      chargeId: response.chargeId,
       title: response.bookTitle ?? 'طلب جديد',
       description: 'طلب من التطبيق - ${response.bookType ?? ''}',
       orderDate: DateTime.now(),
-      status: OrderStatus.processing, // بدء الطلب كـ "قيد المعالجة"
+      status: OrderStatus.processing,
       price: response.amount ?? 0.0,
-      imageUrl: null, // يمكن إضافة صورة الكتاب إذا كانت متوفرة
+      books: books,
+      customer: customer,
+      payment: payment,
+      priceSummary: priceSummary,
+      shipping: shipping,
+      shippingAddress: response.customerDetails?.address,
     );
   }
 

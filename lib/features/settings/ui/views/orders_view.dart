@@ -511,7 +511,7 @@ class OrdersView extends StatefulWidget {
 class _OrdersViewState extends State<OrdersView> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
-  final bool _isRefreshEnabled = false;
+  final bool _isRefreshEnabled = true;
 
   @override
   void initState() {
@@ -754,8 +754,7 @@ class _OrdersViewState extends State<OrdersView> {
               backgroundColor: Colors.white,
               onRefresh: () async {
                 if (mounted) {
-                  // await context.read<OrdersCubit>().loadOrders();
-                  await context.read<OrdersCubit>().loadCachedOrders();
+                  await context.read<OrdersCubit>().loadOrders();
                 }
               },
               child: _buildOrdersListView(state),

@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(dart run build_runner build:*)",
+      "Bash(flutter analyze:*)"
     ]
   }
 }

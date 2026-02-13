@@ -109,30 +109,14 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Either<ApiErrorModel, List<UserOrderModel>>> getUserOrders() async {
     try {
-      // استدعاء واجهة برمجة التطبيقات للحصول على الطلبات
       final response = await apiService.getOrders();
 
-      // تحليل الاستجابة
       if (response != null && response['status'] == 'success') {
         final List<dynamic> ordersData = response['orders'] ?? [];
 
-        // تحويل البيانات إلى نماذج
-        final orders =
-            ordersData.map((orderData) {
-              return UserOrderModel(
-                id: orderData['id'].toString(),
-                title: orderData['title'] ?? '',
-                description: orderData['description'],
-                orderDate:
-                    DateTime.tryParse(orderData['order_date'] ?? '') ??
-                    DateTime.now(),
-                statusString: orderData['status'] ?? 'processing',
-                price:
-                    double.tryParse(orderData['price']?.toString() ?? '0') ??
-                    0.0,
-                imageUrl: orderData['image_url'],
-              );
-            }).toList();
+        final orders = ordersData.map((orderData) {
+          return UserOrderModel.fromApiJson(orderData as Map<String, dynamic>);
+        }).toList();
 
         return Right(orders);
       } else {
@@ -164,10 +148,8 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
           orElse:
               () => UserOrderModel(
                 id: orderId,
-                title: 'غير معروف',
-                orderDate: DateTime.now(),
-                statusString: 'processing',
-                price: 0.0,
+                statusString: 'PROCESSING',
+                createdAt: DateTime.now(),
               ),
         );
 

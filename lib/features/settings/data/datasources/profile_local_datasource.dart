@@ -7,9 +7,9 @@ import 'package:united_formation_app/features/settings/data/datasources/hive_mod
 import 'package:united_formation_app/features/settings/data/datasources/hive_models/profile_hive_model.dart';
 
 import '../../../../core/core.dart';
+import '../../domain/entities/user_order_entity.dart';
 import '../models/library_item_model.dart';
 import '../models/profile_model.dart';
-import '../models/user_order_model.dart';
 
 /// أسماء صناديق Hive
 class HiveBoxes {
@@ -26,8 +26,8 @@ abstract class ProfileLocalDataSource {
   Future<Either<ApiErrorModel, ProfileModel?>> getCachedProfile();
   Future<Either<ApiErrorModel, bool>> cacheProfile(ProfileModel profile);
 
-  Future<Either<ApiErrorModel, List<UserOrderModel>?>> getCachedOrders();
-  Future<Either<ApiErrorModel, bool>> cacheOrders(List<UserOrderModel> orders);
+  Future<Either<ApiErrorModel, List<UserOrderEntity>?>> getCachedOrders();
+  Future<Either<ApiErrorModel, bool>> cacheOrders(List<UserOrderEntity> orders);
 
   Future<Either<ApiErrorModel, List<LibraryItemModel>?>>
   getCachedLibraryItems();
@@ -108,7 +108,7 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
 
   // تنفيذ جلب الطلبات المخزنة
   @override
-  Future<Either<ApiErrorModel, List<UserOrderModel>?>> getCachedOrders() async {
+  Future<Either<ApiErrorModel, List<UserOrderEntity>?>> getCachedOrders() async {
     try {
       final box = await _getOrdersBox();
       final ordersList = box.values.toList();
@@ -119,12 +119,9 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
         return const Right(null);
       }
 
-      // تحويل قائمة نماذج Hive إلى قائمة نماذج البيانات
+      // تحويل قائمة نماذج Hive إلى قائمة entities
       final orders =
-          ordersList.map((orderHive) {
-            final orderEntity = orderHive.toUserOrderEntity();
-            return UserOrderModel.fromEntity(orderEntity);
-          }).toList();
+          ordersList.map((orderHive) => orderHive.toUserOrderEntity()).toList();
 
       return Right(orders);
     } catch (error) {
@@ -136,7 +133,7 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
   // تنفيذ تخزين الطلبات
   @override
   Future<Either<ApiErrorModel, bool>> cacheOrders(
-    List<UserOrderModel> orders,
+    List<UserOrderEntity> orders,
   ) async {
     try {
       final box = await _getOrdersBox();
